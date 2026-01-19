@@ -16,5 +16,5 @@ def write_json(self, data, file_path):
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
         return 1
-    except Exception:
+    except Exception as e:
         return -1

@@ -8,15 +8,9 @@ def add_book(self, title, author):
     >>> book_db.create_table()
     >>> book_db.add_book('book1', 'author')
     """
-    import sqlite3
-    
-    conn = sqlite3.connect(self.db_name)
-    cursor = conn.cursor()
-    
+    cursor = self.connection.cursor()
     cursor.execute(
         "INSERT INTO books (title, author, available) VALUES (?, ?, ?)",
         (title, author, 1)
     )
-    
-    conn.commit()
-    conn.close()
+    self.connection.commit()

@@ -20,7 +20,7 @@ def calculate_total(self):
         # Get the sale multiplier for this dish (default to 1.0 if not in sales)
         sale_multiplier = self.sales.get(dish_name, 1.0)
         
-        # Calculate: count * price * sale_multiplier
+        # Calculate: count * price * sale
         total += count * price * sale_multiplier
     
     return total

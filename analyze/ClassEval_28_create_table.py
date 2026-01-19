@@ -15,4 +15,4 @@ def create_table(self, table_name, key1, key2):
     )
     """
     self.cursor.execute(query)
-    self.connection.commit()
+    self.conn.commit()

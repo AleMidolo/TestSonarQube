@@ -38,7 +38,7 @@ def palindromic_string(self):
         except IndexError:
             pass
         
-        # If palindrome centered at i extends past right, adjust center and right
+        # If palindrome centered at i extends past right, adjust center
         if i + p[i] > right:
             center = i
             right = i + p[i]

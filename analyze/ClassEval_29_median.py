@@ -16,10 +16,10 @@ def median(self, data):
     n = len(sorted_data)
     
     if n % 2 == 1:
-        # Odd number of elements - return middle element
+        # Odd number of elements
         median_value = sorted_data[n // 2]
     else:
-        # Even number of elements - return average of two middle elements
+        # Even number of elements
         median_value = (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2
     
     return round(median_value, 2)

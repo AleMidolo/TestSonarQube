@@ -15,25 +15,23 @@ def rail_fence_cipher(self, plain_text, rails):
         return plain_text
     
     # Create a list of strings for each rail
-    fence = [[] for _ in range(rails)]
+    fence = ['' for _ in range(rails)]
     
-    # Direction: 0 = down, 1 = up
+    # Direction: 0 for down, 1 for up
     rail = 0
     direction = 1  # Start going down
     
     # Place each character on the appropriate rail
     for char in plain_text:
-        fence[rail].append(char)
+        fence[rail] += char
         
         # Change direction at the top or bottom rail
         if rail == 0:
-            direction = 1  # Go down
+            direction = 1
         elif rail == rails - 1:
-            direction = -1  # Go up
+            direction = -1
         
         rail += direction
     
-    # Read off the rails to create the ciphertext
-    ciphertext = ''.join([''.join(rail_chars) for rail_chars in fence])
-    
-    return ciphertext
+    # Concatenate all rails to get the ciphertext
+    return ''.join(fence)

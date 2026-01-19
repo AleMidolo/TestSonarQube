@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 def get_available_slots(self, date):
     """
     दिए गए दिनांक पर सभी उपलब्ध समय स्लॉट प्राप्त करें।
@@ -11,43 +9,35 @@ def get_available_slots(self, date):
     [(datetime.datetime(2023, 1, 1, 23, 0), datetime.datetime(2023, 1, 2, 0, 0))]
 
     """
+    from datetime import datetime, timedelta
+    
     # Get the start and end of the given date
-    day_start = datetime(date.year, date.month, date.day, 0, 0)
-    day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
-    next_day_start = day_start + timedelta(days=1)
+    day_start = date.replace(hour=0, minute=0, second=0, microsecond=0)
+    day_end = day_start + timedelta(days=1)
     
     # Filter events for the given date
-    events_on_date = []
+    day_events = []
     for event in self.events:
-        event_date = event['date']
-        if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
-            events_on_date.append(event)
+        event_date = event['date'].replace(hour=0, minute=0, second=0, microsecond=0)
+        if event_date == day_start:
+            day_events.append(event)
     
-    # Sort events by start_time
-    events_on_date.sort(key=lambda x: x['start_time'])
+    # Sort events by start time
+    day_events.sort(key=lambda x: x['start_time'])
     
     # Find available slots
     available_slots = []
+    current_time = day_start
     
-    if not events_on_date:
-        # If no events, entire day is available
-        available_slots.append((day_start, next_day_start))
-    else:
-        # Check for slot before first event
-        first_event = events_on_date[0]
-        if first_event['start_time'] > day_start:
-            available_slots.append((day_start, first_event['start_time']))
-        
-        # Check for slots between events
-        for i in range(len(events_on_date) - 1):
-            current_event_end = events_on_date[i]['end_time']
-            next_event_start = events_on_date[i + 1]['start_time']
-            if current_event_end < next_event_start:
-                available_slots.append((current_event_end, next_event_start))
-        
-        # Check for slot after last event
-        last_event = events_on_date[-1]
-        if last_event['end_time'] < next_day_start:
-            available_slots.append((last_event['end_time'], next_day_start))
+    for event in day_events:
+        # If there's a gap between current_time and event start, add it as available slot
+        if current_time < event['start_time']:
+            available_slots.append((current_time, event['start_time']))
+        # Move current_time to the end of this event
+        current_time = max(current_time, event['end_time'])
+    
+    # If there's time left after the last event until end of day
+    if current_time < day_end:
+        available_slots.append((current_time, day_end))
     
     return available_slots

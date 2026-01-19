@@ -11,25 +11,18 @@ def get_gpa(self, name):
     93.0
 
     """
-    # Check if student exists in the system
     if name not in self.students:
         return None
     
-    # Get the student's course scores
     student = self.students[name]
     
-    # Check if student has a courses/scores attribute and if it has any grades
-    if hasattr(student, 'courses') and student.courses:
-        scores = list(student.courses.values())
-        if scores:
-            return float(sum(scores) / len(scores))
-        else:
-            return None
-    elif hasattr(student, 'scores') and student.scores:
-        scores = list(student.scores.values())
-        if scores:
-            return float(sum(scores) / len(scores))
-        else:
-            return None
-    else:
+    if not hasattr(student, 'courses') or not student.courses:
         return None
+    
+    if len(student.courses) == 0:
+        return None
+    
+    total_score = sum(student.courses.values())
+    average = total_score / len(student.courses)
+    
+    return float(average)

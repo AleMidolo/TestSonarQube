@@ -16,26 +16,24 @@ def sell_stock(self, stock):
     price = stock['price']
     quantity = stock['quantity']
     
-    # Find the stock in portfolio
+    # पोर्टफोलियो में स्टॉक खोजें
     for i, portfolio_stock in enumerate(self.portfolio):
         if portfolio_stock['name'] == name:
-            # Check if we have enough quantity to sell
+            # जांचें कि पर्याप्त मात्रा है या नहीं
             if portfolio_stock['quantity'] < quantity:
                 return False
             
-            # Calculate the cash to add
-            cash_to_add = price * quantity
-            self.cash_balance += cash_to_add
+            # नकद बैलेंस में जोड़ें
+            self.cash_balance += price * quantity
             
-            # Update or remove the stock from portfolio
-            if portfolio_stock['quantity'] == quantity:
-                # Remove the stock completely
+            # स्टॉक की मात्रा घटाएं
+            portfolio_stock['quantity'] -= quantity
+            
+            # यदि मात्रा 0 हो जाती है, तो पोर्टफोलियो से हटा दें
+            if portfolio_stock['quantity'] == 0:
                 self.portfolio.pop(i)
-            else:
-                # Reduce the quantity
-                portfolio_stock['quantity'] -= quantity
             
             return True
     
-    # Stock not found in portfolio
+    # यदि स्टॉक पोर्टफोलियो में नहीं मिला
     return False

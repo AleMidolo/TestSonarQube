@@ -22,19 +22,22 @@ def get_possible_moves(self, state):
     moves = []
     
     # Check if we can move up (0 can move up if there's a tile above it)
-    # Moving up means the tile above moves down to 0's position
+    # Moving up means swapping 0 with the tile above, so 0 must not be in row 0
     if zero_row > 0:
         moves.append('ऊपर')
     
     # Check if we can move down (0 can move down if there's a tile below it)
+    # Moving down means swapping 0 with the tile below, so 0 must not be in row 2
     if zero_row < 2:
         moves.append('नीचे')
     
     # Check if we can move left (0 can move left if there's a tile to its left)
+    # Moving left means swapping 0 with the tile to the left, so 0 must not be in col 0
     if zero_col > 0:
         moves.append('बाएँ')
     
     # Check if we can move right (0 can move right if there's a tile to its right)
+    # Moving right means swapping 0 with the tile to the right, so 0 must not be in col 2
     if zero_col < 2:
         moves.append('दाएँ')
     

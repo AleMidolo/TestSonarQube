@@ -13,7 +13,7 @@ def is_valid_ipv6(ip_address):
     import socket
     
     try:
-        # Try to convert the address using socket.inet_pton
+        # Try to convert the IP address using socket.inet_pton
         socket.inet_pton(socket.AF_INET6, ip_address)
         return True
     except (socket.error, OSError, ValueError, AttributeError):

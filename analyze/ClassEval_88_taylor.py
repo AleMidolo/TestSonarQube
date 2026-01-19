@@ -1,5 +1,3 @@
-import math
-
 def taylor(self, x, n):
     """
     cos (x/180 * pi) का n-आदेश टेलर विस्तार मान खोजें
@@ -9,6 +7,8 @@ def taylor(self, x, n):
     >>> tricalculator.taylor(60, 50)
     0.5000000000000001
     """
+    import math
+    
     # Convert degrees to radians
     angle_rad = x / 180 * math.pi
     

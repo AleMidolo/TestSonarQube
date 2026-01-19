@@ -10,40 +10,26 @@ def check_winner(self, player_hand, dealer_hand):
     >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
     'Player wins'
     """
-    def calculate_hand_value(hand):
-        value = 0
-        aces = 0
-        
-        for card in hand:
-            rank = card[:-1]  # Remove suit (last character)
-            
-            if rank in ['J', 'Q', 'K']:
-                value += 10
-            elif rank == 'A':
-                aces += 1
-                value += 11
-            else:
-                value += int(rank)
-        
-        # Adjust for aces if value exceeds 21
-        while value > 21 and aces > 0:
-            value -= 10
-            aces -= 1
-        
-        return value
+    # Calculate hand values
+    player_value = self.calculate_hand_value(player_hand)
+    dealer_value = self.calculate_hand_value(dealer_hand)
     
-    player_value = calculate_hand_value(player_hand)
-    dealer_value = calculate_hand_value(dealer_hand)
-    
-    # If both hands are 21 or less, winner is closer to 21
+    # Check if both hands are 21 or less
     if player_value <= 21 and dealer_value <= 21:
+        # Winner is the one closer to 21 (higher value)
         if player_value > dealer_value:
             return 'Player wins'
         else:
             return 'Dealer wins'
-    # Otherwise, winner has the lower hand value
-    else:
+    # If both are over 21, winner has lower value
+    elif player_value > 21 and dealer_value > 21:
         if player_value < dealer_value:
             return 'Player wins'
         else:
             return 'Dealer wins'
+    # If only player is over 21, dealer wins
+    elif player_value > 21:
+        return 'Dealer wins'
+    # If only dealer is over 21, player wins
+    else:
+        return 'Player wins'

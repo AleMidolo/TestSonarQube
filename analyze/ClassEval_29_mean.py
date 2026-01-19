@@ -10,7 +10,7 @@ def mean(self, data):
     3.00
     """
     if not data:
-        return 0.00
+        return 0.0
     
     total = sum(data)
     mean_value = total / len(data)

@@ -9,27 +9,22 @@ def get_correlation(self):
     if len(self) < 2:
         return 1.0
     
-    # Create indices as x values (0, 1, 2, 3, ...)
-    x = list(range(len(self)))
-    y = list(self)
-    
-    n = len(x)
+    # Create indices for correlation calculation
+    indices = list(range(len(self)))
     
     # Calculate means
-    mean_x = sum(x) / n
-    mean_y = sum(y) / n
+    mean_x = sum(indices) / len(indices)
+    mean_y = sum(self) / len(self)
     
-    # Calculate correlation coefficient (Pearson's r)
-    numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
+    # Calculate correlation coefficient
+    numerator = sum((indices[i] - mean_x) * (self[i] - mean_y) for i in range(len(self)))
     
-    sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
-    sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
+    sum_sq_x = sum((indices[i] - mean_x) ** 2 for i in range(len(indices)))
+    sum_sq_y = sum((self[i] - mean_y) ** 2 for i in range(len(self)))
     
     denominator = (sum_sq_x * sum_sq_y) ** 0.5
     
     if denominator == 0:
         return 1.0
     
-    correlation = numerator / denominator
-    
-    return correlation
+    return numerator / denominator

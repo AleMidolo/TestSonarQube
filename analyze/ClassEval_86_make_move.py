@@ -10,7 +10,7 @@ def make_move(self, row, col):
     >>> ttt.current_player
     'O'
     """
-    # Check if the position is valid (within bounds)
+    # Check if the position is valid (within board bounds)
     if row < 0 or row >= len(self.board) or col < 0 or col >= len(self.board[0]):
         return False
     

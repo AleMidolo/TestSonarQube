@@ -11,10 +11,10 @@ def process_excel_data(self, N, save_file_name):
     import os
     
     # Read the Excel file
-    df = self.read_excel(save_file_name)
+    df = pd.read_excel(save_file_name)
     
     # Convert the specified column (N) to uppercase
-    # Assuming N is 1-indexed (first column is 1)
+    # N is 1-indexed, so we need to convert to 0-indexed
     if N > 0 and N <= len(df.columns):
         column_name = df.columns[N - 1]
         df[column_name] = df[column_name].astype(str).str.upper()

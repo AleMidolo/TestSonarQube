@@ -14,19 +14,25 @@ def apply_operator(self, operand_stack, operator_stack):
     # Pop the top operator
     operator = operator_stack.pop()
     
-    # Pop two operands (top two elements)
-    operand2 = operand_stack.pop()
-    operand1 = operand_stack.pop()
+    # Pop the top two operands (right operand first, then left)
+    right = operand_stack.pop()
+    left = operand_stack.pop()
     
-    # Apply the operator
+    # Apply the operation
     if operator == '+':
-        result = operand1 + operand2
+        result = left + right
     elif operator == '-':
-        result = operand1 - operand2
+        result = left - right
     elif operator == '*':
-        result = operand1 * operand2
+        result = left * right
     elif operator == '/':
-        result = operand1 / operand2
+        result = left / right
+    elif operator == '//':
+        result = left // right
+    elif operator == '%':
+        result = left % right
+    elif operator == '**':
+        result = left ** right
     else:
         result = 0
     

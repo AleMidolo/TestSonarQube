@@ -16,10 +16,4 @@ def __getitem__(self, key):
         return components[0] + ''.join(x.title() for x in components[1:])
     
     camel_key = to_camel_case(key)
-    
-    # Try to get the value using the camelCase key from the internal dictionary
-    if hasattr(self, '_data'):
-        return self._data[camel_key]
-    else:
-        # If _data doesn't exist, try to access as a regular dict
-        return super().__getitem__(camel_key)
+    return self.__dict__[camel_key]

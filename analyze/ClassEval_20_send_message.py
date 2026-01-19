@@ -16,5 +16,5 @@ def send_message(self, sender, receiver, message):
     if sender not in self.users or receiver not in self.users:
         return False
     
-    self.users[receiver].append({'sender': sender, 'message': message})
+    self.users[receiver].append(message)
     return True

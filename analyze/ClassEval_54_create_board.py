@@ -14,32 +14,24 @@ def create_board(self):
     rows, cols = self.board_size[0], self.board_size[1]
     total_cells = rows * cols
     
-    # Calculate how many pairs we need
-    num_pairs = total_cells // 2
-    
     # Create a flat list with pairs of icons
-    flat_board = []
+    tiles = []
     icon_index = 0
     
-    for _ in range(num_pairs):
-        # Add a pair of the same icon
-        flat_board.append(self.icons[icon_index % len(self.icons)])
-        flat_board.append(self.icons[icon_index % len(self.icons)])
+    # We need total_cells tiles, and each icon should appear in pairs
+    for i in range(total_cells):
+        tiles.append(self.icons[icon_index % len(self.icons)])
         icon_index += 1
     
-    # If total_cells is odd, add one more icon
-    if total_cells % 2 == 1:
-        flat_board.append(self.icons[0])
+    # Shuffle the tiles
+    random.shuffle(tiles)
     
-    # Shuffle the flat board
-    random.shuffle(flat_board)
-    
-    # Convert flat list to 2D board
+    # Create 2D board from flat list
     board = []
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(flat_board[i * cols + j])
+            row.append(tiles[i * cols + j])
         board.append(row)
     
     self.board = board

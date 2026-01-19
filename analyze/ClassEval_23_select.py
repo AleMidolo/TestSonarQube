@@ -10,9 +10,6 @@ def select(self, m: int) -> List[List[str]]:
     """
     from itertools import combinations
     
-    if not hasattr(self, 'data'):
-        return []
-    
     result = []
     for combo in combinations(self.data, m):
         result.append(list(combo))

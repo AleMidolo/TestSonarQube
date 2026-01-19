@@ -7,7 +7,7 @@ def update(self, data, condition):
     >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, "field3 = value1")
     "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;"
     """
-    # Build SET clause from data dictionary
+    # Build the SET clause
     set_parts = []
     for field, value in data.items():
         # Add quotes around string values
@@ -18,7 +18,7 @@ def update(self, data, condition):
     
     set_clause = ", ".join(set_parts)
     
-    # Construct the full UPDATE statement
+    # Build the complete UPDATE statement
     sql_statement = f"UPDATE {self.table} SET {set_clause} WHERE {condition};"
     
     return sql_statement
