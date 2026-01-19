@@ -21,7 +21,7 @@ def send_to(self, recv, content, size):
     # If recv.inbox is a list, calculate total size
     if isinstance(recv.inbox, list):
         current_size = sum(email.get('size', 0) for email in recv.inbox)
-    elif isinstance(recv.inbox, dict):
+    elif isinstance(recv.inbox, dict) and recv.inbox:
         current_size = recv.inbox.get('size', 0)
     else:
         current_size = 0

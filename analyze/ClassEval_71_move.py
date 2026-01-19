@@ -53,7 +53,7 @@ def move(self, direction):
         box_new_y = new_y + dy
         box_new_x = new_x + dx
         
-        # Check if box can be pushed (destination is not wall or another box)
+        # Check if box can be pushed (destination is empty or goal)
         if self.map[box_new_y][box_new_x] == '#' or self.map[box_new_y][box_new_x] == 'X':
             return False
         

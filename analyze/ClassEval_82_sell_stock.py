@@ -29,7 +29,7 @@ def sell_stock(self, stock):
             # Update or remove the stock from portfolio
             portfolio_stock["quantity"] -= quantity
             
-            # Remove stock from portfolio if quantity becomes 0
+            # Remove the stock if quantity becomes 0
             if portfolio_stock["quantity"] == 0:
                 self.portfolio.remove(portfolio_stock)
             

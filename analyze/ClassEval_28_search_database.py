@@ -8,12 +8,15 @@ def search_database(self, table_name, name):
     >>> db.search_database('user', 'John')
     [(1, 'John', 25)]
     """
-    cursor = self.connection.cursor()
-    query = f"SELECT * FROM {table_name} WHERE name = ?"
-    cursor.execute(query, (name,))
-    results = cursor.fetchall()
-    
-    if results:
-        return results
-    else:
+    try:
+        cursor = self.connection.cursor()
+        query = f"SELECT * FROM {table_name} WHERE name = ?"
+        cursor.execute(query, (name,))
+        results = cursor.fetchall()
+        
+        if results:
+            return results
+        else:
+            return None
+    except Exception as e:
         return None

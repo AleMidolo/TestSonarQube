@@ -7,7 +7,7 @@ def kappa(testData, k):
     >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
     0.25
     """
-    # Calculate the total number of observations
+    # Calculate total number of observations
     n = sum(sum(row) for row in testData)
     
     # Calculate observed agreement (Po)
@@ -28,4 +28,4 @@ def kappa(testData, k):
     
     kappa_value = (observed_agreement - expected_agreement) / (1 - expected_agreement)
     
-    return round(kappa_value, 2)
+    return kappa_value

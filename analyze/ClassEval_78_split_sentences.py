@@ -7,29 +7,33 @@ def split_sentences(self, sentences_string):
     >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
     ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
     """
-    if not sentences_string:
-        return []
+    import re
     
-    sentences = []
-    current_sentence = []
-    words = sentences_string.split()
+    # Pattern explanation:
+    # (?<!Mr)  - Negative lookbehind: not preceded by "Mr"
+    # [.?]     - Match . or ?
+    # (?=\s|$) - Positive lookahead: followed by whitespace or end of string
     
-    for i, word in enumerate(words):
-        current_sentence.append(word)
-        
-        # Check if word ends with . or ?
-        if word.endswith('.') or word.endswith('?'):
-            # Check if it's not "Mr." (or similar titles)
-            if word.endswith('.') and word == "Mr.":
-                # Don't end sentence, continue
-                continue
-            
-            # This is the end of a sentence
-            sentences.append(' '.join(current_sentence))
-            current_sentence = []
+    # Split by . or ? followed by space, but not if preceded by "Mr"
+    sentences = re.split(r'(?<!Mr)[.?](?=\s|$)', sentences_string)
     
-    # Add any remaining words as a sentence (if they exist)
-    if current_sentence:
-        sentences.append(' '.join(current_sentence))
+    # Filter out empty strings and strip whitespace
+    result = []
+    for i, sentence in enumerate(sentences):
+        sentence = sentence.strip()
+        if sentence:
+            # Add back the punctuation (except for the last one if it's empty)
+            if i < len(sentences) - 1:
+                # Determine which punctuation was used
+                original_pos = sentences_string.find(sentence)
+                if original_pos != -1:
+                    end_pos = original_pos + len(sentence)
+                    if end_pos < len(sentences_string) and sentences_string[end_pos] in '.?':
+                        sentence += sentences_string[end_pos]
+            else:
+                # Last sentence - check if it ends with punctuation in original
+                if sentences_string.rstrip() and sentences_string.rstrip()[-1] in '.?':
+                    sentence += sentences_string.rstrip()[-1]
+            result.append(sentence)
     
-    return sentences
+    return result

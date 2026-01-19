@@ -14,7 +14,7 @@ def mismatch_in_text(self, currentPos):
         if currentPos + i >= len(self.text):
             return i
         # Check if there's a mismatch
-        if self.text[currentPos + i] != self.pattern[i]:
+        if self.pattern[i] != self.text[currentPos + i]:
             return i
     # No mismatch found, pattern matches completely
     return -1

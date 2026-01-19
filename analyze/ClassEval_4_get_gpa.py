@@ -22,7 +22,7 @@ def get_gpa(self, name):
     if len(student.courses) == 0:
         return None
     
-    total = sum(student.courses.values())
-    average = total / len(student.courses)
+    total_score = sum(student.courses.values())
+    average = total_score / len(student.courses)
     
     return float(average)

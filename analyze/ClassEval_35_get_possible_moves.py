@@ -18,7 +18,7 @@ def get_possible_moves(self, state):
         if empty_row is not None:
             break
     
-    # Check each direction
+    # Check each possible direction
     # 'up' means moving a tile up into the empty space (empty tile moves down)
     if empty_row < 2:  # Can move up if empty tile is not in the bottom row
         moves.append('up')

@@ -20,10 +20,7 @@ def skewness(data):
     if std_dev == 0:
         return 0.0
     
-    # Calculate the third moment
-    third_moment = sum((x - mean) ** 3 for x in data)
-    
-    # Apply the sample skewness formula
-    skewness = (n / ((n - 1) * (n - 2))) * (third_moment / (std_dev ** 3))
+    m3 = sum((x - mean) ** 3 for x in data) / n
+    skewness = m3 / (std_dev ** 3)
     
     return skewness

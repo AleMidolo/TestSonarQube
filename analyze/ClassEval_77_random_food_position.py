@@ -6,7 +6,7 @@ def random_food_position(self):
     import random
     
     while True:
-        # Generate random x and y coordinates
+        # Generate random x and y coordinates within the game boundaries
         new_x = random.randint(0, self.width - 1)
         new_y = random.randint(0, self.height - 1)
         new_position = (new_x, new_y)

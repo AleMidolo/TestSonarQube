@@ -13,7 +13,7 @@ def evaluate_expression(self, expression):
         # Evaluate the expression safely
         result = eval(expression)
         # Check if the result equals 24 (with floating point tolerance)
-        return abs(result - 24) < 1e-9
+        return abs(result - 24) < 1e-6
     except:
         # If evaluation fails (invalid expression), return False
         return False

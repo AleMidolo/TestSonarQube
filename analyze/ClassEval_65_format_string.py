@@ -7,6 +7,15 @@ def format_string(self, x):
     >>> formatter.format_string("123456")
     "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
     """
+    # Handle edge cases
+    if not x or x == "0":
+        return "ZERO ONLY"
+    
+    # Remove leading zeros
+    x = x.lstrip("0")
+    if not x:
+        return "ZERO ONLY"
+    
     # Define word mappings
     ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
     teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
@@ -14,7 +23,7 @@ def format_string(self, x):
     tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
     def convert_below_thousand(num):
-        """Convert numbers below 1000 to words"""
+        """Convert a number below 1000 to words"""
         if num == 0:
             return ""
         elif num < 10:
@@ -33,29 +42,41 @@ def format_string(self, x):
                 result += " AND " + convert_below_thousand(remainder)
             return result
     
-    # Handle zero case
-    num = int(x)
-    if num == 0:
-        return "ZERO ONLY"
+    # Split number into groups of three from right
+    num_int = int(x)
     
-    # Break number into groups
-    billion = num // 1000000000
-    million = (num % 1000000000) // 1000000
-    thousand = (num % 1000000) // 1000
-    remainder = num % 1000
-    
-    result = []
-    
-    if billion > 0:
-        result.append(convert_below_thousand(billion) + " BILLION")
-    
-    if million > 0:
-        result.append(convert_below_thousand(million) + " MILLION")
-    
-    if thousand > 0:
-        result.append(convert_below_thousand(thousand) + " THOUSAND")
-    
-    if remainder > 0:
-        result.append(convert_below_thousand(remainder))
-    
-    return " ".join(result) + " ONLY"
+    if num_int < 1000:
+        return convert_below_thousand(num_int) + " ONLY"
+    elif num_int < 1000000:
+        thousands = num_int // 1000
+        remainder = num_int % 1000
+        result = convert_below_thousand(thousands) + " THOUSAND"
+        if remainder != 0:
+            result += " " + convert_below_thousand(remainder)
+        return result + " ONLY"
+    elif num_int < 1000000000:
+        millions = num_int // 1000000
+        remainder = num_int % 1000000
+        result = convert_below_thousand(millions) + " MILLION"
+        if remainder >= 1000:
+            thousands = remainder // 1000
+            result += " " + convert_below_thousand(thousands) + " THOUSAND"
+            remainder = remainder % 1000
+        if remainder != 0:
+            result += " " + convert_below_thousand(remainder)
+        return result + " ONLY"
+    else:
+        billions = num_int // 1000000000
+        remainder = num_int % 1000000000
+        result = convert_below_thousand(billions) + " BILLION"
+        if remainder >= 1000000:
+            millions = remainder // 1000000
+            result += " " + convert_below_thousand(millions) + " MILLION"
+            remainder = remainder % 1000000
+        if remainder >= 1000:
+            thousands = remainder // 1000
+            result += " " + convert_below_thousand(thousands) + " THOUSAND"
+            remainder = remainder % 1000
+        if remainder != 0:
+            result += " " + convert_below_thousand(remainder)
+        return result + " ONLY"

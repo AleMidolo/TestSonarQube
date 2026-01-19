@@ -49,5 +49,5 @@ def process_csv_data(self, N, save_file_name):
             writer.writerows(new_data)
         
         return 1
-    except:
+    except Exception:
         return 0

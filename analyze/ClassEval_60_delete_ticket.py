@@ -7,4 +7,3 @@ def delete_ticket(self, ticket_id):
     cursor = self.connection.cursor()
     cursor.execute("DELETE FROM tickets WHERE id = ?", (ticket_id,))
     self.connection.commit()
-    cursor.close()

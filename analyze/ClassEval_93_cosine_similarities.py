@@ -1,5 +1,3 @@
-import numpy as np
-
 @staticmethod
 def cosine_similarities(vector_1, vectors_all):
     """
@@ -12,6 +10,8 @@ def cosine_similarities(vector_1, vectors_all):
     >>> VectorUtil.cosine_similarities(vector1, vectors_all)
     [0.97463185 0.95941195]
     """
+    import numpy as np
+    
     # Convert list to numpy array if needed
     if isinstance(vectors_all, list):
         vectors_all = np.array(vectors_all)

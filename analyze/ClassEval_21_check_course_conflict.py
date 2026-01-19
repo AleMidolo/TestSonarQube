@@ -21,9 +21,8 @@ def check_course_conflict(self, new_course):
         existing_start = time_to_minutes(course['start_time'])
         existing_end = time_to_minutes(course['end_time'])
         
-        # Check if there's any overlap (including same boundary times)
-        # Conflict occurs if:
-        # - new course starts before existing ends AND new course ends after existing starts
+        # Check if there's any overlap (including boundary times)
+        # Conflict occurs if: new course starts before existing ends AND new course ends after existing starts
         if new_start < existing_end and new_end > existing_start:
             return False
     

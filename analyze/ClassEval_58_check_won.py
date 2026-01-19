@@ -14,5 +14,6 @@ def check_won(self, map):
             if map[i][j] == '-':
                 # Check if the corresponding cell in minesweeper_map is a mine
                 if self.minesweeper_map[i][j] != 'X':
+                    # There's an unrevealed cell that's not a mine
                     return False
     return True

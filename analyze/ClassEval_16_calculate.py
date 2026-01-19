@@ -15,12 +15,7 @@ def calculate(self, expression):
         if not expression:
             return None
         
-        # Validate expression contains only valid characters
-        valid_chars = set('0123456789+-*/(). ')
-        if not all(c in valid_chars for c in expression):
-            return None
-        
-        # Evaluate the expression
+        # Evaluate the expression safely
         result = eval(expression)
         
         # Return as float

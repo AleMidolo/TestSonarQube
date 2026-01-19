@@ -11,11 +11,7 @@ def LargeOrderPromo(order):
     0.0
 
     """
-    # Count the number of different products in the order
-    distinct_products = len(order.cart)
-    
-    # If there are 10 or more different products, apply 7% discount
-    if distinct_products >= 10:
+    distinct_items = len(order.cart)
+    if distinct_items >= 10:
         return order.total() * 0.07
-    
     return 0.0

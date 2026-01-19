@@ -25,5 +25,5 @@ def switch_song(self):
         else:
             return False
     except ValueError:
-        # current_song is not in the playlist
+        # current_song is not in playlist
         return False

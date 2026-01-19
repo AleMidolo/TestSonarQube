@@ -19,8 +19,8 @@ def add_movie(self, name, price, start_time, end_time, n):
     movie = {
         'name': name,
         'price': price,
-        'start_time': datetime.strptime(start_time, '%H:%M').replace(year=1900, month=1, day=1),
-        'end_time': datetime.strptime(end_time, '%H:%M').replace(year=1900, month=1, day=1),
+        'start_time': datetime.strptime(start_time, '%H:%M'),
+        'end_time': datetime.strptime(end_time, '%H:%M'),
         'seats': np.zeros((n, n))
     }
     self.movies.append(movie)

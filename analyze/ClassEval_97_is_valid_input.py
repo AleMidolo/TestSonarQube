@@ -7,9 +7,6 @@ def is_valid_input(self, textnum):
     >>> w2n.is_valid_input("thirty-two")
     False
     """
-    if not textnum or not isinstance(textnum, str):
-        return False
-    
     # Define valid number words
     valid_words = {
         'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
@@ -19,15 +16,18 @@ def is_valid_input(self, textnum):
         'billion', 'trillion', 'and', 'point'
     }
     
-    # Clean and split the input
+    # Clean and normalize the input
     textnum = textnum.lower().strip()
     
-    # Split by spaces and hyphens
-    words = textnum.replace('-', ' ').split()
+    # Replace hyphens with spaces to split hyphenated words
+    textnum = textnum.replace('-', ' ')
+    
+    # Split into words
+    words = textnum.split()
     
     # Check if all words are valid
     for word in words:
-        if word not in valid_words:
+        if word and word not in valid_words:
             return False
     
     return True

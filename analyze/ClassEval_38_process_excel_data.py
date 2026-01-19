@@ -13,14 +13,14 @@ def process_excel_data(self, N, save_file_name):
     if data is None or len(data) == 0:
         return (0, save_file_name)
     
-    # Process the specified column (N is 1-indexed)
-    # Convert column N to uppercase
+    # Convert the specified column (N) to uppercase
+    # N is 1-indexed, so we need to use N-1 for 0-indexed list
     for row in data:
         if len(row) >= N and row[N-1] is not None:
-            if isinstance(row[N-1], str):
-                row[N-1] = row[N-1].upper()
+            # Convert to string and then to uppercase
+            row[N-1] = str(row[N-1]).upper()
     
-    # Write the processed data to the save file
+    # Write the modified data to the Excel file
     result = self.write_excel(data, save_file_name)
     
     return (result, save_file_name)

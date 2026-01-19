@@ -8,12 +8,6 @@ def octal_to_decimal(octal_num):
     42423
     """
     decimal = 0
-    power = 0
-    
-    # Process digits from right to left
-    for i in range(len(octal_num) - 1, -1, -1):
-        digit = int(octal_num[i])
-        decimal += digit * (8 ** power)
-        power += 1
-    
+    for i, digit in enumerate(reversed(octal_num)):
+        decimal += int(digit) * (8 ** i)
     return decimal
