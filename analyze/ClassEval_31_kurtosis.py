@@ -4,7 +4,7 @@ def kurtosis(data):
         Calculate the kurtosis of a set of data.
         :param data: The input data list, list.
         :return: The kurtosis, float.
-        >>> DataStatistics4.kurtosis([1, 20, 100])
+        >>> DataStatistics4.kurtosis([1, 20,100])
         -1.5000000000000007
         """
     n = len(data)
