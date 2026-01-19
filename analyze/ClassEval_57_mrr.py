@@ -22,11 +22,16 @@ def mrr(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
+        first_correct_idx = None
         for i, val in enumerate(sub_list):
             if val == 1:
-                mrr_val = 1.0 / (i + 1)
-                return (mrr_val, [mrr_val])
-        return (0.0, [0.0])
+                first_correct_idx = i
+                break
+        if first_correct_idx is None:
+            mrr_val = 0.0
+        else:
+            mrr_val = 1.0 / (first_correct_idx + 1)
+        return (mrr_val, [mrr_val])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
@@ -34,10 +39,14 @@ def mrr(data):
             if total_num == 0:
                 mrr_val = 0.0
             else:
-                mrr_val = 0.0
+                first_correct_idx = None
                 for i, val in enumerate(sub_list):
                     if val == 1:
-                        mrr_val = 1.0 / (i + 1)
+                        first_correct_idx = i
                         break
+                if first_correct_idx is None:
+                    mrr_val = 0.0
+                else:
+                    mrr_val = 1.0 / (first_correct_idx + 1)
             separate_result.append(mrr_val)
         return (np.mean(separate_result), separate_result)

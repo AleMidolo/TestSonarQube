@@ -12,13 +12,13 @@ def n_similarity(vector_list_1, vector_list_2):
         """
     if not vector_list_1 or not vector_list_2:
         return np.array([0.0])
-    v1 = np.array(vector_list_1)
-    v2 = np.array(vector_list_2)
-    avg_v1 = np.mean(v1, axis=0)
-    avg_v2 = np.mean(v2, axis=0)
-    norm1 = np.linalg.norm(avg_v1)
-    norm2 = np.linalg.norm(avg_v2)
-    if norm1 == 0 or norm2 == 0:
+    vectors_1 = np.array(vector_list_1)
+    vectors_2 = np.array(vector_list_2)
+    mean_1 = np.mean(vectors_1, axis=0)
+    mean_2 = np.mean(vectors_2, axis=0)
+    norm_1 = np.linalg.norm(mean_1)
+    norm_2 = np.linalg.norm(mean_2)
+    if norm_1 == 0 or norm_2 == 0:
         return np.array([0.0])
-    similarity = np.dot(avg_v1, avg_v2) / (norm1 * norm2)
+    similarity = np.dot(mean_1, mean_2) / (norm_1 * norm_2)
     return similarity

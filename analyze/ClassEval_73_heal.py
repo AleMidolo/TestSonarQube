@@ -6,6 +6,5 @@ def heal(self):
         >>> player_1.heal()
         100
         """
-    max_hp = 100
-    self.hp = min(self.hp + 10, max_hp)
+    self.hp = min(self.hp + 10, 100)
     return self.hp

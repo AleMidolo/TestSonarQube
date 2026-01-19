@@ -10,5 +10,19 @@ def transform(expression):
 
         """
     expression = re.sub('\\s+', '', expression)
-    expression = re.sub('(?<=^|[\\+\\-\\*\\/\\(])\\-', '~', expression)
-    return expression
+    transformed = []
+    i = 0
+    length = len(expression)
+    while i < length:
+        c = expression[i]
+        if c == '-':
+            if i == 0:
+                transformed.append('~')
+            elif expression[i - 1] in '+-*/(%':
+                transformed.append('~')
+            else:
+                transformed.append(c)
+        else:
+            transformed.append(c)
+        i += 1
+    return ''.join(transformed)

@@ -29,10 +29,9 @@ def map(data):
             precisions = []
             for k in range(1, len(sub_list) + 1):
                 relevant_at_k = np.sum(sub_list[:k])
-                if relevant_at_k > 0:
-                    precision_at_k = relevant_at_k / k
-                    if sub_list[k - 1] == 1:
-                        precisions.append(precision_at_k)
+                precision_at_k = relevant_at_k / k
+                if sub_list[k - 1] == 1:
+                    precisions.append(precision_at_k)
             if len(precisions) > 0:
                 ap = np.mean(precisions)
             else:
@@ -52,10 +51,9 @@ def map(data):
                     precisions = []
                     for k in range(1, len(sub_list) + 1):
                         relevant_at_k = np.sum(sub_list[:k])
-                        if relevant_at_k > 0:
-                            precision_at_k = relevant_at_k / k
-                            if sub_list[k - 1] == 1:
-                                precisions.append(precision_at_k)
+                        precision_at_k = relevant_at_k / k
+                        if sub_list[k - 1] == 1:
+                            precisions.append(precision_at_k)
                     if len(precisions) > 0:
                         ap = np.mean(precisions)
                     else:

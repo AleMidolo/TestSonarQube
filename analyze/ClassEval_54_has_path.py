@@ -18,32 +18,22 @@ def has_path(self, pos1, pos2):
     start_x, start_y = pos1
     end_x, end_y = pos2
     for dx, dy in directions:
-        nx, ny = (start_x + dx, start_y + dy)
-        if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-            if (nx, ny) == (end_x, end_y):
-                return True
-            if self.board[nx][ny] == ' ':
-                queue.append((nx, ny, 0, (dx, dy)))
-                visited.add((nx, ny, 0, (dx, dy)))
+        queue.append((start_x, start_y, 0, (dx, dy)))
+        visited.add((start_x, start_y, 0, (dx, dy)))
     while queue:
         x, y, turns, direction = queue.popleft()
-        if turns > 2:
-            continue
-        nx, ny = (x + direction[0], y + direction[1])
-        if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-            if (nx, ny) == (end_x, end_y):
-                return True
-            if self.board[nx][ny] == ' ' and (nx, ny, turns, direction) not in visited:
-                queue.append((nx, ny, turns, direction))
-                visited.add((nx, ny, turns, direction))
+        if (x, y) == (end_x, end_y):
+            return True
         for dx, dy in directions:
-            if (dx, dy) == direction or (dx, dy) == (-direction[0], -direction[1]):
-                continue
-            nx, ny = (x + dx, y + dy)
-            if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-                if (nx, ny) == (end_x, end_y):
-                    return True
-                if self.board[nx][ny] == ' ' and (nx, ny, turns + 1, (dx, dy)) not in visited:
-                    queue.append((nx, ny, turns + 1, (dx, dy)))
-                    visited.add((nx, ny, turns + 1, (dx, dy)))
+            new_x, new_y = (x + dx, y + dy)
+            if 0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]:
+                if (new_x, new_y) == (end_x, end_y) or self.board[new_x][new_y] == ' ':
+                    new_turns = turns
+                    if (dx, dy) != direction:
+                        new_turns += 1
+                    if new_turns <= 2:
+                        state = (new_x, new_y, new_turns, (dx, dy))
+                        if state not in visited:
+                            visited.add(state)
+                            queue.append(state)
     return False
