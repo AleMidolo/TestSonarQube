@@ -1,7 +1,7 @@
 def bad_character_heuristic(self):
     """
-        Finds all occurrences of the pattern in the text.
-        :return: A list of all positions of the pattern in the text, list.
+        Trova tutte le occorrenze del pattern nel testo.
+        :return: Una lista di tutte le posizioni del modello nel testo, lista.
         >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
         >>> boyerMooreSearch.bad_character_heuristic()
         [0, 3]

@@ -10,10 +10,9 @@ def n_similarity(vector_list_1, vector_list_2):
         >>> VectorUtil.n_similarity(vector_list1, vector_list2)
         0.9897287473881233
         """
-    if len(vector_list_1) != len(vector_list_2):
-        raise ValueError('Both vector lists must have the same length.')
     similarities = []
-    for vec1, vec2 in zip(vector_list_1, vector_list_2):
-        sim = VectorUtil.similarity(vec1, vec2)
-        similarities.append(sim)
+    for vec1 in vector_list_1:
+        for vec2 in vector_list_2:
+            sim = VectorUtil.similarity(vec1, vec2)
+            similarities.append(sim)
     return np.mean(similarities)

@@ -8,4 +8,12 @@ def cos(self, x):
         0.5
         """
     x = x / 180 * pi
-    return round(self.taylor(x * 180 / pi, 50), 10)
+    a = 1
+    count = 1
+    for k in range(1, 50):
+        if count % 2 != 0:
+            a -= x ** (2 * k) / self.factorial(2 * k)
+        else:
+            a += x ** (2 * k) / self.factorial(2 * k)
+        count += 1
+    return round(a, 10)
