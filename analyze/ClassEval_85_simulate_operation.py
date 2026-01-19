@@ -20,7 +20,7 @@ def simulate_operation(self):
         elif self.mode == 'cool':
             # कूलिंग मोड में तापमान घटाएं
             self.current_temp -= 1
-        # यदि mode 'off' है तो कुछ नहीं होगा
+        # 'off' मोड में कुछ नहीं होता
         
         time += 1
     

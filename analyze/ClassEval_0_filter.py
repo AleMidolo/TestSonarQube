@@ -11,7 +11,7 @@ def filter(self, request):
     if not request or not isinstance(request, dict):
         return False
     
-    # अनुमत पथ और विधियों की सूची
+    # अनुमत पथ और विधियाँ
     allowed_paths = ['/login', '/register', '/public', '/health']
     allowed_methods = ['GET', 'POST', 'PUT', 'DELETE']
     
@@ -22,11 +22,11 @@ def filter(self, request):
     if path in allowed_paths and method in allowed_methods:
         return True
     
-    # सार्वजनिक संसाधनों के लिए
+    # सार्वजनिक संसाधनों की जाँच
     if path.startswith('/public'):
         return True
     
-    # स्वास्थ्य जांच के लिए
+    # स्वास्थ्य जाँच एंडपॉइंट
     if path == '/health' and method == 'GET':
         return True
     
