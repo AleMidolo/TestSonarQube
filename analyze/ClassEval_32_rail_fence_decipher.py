@@ -17,7 +17,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
     for i in range(len(encrypted_text)):
         if row == 0:
             dir_down = True
-        elif row == rails - 1:
+        if row == rails - 1:
             dir_down = False
         rail[row][col] = '*'
         col += 1
@@ -36,7 +36,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
     for i in range(len(encrypted_text)):
         if row == 0:
             dir_down = True
-        elif row == rails - 1:
+        if row == rails - 1:
             dir_down = False
         if rail[row][col] != '':
             result.append(rail[row][col])

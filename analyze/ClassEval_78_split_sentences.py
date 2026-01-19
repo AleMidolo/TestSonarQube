@@ -7,17 +7,23 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)\\.\\s+|\\?\\s+'
+    if not sentences_string:
+        return []
+    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bMs)(?<!\\bDr)(?<!\\bProf)(?<!\\bSr)(?<!\\bJr)\\.\\s+|\\?\\s+'
     parts = re.split(pattern, sentences_string)
     sentences = []
-    for i, part in enumerate(parts):
-        if i < len(parts) - 1:
-            match = re.search(pattern, sentences_string)
-            if match:
-                delimiter = match.group(0).strip()
-                sentences.append(part + delimiter)
-                sentences_string = sentences_string[len(part + match.group(0)):]
-        elif part and (part.endswith('.') or part.endswith('?')):
-            sentences.append(part)
+    for i in range(len(parts) - 1):
+        delimiter_match = re.search(pattern, sentences_string)
+        if delimiter_match:
+            if '.' in delimiter_match.group():
+                sentences.append(parts[i] + '.')
+            else:
+                sentences.append(parts[i] + '?')
+            sentences_string = sentences_string[len(parts[i]) + len(delimiter_match.group()):]
+    if parts[-1]:
+        if parts[-1].endswith('.') or parts[-1].endswith('?'):
+            sentences.append(parts[-1])
+        else:
+            pass
     sentences = [s.strip() for s in sentences if s.strip()]
     return sentences

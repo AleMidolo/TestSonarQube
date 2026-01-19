@@ -9,22 +9,27 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    transformed_expression = self.transform(expression)
-    self.prepare(transformed_expression)
+    transformed_expr = self.transform(expression)
+    self.prepare(transformed_expr)
     calc_stack = deque()
     for token in self.postfix_stack:
-        if not self.is_operator(token):
-            if token.startswith('~'):
-                calc_stack.append(str(-Decimal(token[1:])))
+        if self.is_operator(token):
+            if token == '~':
+                if not calc_stack:
+                    raise ValueError('Invalid expression: unary minus without operand')
+                operand = calc_stack.pop()
+                result = Decimal(0) - Decimal(operand)
+                calc_stack.append(str(result))
             else:
-                calc_stack.append(token)
-        elif token in {'+', '-', '*', '\\/', '%'}:
-            if len(calc_stack) < 2:
-                raise ValueError("Invalid expression: insufficient operands for operator '{}'".format(token))
-            second_value = calc_stack.pop()
-            first_value = calc_stack.pop()
-            result = self._calculate(first_value, second_value, token)
-            calc_stack.append(str(result))
+                if len(calc_stack) < 2:
+                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
+                second = calc_stack.pop()
+                first = calc_stack.pop()
+                result = self._calculate(first, second, token)
+                calc_stack.append(str(result))
+        else:
+            calc_stack.append(token)
     if len(calc_stack) != 1:
-        raise ValueError('Invalid expression: malformed postfix notation')
-    return float(Decimal(calc_stack.pop()))
+        raise ValueError('Invalid expression: too many operands or operators')
+    result_decimal = Decimal(calc_stack.pop())
+    return float(result_decimal)
