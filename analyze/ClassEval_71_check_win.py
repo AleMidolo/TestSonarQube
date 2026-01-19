@@ -6,12 +6,6 @@ def check_win(self):
     >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
     >>> game.check_win()
     """
-    # Verifica se tutte le posizioni target hanno una scatola
-    for target_pos in self.targets:
-        if target_pos not in self.boxes:
-            self.is_game_over = False
-            return self.is_game_over
-    
-    # Se tutte le scatole sono sulle posizioni target
-    self.is_game_over = True
+    # Verifica se tutte le posizioni delle scatole coincidono con le posizioni target
+    self.is_game_over = set(self.boxes) == set(self.targets)
     return self.is_game_over

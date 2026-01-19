@@ -13,16 +13,16 @@ def get(self, index):
     num_partitions = self.num_partitions
     
     # Calcola la dimensione base di ogni blocco e il resto
-    base_size = total_length // num_partitions
+    block_size = total_length // num_partitions
     remainder = total_length % num_partitions
     
-    # Le prime 'remainder' partizioni avranno dimensione base_size + 1
-    # Le restanti avranno dimensione base_size
+    # Le prime 'remainder' partizioni avranno dimensione block_size + 1
+    # Le restanti avranno dimensione block_size
     if index < remainder:
-        start = index * (base_size + 1)
-        end = start + base_size + 1
+        start = index * (block_size + 1)
+        end = start + block_size + 1
     else:
-        start = remainder * (base_size + 1) + (index - remainder) * base_size
-        end = start + base_size
+        start = remainder * (block_size + 1) + (index - remainder) * block_size
+        end = start + block_size
     
     return self.data[start:end]

@@ -21,16 +21,19 @@ def generate_mine_sweeper_map(self):
         grid[row][col] = 'X'
     
     # Calculate numbers for non-mine cells
-    directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
-    
     for i in range(self.n):
         for j in range(self.n):
             if grid[i][j] != 'X':
-                mine_count = 0
-                for di, dj in directions:
-                    ni, nj = i + di, j + dj
-                    if 0 <= ni < self.n and 0 <= nj < self.n and grid[ni][nj] == 'X':
-                        mine_count += 1
-                grid[i][j] = mine_count
+                # Count adjacent mines
+                count = 0
+                for di in [-1, 0, 1]:
+                    for dj in [-1, 0, 1]:
+                        if di == 0 and dj == 0:
+                            continue
+                        ni, nj = i + di, j + dj
+                        if 0 <= ni < self.n and 0 <= nj < self.n:
+                            if grid[ni][nj] == 'X':
+                                count += 1
+                grid[i][j] = count
     
     return grid

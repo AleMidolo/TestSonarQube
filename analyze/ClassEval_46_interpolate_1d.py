@@ -25,6 +25,7 @@ def interpolate_1d(x, y, x_interp):
             for i in range(len(x) - 1):
                 if x[i] <= xi <= x[i + 1]:
                     # Linear interpolation formula
+                    # y = y0 + (y1 - y0) * (x - x0) / (x1 - x0)
                     x0, x1 = x[i], x[i + 1]
                     y0, y1 = y[i], y[i + 1]
                     yi = y0 + (y1 - y0) * (xi - x0) / (x1 - x0)

@@ -9,11 +9,11 @@ def insert(self, data):
     if not data:
         return ""
     
-    # Estrai le chiavi (nomi dei campi) e i valori
+    # Extract column names and values
     columns = ', '.join(data.keys())
     values = ', '.join(f"'{value}'" for value in data.values())
     
-    # Genera l'istruzione SQL INSERT
-    sql_statement = f"INSERT INTO {self.table} ({columns}) VALUES ({values});"
+    # Generate the INSERT statement
+    sql_statement = f"INSERT INTO {self.table_name} ({columns}) VALUES ({values});"
     
     return sql_statement

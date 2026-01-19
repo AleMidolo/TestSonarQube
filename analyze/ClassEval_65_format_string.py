@@ -66,6 +66,4 @@ def format_string(self, x):
         risultato.append(converti_centinaia(resto))
     
     # Aggiungi "SOLO" alla fine
-    risultato.append("SOLO")
-    
-    return " ".join(risultato)
+    return " ".join(risultato) + " SOLO"

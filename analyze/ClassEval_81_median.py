@@ -12,8 +12,8 @@ def median(data):
     n = len(sorted_data)
     
     if n % 2 == 0:
-        # Se la lunghezza è pari, la mediana è la media dei due valori centrali
+        # Se la lista ha un numero pari di elementi, la mediana è la media dei due elementi centrali
         return (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2.0
     else:
-        # Se la lunghezza è dispari, la mediana è il valore centrale
+        # Se la lista ha un numero dispari di elementi, la mediana è l'elemento centrale
         return float(sorted_data[n // 2])

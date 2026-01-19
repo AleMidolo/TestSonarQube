@@ -12,28 +12,28 @@ def mrr(data):
     1.0, [1.0]
     0.75, [1.0, 0.5]
     """
-    def calculate_single_rr(results, ground_truth_count):
+    def calculate_single_mrr(results, ground_truth_count):
         # Find the rank of the first correct answer (1)
         for i, result in enumerate(results):
             if result == 1:
-                # Rank is 1-indexed, so position 0 has rank 1
+                # Rank is 1-indexed, so position i has rank i+1
                 return 1.0 / (i + 1)
-        # If no correct answer found, reciprocal rank is 0
+        # If no correct answer found, return 0
         return 0.0
     
     # Check if data is a single tuple or a list of tuples
     if isinstance(data, tuple):
         # Single tuple case
         results, ground_truth_count = data
-        rr = calculate_single_rr(results, ground_truth_count)
-        return rr, [rr]
+        mrr_value = calculate_single_mrr(results, ground_truth_count)
+        return mrr_value, [mrr_value]
     else:
         # List of tuples case
-        rr_list = []
+        mrr_values = []
         for results, ground_truth_count in data:
-            rr = calculate_single_rr(results, ground_truth_count)
-            rr_list.append(rr)
+            mrr_value = calculate_single_mrr(results, ground_truth_count)
+            mrr_values.append(mrr_value)
         
-        # Calculate mean reciprocal rank
-        mean_rr = sum(rr_list) / len(rr_list) if rr_list else 0.0
-        return mean_rr, rr_list
+        # Calculate mean MRR
+        mean_mrr = sum(mrr_values) / len(mrr_values) if mrr_values else 0.0
+        return mean_mrr, mrr_values

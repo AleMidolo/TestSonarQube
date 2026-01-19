@@ -8,7 +8,7 @@ def interpret(self, display=False):
     [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
 
     """
-    # Check if input is empty or contains only whitespace
+    # Check if the input is empty or contains only whitespace
     if not hasattr(self, 'score') or not self.score or self.score.strip() == '':
         return []
     
@@ -31,7 +31,7 @@ def interpret(self, display=False):
             elif char.isdigit():
                 tune += char
         
-        # Only add if we have both chord and tune
+        # Only add to playlist if both chord and tune exist
         if chord and tune:
             play_list.append({'Chord': chord, 'Tune': tune})
     

@@ -23,35 +23,47 @@ def multiply(num1, num2):
         negative = not negative
         num2 = num2[1:]
     
-    # Initialize result array
-    len1, len2 = len(num1), len(num2)
-    result = [0] * (len1 + len2)
-    
-    # Reverse the strings for easier processing (least significant digit first)
+    # Reverse strings for easier manipulation (least significant digit first)
     num1 = num1[::-1]
     num2 = num2[::-1]
     
+    # Initialize result array
+    result = [0] * (len(num1) + len(num2))
+    
     # Multiply each digit of num1 with each digit of num2
-    for i in range(len1):
-        for j in range(len2):
+    for i in range(len(num1)):
+        for j in range(len(num2)):
             digit1 = int(num1[i])
             digit2 = int(num2[j])
-            result[i + j] += digit1 * digit2
+            
+            # Multiply digits and add to appropriate position
+            product = digit1 * digit2
+            result[i + j] += product
             
             # Handle carry
-            result[i + j + 1] += result[i + j] // 10
+            carry = result[i + j] // 10
             result[i + j] %= 10
+            
+            # Propagate carry
+            k = i + j + 1
+            while carry > 0:
+                result[k] += carry
+                carry = result[k] // 10
+                result[k] %= 10
+                k += 1
     
-    # Convert result array to string
-    # Remove leading zeros
-    while len(result) > 1 and result[-1] == 0:
-        result.pop()
-    
-    # Reverse to get the correct order
+    # Convert result array to string (reverse back)
     result_str = ''.join(map(str, result[::-1]))
     
+    # Remove leading zeros
+    result_str = result_str.lstrip('0')
+    
+    # Handle case where result is 0
+    if not result_str:
+        result_str = "0"
+    
     # Add negative sign if needed
-    if negative:
+    if negative and result_str != "0":
         result_str = '-' + result_str
     
     return result_str

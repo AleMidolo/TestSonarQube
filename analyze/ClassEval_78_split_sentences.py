@@ -9,27 +9,25 @@ def split_sentences(self, sentences_string):
     """
     import re
     
-    # Pattern che identifica . o ? seguiti da uno spazio (ma non Mr.)
-    # Usa lookahead negativo per evitare di splittare su "Mr."
+    # Pattern che identifica . o ? seguiti da uno spazio, ma non Mr.
+    # Usa lookahead negativo per escludere Mr.
     pattern = r'(?<!Mr)([.?])\s+'
     
-    # Split mantenendo i delimitatori
+    # Dividi la stringa usando il pattern
     parts = re.split(pattern, sentences_string)
     
-    # Ricostruisce le frasi combinando il testo con i delimitatori
+    # Ricostruisci le frasi combinando il testo con i delimitatori
     sentences = []
     i = 0
     while i < len(parts):
-        if parts[i]:  # Salta stringhe vuote
-            if i + 1 < len(parts) and parts[i + 1] in '.?':
-                # Combina il testo con il suo delimitatore
-                sentences.append(parts[i] + parts[i + 1])
-                i += 2
-            else:
-                # Ultima frase senza spazio finale
-                sentences.append(parts[i])
-                i += 1
+        if i + 1 < len(parts) and parts[i + 1] in '.?':
+            # Combina il testo con il suo delimitatore
+            sentences.append(parts[i] + parts[i + 1])
+            i += 2
         else:
+            # Ultimo elemento senza delimitatore o testo rimanente
+            if parts[i].strip():
+                sentences.append(parts[i].strip())
             i += 1
     
     return sentences

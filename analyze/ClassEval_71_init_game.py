@@ -13,15 +13,15 @@ def init_game(self):
     """
     self.targets = []
     self.boxes = []
-    self.player_row = None
-    self.player_col = None
+    self.player_row = 0
+    self.player_col = 0
     
     for row_idx, row in enumerate(self.map):
         for col_idx, cell in enumerate(row):
-            if cell == 'O':  # Player position
+            if cell == 'O':  # Player
                 self.player_row = row_idx
                 self.player_col = col_idx
-            elif cell == 'X':  # Box position
+            elif cell == 'X':  # Box
                 self.boxes.append((row_idx, col_idx))
-            elif cell == 'G':  # Target/Goal position
+            elif cell == 'G':  # Goal/Target
                 self.targets.append((row_idx, col_idx))

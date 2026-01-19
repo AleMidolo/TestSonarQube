@@ -16,15 +16,16 @@ def process_xml_data(self, file_name):
         tree = ET.parse(self.file_name)
         root = tree.getroot()
         
-        # Modifica i dati negli elementi XML
+        # Processa/modifica i dati XML
         # (Esempio generico di modifica - può essere personalizzato)
         for element in root.iter():
             if element.text and element.text.strip():
-                # Esempio: aggiungi un prefisso o modifica il testo
+                # Esempio: modifica il testo degli elementi
                 element.text = element.text.strip()
         
         # Scrivi i dati XML modificati nel nuovo file
         tree.write(file_name, encoding='utf-8', xml_declaration=True)
+        
         return True
     except Exception as e:
         return False

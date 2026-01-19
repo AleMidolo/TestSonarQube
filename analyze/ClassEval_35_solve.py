@@ -8,15 +8,15 @@ def solve(self):
     """
     from collections import deque
     
-    # Coda per BFS - ogni elemento è una tupla (stato, percorso)
+    # Coda per BFS: ogni elemento è una tupla (stato, percorso)
     open_list = deque([(self.state, [])])
     
     # Set per tenere traccia degli stati visitati
     visited = set()
-    visited.add(str(self.state))
+    visited.add(tuple(map(tuple, self.state)))
     
     while open_list:
-        # Estrae l'elemento in posizione 0 (FIFO per BFS)
+        # Estrae l'elemento in posizione 0
         current_state, path = open_list.popleft()
         
         # Salva lo stato corrente
@@ -32,15 +32,18 @@ def solve(self):
         possible_moves = self.get_possible_moves()
         
         # Per ogni mossa possibile
-        for direction in possible_moves:
+        for move_direction in possible_moves:
             # Genera il nuovo stato
-            new_state = self.move(direction)
+            new_state = self.move(move_direction)
             
-            # Se il nuovo stato non è stato visitato
-            if new_state is not None and str(new_state) not in visited:
-                visited.add(str(new_state))
-                # Aggiunge alla coda con il percorso aggiornato
-                open_list.append((new_state, path + [direction]))
+            # Converte lo stato in tupla per poterlo aggiungere al set
+            state_tuple = tuple(map(tuple, new_state))
+            
+            # Se non è stato visitato, aggiungilo alla coda
+            if state_tuple not in visited:
+                visited.add(state_tuple)
+                new_path = path + [move_direction]
+                open_list.append((new_state, new_path))
         
         # Ripristina lo stato originale
         self.state = original_state

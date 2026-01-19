@@ -8,29 +8,27 @@ def get_correlation(self):
     """
     import math
     
-    # Assuming this is a method of a class that has data stored in self
-    # Based on the doctest, it appears to calculate correlation between
-    # the data values and their indices (or between x and y coordinates)
-    
+    # Assuming this is a method of a class that stores data
+    # and we're calculating correlation between indices and values
     data = self if isinstance(self, list) else getattr(self, 'data', [])
     
     n = len(data)
     if n == 0:
         return 0.0
     
-    # Create x values as indices (0, 1, 2, 3, ...)
-    x_values = list(range(n))
-    y_values = data
+    # Create x as indices (0, 1, 2, ..., n-1) and y as the data values
+    x = list(range(n))
+    y = data
     
     # Calculate means
-    mean_x = sum(x_values) / n
-    mean_y = sum(y_values) / n
+    mean_x = sum(x) / n
+    mean_y = sum(y) / n
     
     # Calculate correlation coefficient (Pearson)
-    numerator = sum((x_values[i] - mean_x) * (y_values[i] - mean_y) for i in range(n))
+    numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
     
-    sum_sq_x = sum((x - mean_x) ** 2 for x in x_values)
-    sum_sq_y = sum((y - mean_y) ** 2 for y in y_values)
+    sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
+    sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
     
     denominator = math.sqrt(sum_sq_x * sum_sq_y)
     

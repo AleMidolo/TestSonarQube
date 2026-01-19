@@ -18,5 +18,5 @@ def standard_deviation(data):
     # Calculate variance (sum of squared differences from mean)
     variance = sum((x - mean) ** 2 for x in data) / len(data)
     
-    # Standard deviation is the square root of variance
+    # Standard deviation is square root of variance
     return variance ** 0.5

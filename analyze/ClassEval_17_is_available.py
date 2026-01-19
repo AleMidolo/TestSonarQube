@@ -15,7 +15,7 @@ def is_available(self, start_time, end_time):
         event_end = event['end_time']
         
         # Check if there is any overlap between the requested time and the event
-        # Two intervals overlap if one starts before the other ends
+        # Overlap occurs if: start_time < event_end AND end_time > event_start
         if start_time < event_end and end_time > event_start:
             return False
     

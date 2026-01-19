@@ -7,12 +7,9 @@ def get_octets(self):
     ["10", "10", "10", "10"]
     """
     if hasattr(self, 'ip_address') and self.ip_address:
-        # Split the IP address by "." and return as list
-        octets = self.ip_address.split(".")
-        
-        # Validate that we have exactly 4 octets
+        octets = self.ip_address.split('.')
         if len(octets) == 4:
-            # Validate each octet is a valid number between 0-255
+            # Validate that each octet is a valid number between 0 and 255
             try:
                 for octet in octets:
                     num = int(octet)
@@ -21,5 +18,4 @@ def get_octets(self):
                 return octets
             except ValueError:
                 return []
-        return []
     return []

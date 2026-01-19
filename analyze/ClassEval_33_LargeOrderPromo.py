@@ -18,8 +18,6 @@ def LargeOrderPromo(order):
     if distinct_products >= 10:
         # Calcola il totale dell'ordine
         total = sum(item['quantity'] * item['price'] for item in order.cart)
-        # Restituisce il 7% del totale come sconto
         return total * 0.07
     
-    # Nessuno sconto se ci sono meno di 10 prodotti diversi
     return 0.0
