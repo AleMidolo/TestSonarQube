@@ -1,37 +1,63 @@
 def prepare(self, expression):
     """
-        准备中缀表达式以便转换为后缀表示法
-        :param expression: 字符串，要准备的中缀表达式
-        >>> expression_calculator = ExpressionCalculator()
-        >>> expression_calculator.prepare("2+3*4")
-        expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
-        """
-    op_stack = deque()
-    arr = list(expression)
-    current = ''
+    准备中缀表达式以便转换为后缀表示法
+    :param expression: 字符串，要准备的中缀表达式
+    >>> expression_calculator = ExpressionCalculator()
+    >>> expression_calculator.prepare("2+3*4")
+
+    expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
+    """
+    # 定义运算符优先级
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+    
+    # 初始化输出列表和运算符栈
+    output = []
+    operator_stack = []
+    
+    # 解析表达式，提取数字和运算符
     i = 0
-    while i < len(arr):
-        c = arr[i]
-        if not self.is_operator(c):
-            current = c
+    while i < len(expression):
+        char = expression[i]
+        
+        # 跳过空格
+        if char == ' ':
             i += 1
-            while i < len(arr) and (not self.is_operator(arr[i])):
-                current += arr[i]
-                i += 1
-            if current[0] == '.':
-                current = '0' + current
-            self.postfix_stack.append(current)
             continue
-        if c == '(':
-            op_stack.append(c)
-        elif c == ')':
-            while op_stack and op_stack[-1] != '(':
-                self.postfix_stack.append(op_stack.pop())
-            op_stack.pop()
-        else:
-            while op_stack and op_stack[-1] != '(' and self.compare(c, op_stack[-1]):
-                self.postfix_stack.append(op_stack.pop())
-            op_stack.append(c)
+        
+        # 如果是数字（包括多位数和小数）
+        if char.isdigit() or char == '.':
+            num = ''
+            while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
+                num += expression[i]
+                i += 1
+            output.append(num)
+            continue
+        
+        # 如果是左括号
+        elif char == '(':
+            operator_stack.append(char)
+        
+        # 如果是右括号
+        elif char == ')':
+            while operator_stack and operator_stack[-1] != '(':
+                output.append(operator_stack.pop())
+            if operator_stack:
+                operator_stack.pop()  # 弹出左括号
+        
+        # 如果是运算符
+        elif char in precedence:
+            while (operator_stack and 
+                   operator_stack[-1] != '(' and 
+                   operator_stack[-1] in precedence and
+                   precedence[operator_stack[-1]] >= precedence[char]):
+                output.append(operator_stack.pop())
+            operator_stack.append(char)
+        
         i += 1
-    while op_stack:
-        self.postfix_stack.append(op_stack.pop())
+    
+    # 将剩余的运算符弹出到输出列表
+    while operator_stack:
+        output.append(operator_stack.pop())
+    
+    # 将结果存储到实例变量
+    self.postfix_stack = output

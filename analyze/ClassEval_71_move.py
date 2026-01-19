@@ -1,53 +1,80 @@
 def move(self, direction):
     """
-        根据指定方向移动玩家并检查游戏是否获胜。
-        :param direction: str，玩家移动的方向。
-            它可以是 'w'、's'、'a' 或 'd'，分别表示上、下、左或右。
+    根据指定方向移动玩家并检查游戏是否获胜。
+    :param direction: str，玩家移动的方向。
+        它可以是 'w'、's'、'a' 或 'd'，分别表示上、下、左或右。
 
-        :return: 如果游戏获胜则返回 True，否则返回 False。
-        >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
-        >>> game.print_map()
-        # # # # # 
-        # O     #
-        #   X   #
-        #     G #
-        # # # # #
-        >>> game.move('d')
-        False
-        >>> game.move('s')   
-        False
-        >>> game.move('a')   
-        False
-        >>> game.move('s') 
-        False
-        >>> game.move('d') 
-        True
-        """
-    direction_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
-    if direction not in direction_map:
+    :return: 如果游戏获胜则返回 True，否则返回 False。
+    """
+    # 定义方向映射
+    directions = {
+        'w': (-1, 0),  # 上
+        's': (1, 0),   # 下
+        'a': (0, -1),  # 左
+        'd': (0, 1)    # 右
+    }
+    
+    if direction not in directions:
         return False
-    dr, dc = direction_map[direction]
-    new_row = self.player_row + dr
-    new_col = self.player_col + dc
-    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])):
-        return False
-    if self.map[new_row][new_col] == '#':
-        return False
-    box_index = -1
-    for i, box in enumerate(self.boxes):
-        if box == (new_row, new_col):
-            box_index = i
+    
+    # 找到玩家当前位置
+    player_row, player_col = None, None
+    for i in range(len(self.map)):
+        for j in range(len(self.map[i])):
+            if self.map[i][j] == 'O':
+                player_row, player_col = i, j
+                break
+        if player_row is not None:
             break
-    if box_index != -1:
+    
+    # 计算新位置
+    dr, dc = directions[direction]
+    new_row = player_row + dr
+    new_col = player_col + dc
+    
+    # 检查新位置是否有效
+    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or new_col >= len(self.map[0]):
+        return False
+    
+    next_cell = self.map[new_row][new_col]
+    
+    # 如果是墙，不能移动
+    if next_cell == '#':
+        return False
+    
+    # 如果是空地或目标点，直接移动
+    if next_cell == ' ' or next_cell == 'G':
+        self.map[player_row] = self.map[player_row][:player_col] + ' ' + self.map[player_row][player_col + 1:]
+        self.map[new_row] = self.map[new_row][:new_col] + 'O' + self.map[new_row][new_col + 1:]
+        
+        # 检查是否获胜（玩家到达目标点）
+        if next_cell == 'G':
+            return True
+    
+    # 如果是箱子，尝试推动箱子
+    elif next_cell == 'X':
         box_new_row = new_row + dr
         box_new_col = new_col + dc
-        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or (box_new_col >= len(self.map[0])):
+        
+        # 检查箱子的新位置是否有效
+        if box_new_row < 0 or box_new_row >= len(self.map) or box_new_col < 0 or box_new_col >= len(self.map[0]):
             return False
-        if self.map[box_new_row][box_new_col] == '#':
+        
+        box_next_cell = self.map[box_new_row][box_new_col]
+        
+        # 箱子只能推到空地或目标点
+        if box_next_cell == ' ' or box_next_cell == 'G':
+            # 移动箱子
+            self.map[box_new_row] = self.map[box_new_row][:box_new_col] + 'X' + self.map[box_new_row][box_new_col + 1:]
+            # 移动玩家到箱子原来的位置
+            self.map[new_row] = self.map[new_row][:new_col] + 'O' + self.map[new_row][new_col + 1:]
+            # 清空玩家原来的位置
+            self.map[player_row] = self.map[player_row][:player_col] + ' ' + self.map[player_row][player_col + 1:]
+            
+            # 检查是否获胜（箱子到达目标点）
+            if box_next_cell == 'G':
+                return True
+        else:
             return False
-        if (box_new_row, box_new_col) in self.boxes:
-            return False
-        self.boxes[box_index] = (box_new_row, box_new_col)
-    self.player_row = new_row
-    self.player_col = new_col
-    return self.check_win()
+    
+    return False

@@ -1,19 +1,17 @@
-def filter(self, request):
-    """
-        根据某些规则和条件过滤传入的请求。
-        :param request: dict，传入请求的详细信息
-        :return: bool，如果请求被允许则返回 True，否则返回 False
-        >>> filter = AccessGatewayFilter()
-        >>> filter.filter({'path': '/login', 'method': 'POST'})
-        True
-        """
-    if self.is_start_with(request.get('path', '')):
-        return True
-    try:
-        user_info = self.get_jwt_user(request)
-        if user_info is not None:
-            self.set_current_user_info_and_log(user_info.get('user', {}))
-            return True
-    except (KeyError, ValueError, TypeError):
-        pass
-    return False
+def __init__(self):
+    """初始化访问网关过滤器，设置允许的路径和方法规则"""
+    # 定义允许的路径和方法组合
+    self.allowed_rules = {
+        '/login': ['POST', 'GET'],
+        '/register': ['POST'],
+        '/home': ['GET'],
+        '/api/data': ['GET', 'POST', 'PUT', 'DELETE'],
+        '/logout': ['POST', 'GET'],
+        '/public': ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+    }
+
+    # 定义公共路径前缀（无需验证）
+    self.public_prefixes = ['/public', '/static', '/assets']
+
+    # 定义黑名单路径
+    self.blacklist_paths = ['/admin/delete', '/system/shutdown']

@@ -1,18 +1,13 @@
 def cos(self, x):
     """
-        计算 x 度角的余弦值
-        :param x: float
-        :return: float
-        >>> tricalculator = TriCalculator()
-        >>> tricalculator.cos(60)
-        0.5
-        """
-    x = x / 180 * pi
-    g = 0
-    t = 1
-    n = 1
-    while fabs(t) >= 1e-15:
-        g += t
-        n += 1
-        t = -t * x * x / (2 * n - 1) / (2 * n - 2)
-    return round(g, 10)
+    计算 x 度角的余弦值
+    :param x: float
+    :return: float
+    >>> tricalculator = TriCalculator()
+    >>> tricalculator.cos(60)
+    0.5
+    """
+    # 将角度转换为弧度
+    radians = math.radians(x)
+    # 计算余弦值
+    return math.cos(radians)

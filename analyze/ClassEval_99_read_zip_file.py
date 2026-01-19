@@ -1,12 +1,6 @@
-def read_zip_file(self):
+def __init__(self, zip_path):
     """
-        获取打开的文件对象
-        :return: 如果成功，返回打开的文件对象；否则，返回 None
-        >>> zfp = ZipFileProcessor("aaa.zip")
-        >>> file = zfp.read_zip_file()
-        """
-    try:
-        zip_file = zipfile.ZipFile(self.file_name, 'r')
-        return zip_file
-    except:
-        return None
+    初始化 ZipFileProcessor
+    :param zip_path: zip 文件的路径
+    """
+    self.zip_path = zip_path

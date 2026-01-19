@@ -1,46 +1,38 @@
-@staticmethod
 def mrr(data):
     """
-        计算输入数据的 MRR。MRR 是一个广泛使用的评估指标。它是倒数排名的平均值。
-        :param data: 数据必须是一个元组，列表 0,1，例如（[1,0,...],5）。在每个元组中（实际结果，真实值数量），真实值数量是总的真实数量。
-         ([1,0,...],5),
-        或元组列表，例如 [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)]。
-        1 代表正确答案，0 代表错误答案。
-        :return: 如果输入数据是列表，则返回该列表的召回率。如果输入数据是列表的列表，则返回所有列表的平均召回率。第二个返回值是每个输入的精确度列表。
-        >>> MetricsCalculator2.mrr(([1, 0, 1, 0], 4))
-        >>> MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])
-        1.0, [1.0]
-        0.75, [1.0, 0.5]
-        """
-    if type(data) != list and type(data) != tuple:
-        raise Exception('the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple')
-    if len(data) == 0:
-        return (0.0, [0.0])
-    if type(data) == tuple:
-        sub_list, total_num = data
-        sub_list = np.array(sub_list)
-        if total_num == 0:
-            return (0.0, [0.0])
-        else:
-            positions = np.where(sub_list == 1)[0]
-            if len(positions) == 0:
-                mrr_value = 0.0
-            else:
-                first_correct_pos = positions[0] + 1
-                mrr_value = 1.0 / first_correct_pos
-            return (mrr_value, [mrr_value])
-    if type(data) == list:
-        separate_result = []
-        for sub_list, total_num in data:
-            sub_list = np.array(sub_list)
-            if total_num == 0:
-                mrr_value = 0.0
-            else:
-                positions = np.where(sub_list == 1)[0]
-                if len(positions) == 0:
-                    mrr_value = 0.0
-                else:
-                    first_correct_pos = positions[0] + 1
-                    mrr_value = 1.0 / first_correct_pos
-            separate_result.append(mrr_value)
-        return (np.mean(separate_result), separate_result)
+    计算输入数据的 MRR。MRR 是一个广泛使用的评估指标。它是倒数排名的平均值。
+    :param data: 数据必须是一个元组，列表 0,1，例如（[1,0,...],5）。在每个元组中（实际结果，真实值数量），真实值数量是总的真实数量。
+     ([1,0,...],5),
+    或元组列表，例如 [([1,0,1,...],5),([1,0,...],6),([0,0,...],5)]。
+    1 代表正确答案，0 代表错误答案。
+    :return: 如果输入数据是列表，则返回该列表的召回率。如果输入数据是元组的列表，则返回所有列表的平均召回率。第二个返回值是每个输入的精确度列表。
+    >>> MetricsCalculator2.mrr(([1, 0, 1, 0], 4))
+    >>> MetricsCalculator2.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])
+    1.0, [1.0]
+    0.75, [1.0, 0.5]
+    """
+    def calculate_single_mrr(result_list, total_relevant):
+        # Find the position of the first 1 (first relevant result)
+        for i, val in enumerate(result_list):
+            if val == 1:
+                # Return reciprocal rank (position is 1-indexed)
+                return 1.0 / (i + 1)
+        # If no relevant result found, return 0
+        return 0.0
+    
+    # Check if data is a single tuple or a list of tuples
+    if isinstance(data, tuple):
+        # Single query case
+        result_list, total_relevant = data
+        mrr_value = calculate_single_mrr(result_list, total_relevant)
+        return mrr_value, [mrr_value]
+    else:
+        # Multiple queries case
+        mrr_list = []
+        for result_list, total_relevant in data:
+            mrr_value = calculate_single_mrr(result_list, total_relevant)
+            mrr_list.append(mrr_value)
+        
+        # Calculate average MRR
+        avg_mrr = sum(mrr_list) / len(mrr_list) if mrr_list else 0.0
+        return avg_mrr, mrr_list

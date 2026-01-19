@@ -1,16 +1,25 @@
 def calculate_binary_info(self):
     """
-        计算二进制字符串的信息，包括0和1的百分比，以及二进制字符串的总长度。
-        >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
-        >>> bdp.calculate_binary_info()
-        {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
+    计算二进制字符串的信息，包括0和1的百分比，以及二进制字符串的总长度。
+    >>> bdp = BinaryDataProcessor("0110100001100101011011000110110001101111")
+    >>> bdp.calculate_binary_info()
+    {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
 
-        """
-    if not self.binary_string:
+    """
+    binary_str = self.binary_data
+    total_length = len(binary_str)
+    
+    if total_length == 0:
         return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
-    total_length = len(self.binary_string)
-    zero_count = self.binary_string.count('0')
-    one_count = self.binary_string.count('1')
-    zero_percentage = zero_count / total_length
-    one_percentage = one_count / total_length
-    return {'Zeroes': round(zero_percentage, 3), 'Ones': round(one_percentage, 3), 'Bit length': total_length}
+    
+    count_zeros = binary_str.count('0')
+    count_ones = binary_str.count('1')
+    
+    percentage_zeros = count_zeros / total_length
+    percentage_ones = count_ones / total_length
+    
+    return {
+        'Zeroes': percentage_zeros,
+        'Ones': percentage_ones,
+        'Bit length': total_length
+    }

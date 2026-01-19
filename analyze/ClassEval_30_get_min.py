@@ -1,9 +1,11 @@
 def get_min(self):
     """
-        计算数据中的最小值
-        :return: float
-        >>> ds2 = DataStatistics2([1, 2, 3, 4])
-        >>> ds2.get_min()
-        1
-        """
-    return np.min(self.data)
+    计算数据中的最小值
+    :return: float
+    >>> ds2 = DataStatistics2([1, 2, 3, 4])
+    >>> ds2.get_min()
+    1
+    """
+    if not self.data:
+        return None
+    return min(self.data)

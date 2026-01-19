@@ -1,16 +1,21 @@
 def check_won(self, map):
     """
-        检查玩家是否赢得了游戏，如果玩家地图上只有地雷，则返回 True，否则返回 False。
-        :return: 如果玩家赢得了游戏，则返回 True，否则返回 False。
-        >>> minesweeper_game = MinesweeperGame(3, 1)
-        >>> minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
-        >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
-        >>> minesweeper_game.check_won(minesweeper_game.player_map)
-        False
+    检查玩家是否赢得了游戏，如果玩家地图上只有地雷，则返回 True，否则返回 False。
+    :return: 如果玩家赢得了游戏，则返回 True，否则返回 False。
+    >>> minesweeper_game = MinesweeperGame(3, 1)
+    >>> minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
+    >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+    >>> minesweeper_game.check_won(minesweeper_game.player_map)
+    False
 
-        """
-    for i in range(self.n):
-        for j in range(self.n):
-            if map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
-                return False
+    """
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            # 如果玩家地图上还有未揭开的格子（'-'）
+            if map[i][j] == '-':
+                # 检查对应的扫雷地图位置是否不是地雷
+                if self.minesweeper_map[i][j] != 'X':
+                    # 如果有非地雷的格子未揭开，则游戏未赢
+                    return False
+    # 所有非地雷格子都已揭开，玩家赢得游戏
     return True

@@ -1,43 +1,50 @@
 def string_to_datetime(self, string):
     """
-        将时间字符串转换为 datetime 实例
-        :param string: 字符串, 转换格式之前的字符串
-        :return: datetime 实例
-        >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
-        2001-07-18 01:01:01
-        """
-    formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y']
+    将时间字符串转换为 datetime 实例
+    :param string: 字符串, 转换格式之前的字符串
+    :return: datetime 实例
+    >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
+    2001-07-18 01:01:01
+    """
+    from datetime import datetime
+    
+    # 尝试多种常见的日期时间格式
+    formats = [
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%Y/%m/%d %H:%M:%S",
+        "%Y/%m/%d %H:%M:%S.%f",
+        "%Y-%m-%d",
+        "%Y/%m/%d",
+    ]
+    
+    # 首先尝试标准格式
     for fmt in formats:
         try:
-            return datetime.datetime.strptime(string, fmt)
+            return datetime.strptime(string, fmt)
         except ValueError:
             continue
-    string = string.strip()
-    try:
-        if ' ' in string:
-            date_part, time_part = string.split(' ', 1)
-        else:
-            date_part = string
-            time_part = '00:00:00'
-        date_parts = date_part.replace('-', ' ').replace('/', ' ').replace('.', ' ').split()
-        year = int(date_parts[0])
-        month = int(date_parts[1])
-        day = int(date_parts[2])
-        time_parts = time_part.replace(':', ' ').split()
-        if len(time_parts) == 3:
-            hour = int(time_parts[0])
-            minute = int(time_parts[1])
-            second = int(time_parts[2])
-        elif len(time_parts) == 2:
-            hour = int(time_parts[0])
-            minute = int(time_parts[1])
-            second = 0
-        elif len(time_parts) == 1:
-            hour = int(time_parts[0])
-            minute = 0
-            second = 0
-        else:
-            hour = minute = second = 0
-        return datetime.datetime(year, month, day, hour, minute, second)
-    except (ValueError, IndexError):
-        raise ValueError(f'Unable to parse time string: {string}')
+    
+    # 如果标准格式都失败，尝试处理不规则格式（如 "2001-7-18 1:1:1"）
+    # 将单个数字的月、日、时、分、秒补零
+    import re
+    
+    # 匹配日期时间模式并规范化
+    # 处理 YYYY-M-D H:M:S 格式
+    pattern = r'(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}):(\d{1,2})(?:\.(\d+))?)?'
+    match = re.match(pattern, string.strip())
+    
+    if match:
+        year, month, day, hour, minute, second, microsecond = match.groups()
+        year = int(year)
+        month = int(month)
+        day = int(day)
+        hour = int(hour) if hour else 0
+        minute = int(minute) if minute else 0
+        second = int(second) if second else 0
+        microsecond = int(microsecond.ljust(6, '0')[:6]) if microsecond else 0
+        
+        return datetime(year, month, day, hour, minute, second, microsecond)
+    
+    # 如果所有方法都失败，抛出异常
+    raise ValueError(f"无法解析时间字符串: {string}")

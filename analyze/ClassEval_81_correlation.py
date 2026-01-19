@@ -1,24 +1,30 @@
 @staticmethod
 def correlation(x, y):
     """
-        计算给定列表的相关性。
-        :param x: 给定列表，list。
-        :param y: 给定列表，list。
-        :return: 给定列表的相关性，float。
-        >>> statistics3 = Statistics3()
-        >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
-        1.0
+    计算给定列表的相关性。
+    :param x: 给定列表，list。
+    :param y: 给定列表，list。
+    :return: 给定列表的相关性，float。
+    >>> statistics3 = Statistics3()
+    >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
+    1.0
 
-        """
-    if len(x) != len(y):
-        return None
-    if len(x) < 2:
-        return None
-    mean_x = Statistics3.mean(x)
-    mean_y = Statistics3.mean(y)
-    numerator = sum(((xi - mean_x) * (yi - mean_y) for xi, yi in zip(x, y)))
-    denominator_x = sum(((xi - mean_x) ** 2 for xi in x))
-    denominator_y = sum(((yi - mean_y) ** 2 for yi in y))
-    if denominator_x == 0 or denominator_y == 0:
-        return None
-    return numerator / math.sqrt(denominator_x * denominator_y)
+    """
+    n = len(x)
+    
+    # Calculate means
+    mean_x = sum(x) / n
+    mean_y = sum(y) / n
+    
+    # Calculate numerator (covariance)
+    numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
+    
+    # Calculate denominator (product of standard deviations)
+    sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
+    sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
+    denominator = (sum_sq_x * sum_sq_y) ** 0.5
+    
+    # Return Pearson correlation coefficient
+    if denominator == 0:
+        return 0.0
+    return numerator / denominator

@@ -1,15 +1,13 @@
 def insert_user(self, username, password):
     """
-        将新用户插入到 "users" 表中。
-        :param username: str, 用户名。
-        :param password: str, 用户的密码。
-        :return: None
-        >>> user_db = UserLoginDB("user_database.db")
-        >>> user_db.create_table()
-        >>> user_db.insert_user('user1', 'pass1')
-        """
-    try:
-        self.cursor.execute('\n                INSERT INTO users (username, password) VALUES (?, ?)\n            ', (username, password))
-        self.connection.commit()
-    except sqlite3.IntegrityError:
-        pass
+    将新用户插入到 "users" 表中。
+    :param username: str, 用户名。
+    :param password: str, 用户的密码。
+    :return: None
+    >>> user_db = UserLoginDB("user_database.db")
+    >>> user_db.create_table()
+    >>> user_db.insert_user('user1', 'pass1')
+    """
+    cursor = self.connection.cursor()
+    cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+    self.connection.commit()

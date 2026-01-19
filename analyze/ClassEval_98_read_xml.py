@@ -1,16 +1,6 @@
-def read_xml(self):
+def __init__(self, file_path):
     """
-        读取 XML 文件并返回根元素。
-        :return: Element，XML 文件的根元素。
-        >>> xml_processor = XMLProcessor('test.xml')
-        >>> root_element = xml_processor.read_xml()
-        >>> print(root_element)
-        <Element 'root' at 0x7f8e3b7eb180>
-        """
-    try:
-        tree = ET.parse(self.file_name)
-        self.root = tree.getroot()
-        return self.root
-    except Exception as e:
-        print(f'Error reading XML file: {e}')
-        return None
+    初始化 XMLProcessor 类。
+    :param file_path: XML 文件的路径
+    """
+    self.file_path = file_path
