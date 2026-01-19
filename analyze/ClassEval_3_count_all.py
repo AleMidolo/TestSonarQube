@@ -8,4 +8,4 @@ def count_all(n):
         64
 
         """
-    return sum((ArrangementCalculator.count(n, m) for m in range(1, n + 1)))
+    return 2 ** n - 1

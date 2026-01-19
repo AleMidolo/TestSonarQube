@@ -8,8 +8,8 @@ def trans_two(self, s):
         "VEINTITRÉS"
         """
     if s[0] == '1':
-        return self.NUMBER_TEEN[int(s[1])] if s[1] != '0' else self.NUMBER_TEN[0]
+        return self.NUMBER_TEEN[int(s[1])]
     elif s[0] == '0':
         return self.NUMBER[int(s[1])]
     else:
-        return f'{self.NUMBER_TEN[int(s[0]) - 1]} {self.NUMBER[int(s[1])]}' if s[1] != '0' else self.NUMBER_TEN[int(s[0]) - 1]
+        return f'{self.NUMBER_TEN[int(s[0]) - 1]} {self.NUMBER[int(s[1])]}'.strip()

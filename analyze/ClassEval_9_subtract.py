@@ -17,21 +17,21 @@ def subtract(num1, num2):
         negative = True
     num1 = num1[::-1]
     num2 = num2[::-1]
-    max_length = max(len(num1), len(num2))
-    num2 += '0' * (max_length - len(num2))
     result = []
     borrow = 0
-    for i in range(max_length):
+    for i in range(len(num1)):
         digit1 = int(num1[i])
-        digit2 = int(num2[i]) + borrow
-        if digit1 < digit2:
+        digit2 = int(num2[i]) if i < len(num2) else 0
+        if digit1 < digit2 + borrow:
             digit1 += 10
+            result.append(str(digit1 - digit2 - borrow))
             borrow = 1
         else:
+            result.append(str(digit1 - digit2 - borrow))
             borrow = 0
-        result.append(str(digit1 - digit2))
     while result and result[-1] == '0':
         result.pop()
-    if negative:
-        result.append('-')
-    return ''.join(result[::-1]) if result else '0'
+    if not result:
+        return '0'
+    result.reverse()
+    return ('-' if negative else '') + ''.join(result)

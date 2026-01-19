@@ -13,19 +13,23 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     if type(data) != list and type(data) != tuple:
-        raise Exception('los datos de entrada deben ser una tupla o una lista de tuplas')
+        raise Exception('the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple')
     if len(data) == 0:
         return (0.0, [0.0])
     if type(data) == tuple:
         sub_list, total_num = data
         if total_num == 0:
             return (0.0, [0.0])
-        reciprocal_ranks = []
-        for idx, value in enumerate(sub_list):
-            if value == 1:
-                reciprocal_ranks.append(1.0 / (idx + 1))
-        mrr_value = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
-        return (mrr_value, [mrr_value])
+        else:
+            reciprocal_ranks = []
+            for idx, value in enumerate(sub_list):
+                if value == 1:
+                    reciprocal_ranks.append(1 / (idx + 1))
+                    break
+            else:
+                reciprocal_ranks.append(0)
+            mrr_value = np.mean(reciprocal_ranks)
+            return (mrr_value, [mrr_value])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
@@ -35,7 +39,10 @@ def mrr(data):
                 reciprocal_ranks = []
                 for idx, value in enumerate(sub_list):
                     if value == 1:
-                        reciprocal_ranks.append(1.0 / (idx + 1))
-                mrr_value = np.mean(reciprocal_ranks) if reciprocal_ranks else 0.0
+                        reciprocal_ranks.append(1 / (idx + 1))
+                        break
+                else:
+                    reciprocal_ranks.append(0)
+                mrr_value = np.mean(reciprocal_ranks)
             separate_result.append(mrr_value)
         return (np.mean(separate_result), separate_result)
