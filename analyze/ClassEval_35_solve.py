@@ -21,20 +21,20 @@ def solve(self):
     from collections import deque
     if self.initial_state == self.goal_state:
         return []
-    open_list = deque()
-    open_list.append((self.initial_state, []))
+    queue = deque()
+    queue.append((self.initial_state, []))
     visited = set()
     visited.add(tuple((tuple(row) for row in self.initial_state)))
-    while open_list:
-        current_state, current_path = open_list.popleft()
+    while queue:
+        current_state, path = queue.popleft()
         if current_state == self.goal_state:
-            return current_path
+            return path
         possible_moves = self.get_possible_moves(current_state)
         for direction in possible_moves:
             new_state = self.move(current_state, direction)
             state_tuple = tuple((tuple(row) for row in new_state))
             if state_tuple not in visited:
                 visited.add(state_tuple)
-                new_path = current_path + [direction]
-                open_list.append((new_state, new_path))
+                new_path = path + [direction]
+                queue.append((new_state, new_path))
     return []

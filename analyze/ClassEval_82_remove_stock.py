@@ -4,7 +4,7 @@ def remove_stock(self, stock):
         :param stock: एक शब्दकोश जिसमें "name", "price", और "quantity" कुंजी हैं
         >>> tracker = StockPortfolioTracker(10000.0)
         >>> tracker.portfolio = [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
-        >>> tracker.remove_stock({"name": 'AAPL', "price": 150.0, "quantity": 10})
+        >>> tracker.remove_stock({"name": "AAPL", "price": 150.0, "quantity": 10})
         True
         >>> tracker.portfolio
         []

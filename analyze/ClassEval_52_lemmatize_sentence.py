@@ -21,11 +21,15 @@ def lemmatize_sentence(self, sentence):
             if word.lower() == 'am' or word.lower() == 'is' or word.lower() == 'are':
                 lemmatized_words.append('to be')
             else:
-                lemmatized_words.append(self.lemmatizer.lemmatize(word, pos='v'))
+                lemmatized_word = self.lemmatizer.lemmatize(word, pos='v')
+                lemmatized_words.append(lemmatized_word)
         elif tag.startswith('J'):
-            lemmatized_words.append(self.lemmatizer.lemmatize(word, pos='a'))
+            lemmatized_word = self.lemmatizer.lemmatize(word, pos='a')
+            lemmatized_words.append(lemmatized_word)
         elif tag.startswith('R'):
-            lemmatized_words.append(self.lemmatizer.lemmatize(word, pos='r'))
+            lemmatized_word = self.lemmatizer.lemmatize(word, pos='r')
+            lemmatized_words.append(lemmatized_word)
         else:
-            lemmatized_words.append(self.lemmatizer.lemmatize(word, pos='n'))
+            lemmatized_word = self.lemmatizer.lemmatize(word)
+            lemmatized_words.append(lemmatized_word)
     return lemmatized_words

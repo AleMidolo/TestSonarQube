@@ -9,18 +9,21 @@ def split_sentences(self, sentences_string):
         """
     if not sentences_string:
         return []
-    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s|\\?\\s'
-    parts = re.split(f'({pattern})', sentences_string)
-    sentences = []
-    current_sentence = ''
-    for i in range(0, len(parts) - 1, 2):
-        if i + 1 < len(parts):
-            current_sentence += parts[i] + parts[i + 1]
-            sentence = current_sentence.rstrip()
-            sentences.append(sentence)
-            current_sentence = ''
-    if len(parts) % 2 == 1:
-        remaining = parts[-1]
-        if remaining.strip():
-            sentences.append(remaining.strip())
-    return sentences
+    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s+|\\?\\s+'
+    sentences = re.split(pattern, sentences_string)
+    sentences = [s.strip() for s in sentences if s.strip()]
+    matches = list(re.finditer(pattern, sentences_string))
+    result = []
+    for i, sentence in enumerate(sentences):
+        if i < len(matches):
+            match_text = matches[i].group()
+            punctuation = match_text[0]
+            result.append(sentence + punctuation)
+        elif sentences_string.strip().endswith('.') or sentences_string.strip().endswith('?'):
+            if sentences_string.strip().endswith('.'):
+                result.append(sentence + '.')
+            else:
+                result.append(sentence + '?')
+        else:
+            result.append(sentence)
+    return result

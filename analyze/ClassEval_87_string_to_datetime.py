@@ -6,22 +6,10 @@ def string_to_datetime(self, string):
         >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
         2001-07-18 01:01:01
         """
-    try:
-        return datetime.datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
-    except ValueError:
+    formats = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y']
+    for fmt in formats:
         try:
-            return datetime.datetime.strptime(string, '%Y-%m-%d %H:%M')
+            return datetime.datetime.strptime(string, fmt)
         except ValueError:
-            try:
-                return datetime.datetime.strptime(string, '%Y-%m-%d')
-            except ValueError:
-                try:
-                    return datetime.datetime.strptime(string, '%Y/%m/%d %H:%M:%S')
-                except ValueError:
-                    try:
-                        return datetime.datetime.strptime(string, '%Y/%m/%d %H:%M')
-                    except ValueError:
-                        try:
-                            return datetime.datetime.strptime(string, '%Y/%m/%d')
-                        except ValueError:
-                            raise ValueError(f'Unable to parse time string: {string}')
+            continue
+    raise ValueError(f'Unable to parse time string: {string}')

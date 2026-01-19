@@ -1,8 +1,8 @@
 def evaluate_expression(self, expression):
     """
-        Evaluate a mathematical expression and check if the result is 24.
-        :param expression: string, mathematical expression
-        :return: bool, True if the expression equals 24, otherwise False
+        एक गणितीय अभिव्यक्ति का मूल्यांकन करें और जांचें कि क्या परिणाम 24 है।
+        :param expression: स्ट्रिंग, गणितीय अभिव्यक्ति
+        :return: बूल, यदि अभिव्यक्ति 24 के बराबर है तो True, अन्यथा False
         >>> game = TwentyFourPointGame()
         >>> nums = [4, 3, 6, 6]
         >>> ans = "4*3+6+6"
@@ -10,27 +10,53 @@ def evaluate_expression(self, expression):
         True
         """
     try:
-        node = ast.parse(expression, mode='eval')
-        operators = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv, ast.Pow: operator.pow, ast.USub: operator.neg, ast.UAdd: operator.pos}
+        precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
 
-        def eval_node(node):
-            if isinstance(node, ast.Num):
-                return float(node.n)
-            elif isinstance(node, ast.BinOp):
-                left = eval_node(node.left)
-                right = eval_node(node.right)
-                op = operators[type(node.op)]
-                try:
-                    return op(left, right)
-                except ZeroDivisionError:
-                    return float('inf')
-            elif isinstance(node, ast.UnaryOp):
-                operand = eval_node(node.operand)
-                op = operators[type(node.op)]
-                return op(operand)
-            else:
-                raise TypeError(f'Unsupported operation: {type(node)}')
-        result = eval_node(node.body)
+        def apply_operator(operators, values):
+            operator = operators.pop()
+            right = values.pop()
+            left = values.pop()
+            if operator == '+':
+                values.append(left + right)
+            elif operator == '-':
+                values.append(left - right)
+            elif operator == '*':
+                values.append(left * right)
+            elif operator == '/':
+                if right == 0:
+                    return False
+                values.append(left / right)
+
+        def evaluate(tokens):
+            values = []
+            operators = []
+            i = 0
+            while i < len(tokens):
+                if tokens[i].isdigit():
+                    j = i
+                    while j < len(tokens) and tokens[j].isdigit():
+                        j += 1
+                    values.append(int(tokens[i:j]))
+                    i = j
+                elif tokens[i] in '+-*/':
+                    while operators and operators[-1] in '+-*/' and (precedence[operators[-1]] >= precedence[tokens[i]]):
+                        apply_operator(operators, values)
+                    operators.append(tokens[i])
+                    i += 1
+                elif tokens[i] == '(':
+                    operators.append(tokens[i])
+                    i += 1
+                elif tokens[i] == ')':
+                    while operators and operators[-1] != '(':
+                        apply_operator(operators, values)
+                    operators.pop()
+                    i += 1
+                else:
+                    i += 1
+            while operators:
+                apply_operator(operators, values)
+            return values[0] if values else None
+        result = evaluate(expression)
         return abs(result - 24) < 1e-10
-    except Exception as e:
+    except (ZeroDivisionError, IndexError, ValueError):
         return False
