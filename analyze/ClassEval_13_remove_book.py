@@ -5,31 +5,34 @@ def remove_book(self, title, quantity):
     :param title: str, il titolo del libro
     :param quantity: int
     """
+    # Validazione input
     if not isinstance(title, str):
         raise TypeError("Il titolo deve essere una stringa")
     
     if not isinstance(quantity, int):
         raise TypeError("La quantità deve essere un intero")
     
+    if not title or not title.strip():
+        raise ValueError("Il titolo non può essere vuoto")
+    
     if quantity <= 0:
         raise ValueError("La quantità deve essere maggiore di zero")
     
-    if not title.strip():
-        raise ValueError("Il titolo non può essere vuoto")
+    # Cerca il libro nell'inventario
+    found = False
+    for book in self.inventory:
+        if book['title'] == title:
+            found = True
+            if book['quantity'] < quantity:
+                raise ValueError(f"Quantità insufficiente. Disponibili: {book['quantity']}, richiesti: {quantity}")
+            
+            book['quantity'] -= quantity
+            
+            # Rimuovi il libro dall'inventario se la quantità diventa 0
+            if book['quantity'] == 0:
+                self.inventory.remove(book)
+            
+            break
     
-    # Cerca il libro nell'inventario (assumendo che self.inventory sia una lista o dizionario)
-    # Assumendo che self.inventory sia un dizionario con titolo come chiave
-    if not hasattr(self, 'inventory'):
-        self.inventory = {}
-    
-    if title not in self.inventory:
-        raise ValueError(f"Il libro '{title}' non è presente nell'inventario")
-    
-    if self.inventory[title] < quantity:
-        raise ValueError(f"Quantità insufficiente. Disponibili: {self.inventory[title]}, richiesti: {quantity}")
-    
-    self.inventory[title] -= quantity
-    
-    # Rimuovi il libro dall'inventario se la quantità diventa zero
-    if self.inventory[title] == 0:
-        del self.inventory[title]
+    if not found:
+        raise ValueError(f"Libro '{title}' non trovato nell'inventario")

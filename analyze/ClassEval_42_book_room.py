@@ -34,7 +34,7 @@ def book_room(self, room_type, room_number, name):
     
     self.booked_rooms[room_type].append({
         'name': name,
-        'rooms': room_number
+        'room_number': room_number
     })
     
     return 'Successo!'

@@ -9,4 +9,4 @@ def __len__(self):
     >>> camelize_map.__len__()
     3
     """
-    return len(self.__dict__)
+    return len(self.data)

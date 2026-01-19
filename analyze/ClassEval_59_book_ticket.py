@@ -20,18 +20,17 @@ def book_ticket(self, name, seats_to_book):
     movie = self.movies[name]
     seats = movie['seats']
     
-    # Verifica che tutti i posti richiesti siano validi e disponibili
+    # Verifica che tutti i posti richiesti siano disponibili
     for row, col in seats_to_book:
-        # Verifica che gli indici siano validi
+        # Controlla se gli indici sono validi
         if row < 0 or row >= len(seats) or col < 0 or col >= len(seats[0]):
             return "Prenotazione fallita."
-        
-        # Verifica che il posto sia disponibile (True = disponibile, False = occupato)
-        if not seats[row][col]:
+        # Controlla se il posto è già occupato (True significa occupato)
+        if seats[row][col]:
             return "Prenotazione fallita."
     
-    # Se tutti i controlli sono passati, prenota i posti
+    # Se tutti i posti sono disponibili, procedi con la prenotazione
     for row, col in seats_to_book:
-        seats[row][col] = False
+        seats[row][col] = True
     
     return "Prenotazione riuscita."

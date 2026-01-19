@@ -8,7 +8,7 @@ def update_currency_rate(self, currency, new_rate):
     >>> cc.update_currency_rate('CNY', 7.18)
     self.rates['CNY'] = 7.18
     """
-    if currency in self.rates:
+    if hasattr(self, 'rates') and isinstance(self.rates, dict):
         self.rates[currency] = new_rate
         return None
     else:

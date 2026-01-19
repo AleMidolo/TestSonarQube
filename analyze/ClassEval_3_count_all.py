@@ -11,9 +11,9 @@ def count_all(n):
     import math
     
     total = 0
-    # Per ogni k da 1 a n, calcola il numero di arrangiamenti A(n, k) = n! / (n-k)!
+    # Per ogni k da 1 a n, calcola il numero di permutazioni di k elementi scelti da n
     for k in range(1, n + 1):
-        arrangements = math.factorial(n) // math.factorial(n - k)
-        total += arrangements
+        # P(n, k) = n! / (n - k)!
+        total += math.factorial(n) // math.factorial(n - k)
     
     return total

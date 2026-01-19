@@ -20,13 +20,13 @@ def calculate_calorie_intake(self):
     else:  # female
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
     
-    # Get user condition (assuming there's a method or attribute for this)
+    # Get user condition (assuming there's a method to determine this)
     condition = self.get_condition()
     
     # Calculate calorie intake based on condition
-    if condition == "overweight":  # troppo grasso
+    if condition == "too fat":
         calorie_intake = bmr * 1.2
-    elif condition == "underweight":  # troppo magro
+    elif condition == "too thin":
         calorie_intake = bmr * 1.6
     else:  # normal
         calorie_intake = bmr * 1.4

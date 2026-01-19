@@ -16,11 +16,10 @@ def write_text(self, content, font_size=12, alignment='left'):
         for run in paragraph.runs:
             run.font.size = docx.shared.Pt(font_size)
         
-        # Se non ci sono runs (paragrafo vuoto), crea un run
+        # Se il paragrafo è vuoto (nessun run), aggiungi il testo
         if not paragraph.runs:
             run = paragraph.add_run(content)
             run.font.size = docx.shared.Pt(font_size)
-            paragraph.text = ''
         
         # Imposta l'allineamento
         alignment_map = {

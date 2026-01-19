@@ -23,5 +23,5 @@ def compare(self, cur, peek):
     cur_precedence = precedence.get(cur, 0)
     peek_precedence = precedence.get(peek, 0)
     
-    # Restituisce True se cur ha precedenza maggiore o uguale a peek
+    # Restituisce True se cur ha precedenza >= peek
     return cur_precedence >= peek_precedence

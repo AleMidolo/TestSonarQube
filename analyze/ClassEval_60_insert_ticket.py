@@ -12,4 +12,4 @@ def insert_ticket(self, movie_name, theater_name, seat_number, customer_name):
     VALUES (?, ?, ?, ?)
     """
     self.cursor.execute(query, (movie_name, theater_name, seat_number, customer_name))
-    self.connection.commit()
+    self.conn.commit()

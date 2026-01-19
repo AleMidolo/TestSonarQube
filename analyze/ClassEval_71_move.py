@@ -19,7 +19,7 @@ def move(self, direction):
     
     dy, dx = directions[direction]
     
-    # Trova la posizione corrente del giocatore (O)
+    # Trova la posizione corrente del giocatore
     player_y, player_x = None, None
     for i in range(len(self.map)):
         for j in range(len(self.map[i])):
@@ -37,14 +37,14 @@ def move(self, direction):
     if new_y < 0 or new_y >= len(self.map) or new_x < 0 or new_x >= len(self.map[0]):
         return False
     
-    next_cell = self.map[new_y][new_x]
+    target_cell = self.map[new_y][new_x]
     
     # Se c'è un muro, non muovere
-    if next_cell == '#':
+    if target_cell == '#':
         return False
     
-    # Se c'è una scatola (X)
-    if next_cell == 'X':
+    # Se c'è una scatola
+    if target_cell == 'X':
         # Calcola la posizione dietro la scatola
         box_new_y = new_y + dy
         box_new_x = new_x + dx
@@ -53,25 +53,22 @@ def move(self, direction):
         if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[0]):
             return False
         
-        box_next_cell = self.map[box_new_y][box_new_x]
+        box_target = self.map[box_new_y][box_new_x]
         
         # La scatola può essere spinta solo in uno spazio vuoto o sul goal
-        if box_next_cell == ' ' or box_next_cell == 'G':
-            # Muovi la scatola
-            self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x + 1:]
-            # Muovi il giocatore nella posizione della scatola
-            self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
-            # Libera la posizione precedente del giocatore
-            self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
-            
-            # Controlla se il gioco è vinto (scatola sul goal)
-            if box_next_cell == 'G':
-                return True
-        else:
+        if box_target != ' ' and box_target != 'G':
             return False
-    else:
-        # Movimento normale (spazio vuoto o goal)
-        self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
-        self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
+        
+        # Sposta la scatola
+        self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x + 1:]
     
-    return False
+    # Muovi il giocatore
+    self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
+    self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
+    
+    # Controlla se il gioco è vinto (la scatola è sul goal)
+    for i in range(len(self.map)):
+        if 'G' in self.map[i]:
+            return False
+    
+    return True

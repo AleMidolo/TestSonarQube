@@ -13,27 +13,13 @@ def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, resul
     [['A', 'B'], ['A', 'C'], ['A', 'D'], ['B', 'C'], ['B', 'D'], ['C', 'D']]
 
     """
-    # Caso base: se abbiamo riempito tutti gli slot nella combinazione
+    # Base case: if we've filled all positions in resultList, add a copy to result
     if resultIndex == len(resultList):
         result.append(resultList[:])
         return
     
-    # Caso base: se non ci sono più elementi da considerare
-    if dataIndex >= len(self.data):
-        return
-    
-    # Calcola quanti elementi mancano da selezionare
-    remaining_slots = len(resultList) - resultIndex
-    # Calcola quanti elementi sono ancora disponibili
-    remaining_elements = len(self.data) - dataIndex
-    
-    # Se non ci sono abbastanza elementi rimanenti, termina
-    if remaining_elements < remaining_slots:
-        return
-    
-    # Scelta 1: Includere l'elemento corrente nella combinazione
-    resultList[resultIndex] = self.data[dataIndex]
-    self._select(dataIndex + 1, resultList, resultIndex + 1, result)
-    
-    # Scelta 2: Non includere l'elemento corrente e passare al successivo
-    self._select(dataIndex + 1, resultList, resultIndex, result)
+    # Recursive case: try each element from dataIndex onwards
+    for i in range(dataIndex, len(self.data)):
+        resultList[resultIndex] = self.data[i]
+        # Recursively fill the next position, starting from i+1 to avoid duplicates
+        self._select(i + 1, resultList, resultIndex + 1, result)

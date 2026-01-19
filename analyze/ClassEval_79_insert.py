@@ -11,9 +11,12 @@ def insert(self, data):
     
     # Estrai le chiavi (nomi dei campi) e i valori
     columns = ', '.join(data.keys())
-    values = ', '.join(f"'{value}'" for value in data.values())
     
-    # Genera l'istruzione SQL INSERT
-    sql_statement = f"INSERT INTO {self.table} ({columns}) VALUES ({values});"
+    # Formatta i valori: aggiungi apici singoli per le stringhe
+    values = ', '.join(f"'{value}'" if isinstance(value, str) else str(value) for value in data.values())
     
-    return sql_statement
+    # Costruisci l'istruzione SQL INSERT
+    # Assumendo che self abbia un attributo table_name (es. 'table1' dall'esempio)
+    table_name = getattr(self, 'table_name', 'table1')
+    
+    return f"INSERT INTO {table_name} ({columns}) VALUES ({values});"

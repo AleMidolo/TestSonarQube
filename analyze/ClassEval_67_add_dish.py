@@ -16,11 +16,11 @@ def add_dish(self, dish):
             if menu_item["count"] >= dish["count"]:
                 # Aggiungi il piatto a selected_dish
                 self.selected_dish.append(dish)
-                # Decrementa il conteggio nel menu
+                # Aggiorna il conteggio nel menu
                 menu_item["count"] -= dish["count"]
                 return True
             else:
-                # Conteggio non valido (non abbastanza disponibile)
+                # Conteggio non valido
                 return False
     # Piatto non trovato nel menu
     return False

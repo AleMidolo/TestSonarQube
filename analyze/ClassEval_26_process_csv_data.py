@@ -18,7 +18,7 @@ Al nome del file originale viene aggiunto il suffisso '_process'.
     try:
         # Legge il file CSV
         result = self.read_csv(save_file_name)
-        if result is None:
+        if result is None or result == ([], []):
             return 0
         
         title, data = result
@@ -41,7 +41,7 @@ Al nome del file originale viene aggiunto il suffisso '_process'.
             new_file_name = save_file_name + '_process'
         
         # Salva i dati processati nel nuovo file
-        self.write_csv(new_file_name, title, processed_data)
+        self.write_csv(title, processed_data, new_file_name)
         
         return 1
     except:

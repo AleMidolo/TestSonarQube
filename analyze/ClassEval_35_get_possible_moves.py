@@ -18,19 +18,19 @@ def get_possible_moves(self, state):
         if zero_row is not None:
             break
     
-    # Controlla se possiamo muovere verso su (lo 0 si muove su, quindi deve esserci una riga sopra)
+    # Controlla se possiamo muovere su (lo 0 si muove su, quindi deve esserci una riga sopra)
     if zero_row > 0:
         moves.append('su')
     
-    # Controlla se possiamo muovere verso giù (lo 0 si muove giù, quindi deve esserci una riga sotto)
+    # Controlla se possiamo muovere giù (lo 0 si muove giù, quindi deve esserci una riga sotto)
     if zero_row < 2:
         moves.append('giù')
     
-    # Controlla se possiamo muovere verso sinistra (lo 0 si muove a sinistra, quindi deve esserci una colonna a sinistra)
+    # Controlla se possiamo muovere sinistra (lo 0 si muove a sinistra, quindi deve esserci una colonna a sinistra)
     if zero_col > 0:
         moves.append('sinistra')
     
-    # Controlla se possiamo muovere verso destra (lo 0 si muove a destra, quindi deve esserci una colonna a destra)
+    # Controlla se possiamo muovere destra (lo 0 si muove a destra, quindi deve esserci una colonna a destra)
     if zero_col < 2:
         moves.append('destra')
     

@@ -32,12 +32,16 @@ def get_page_info(self, page_number):
     # Get the data for the current page
     page_data = self.data[start_index:end_index]
     
+    # Determine if there are previous and next pages
+    has_previous = page_number > 1
+    has_next = page_number < total_pages
+    
     return {
         "current_page": page_number,
         "per_page": self.per_page,
         "total_pages": total_pages,
         "total_items": total_items,
-        "has_previous": page_number > 1,
-        "has_next": page_number < total_pages,
+        "has_previous": has_previous,
+        "has_next": has_next,
         "data": page_data
     }

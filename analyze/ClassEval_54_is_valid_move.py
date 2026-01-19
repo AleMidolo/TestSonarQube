@@ -46,30 +46,30 @@ def _is_direct_path(self, pos1, pos2):
     if pos1[0] == pos2[0]:  # Stessa colonna (verticale)
         y_min, y_max = min(pos1[1], pos2[1]), max(pos1[1], pos2[1])
         for y in range(y_min + 1, y_max):
-            if self.board[y][pos1[0]] != '':
+            if self.board[y][pos1[0]] is not None:
                 return False
         return True
     elif pos1[1] == pos2[1]:  # Stessa riga (orizzontale)
         x_min, x_max = min(pos1[0], pos2[0]), max(pos1[0], pos2[0])
         for x in range(x_min + 1, x_max):
-            if self.board[pos1[1]][x] != '':
+            if self.board[pos1[1]][x] is not None:
                 return False
         return True
     return False
 
 def _is_one_turn_path(self, pos1, pos2):
     """Verifica se c'è un percorso con una svolta tra due posizioni"""
-    # Prova punto di svolta (pos1[0], pos2[1])
+    # Prova il punto di svolta (pos1[0], pos2[1])
     corner1 = (pos1[0], pos2[1])
     if (corner1 != pos1 and corner1 != pos2 and 
-        (self.board[corner1[1]][corner1[0]] == '' or corner1 == pos1 or corner1 == pos2)):
+        (self.board[corner1[1]][corner1[0]] is None or corner1 == pos1 or corner1 == pos2)):
         if self._is_direct_path(pos1, corner1) and self._is_direct_path(corner1, pos2):
             return True
     
-    # Prova punto di svolta (pos2[0], pos1[1])
+    # Prova il punto di svolta (pos2[0], pos1[1])
     corner2 = (pos2[0], pos1[1])
     if (corner2 != pos1 and corner2 != pos2 and 
-        (self.board[corner2[1]][corner2[0]] == '' or corner2 == pos1 or corner2 == pos2)):
+        (self.board[corner2[1]][corner2[0]] is None or corner2 == pos1 or corner2 == pos2)):
         if self._is_direct_path(pos1, corner2) and self._is_direct_path(corner2, pos2):
             return True
     
@@ -81,7 +81,7 @@ def _is_two_turn_path(self, pos1, pos2):
     for y in range(len(self.board)):
         for x in range(len(self.board[0])):
             mid = (x, y)
-            if self.board[y][x] == '' or mid == pos1 or mid == pos2:
+            if self.board[y][x] is None or mid == pos1 or mid == pos2:
                 if self._is_one_turn_path(pos1, mid) and self._is_one_turn_path(mid, pos2):
                     return True
     return False

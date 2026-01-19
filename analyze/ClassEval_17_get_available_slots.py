@@ -13,8 +13,8 @@ def get_available_slots(self, date):
     # Define the start and end of the day
     day_start = datetime(date.year, date.month, date.day, 0, 0)
     day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
-    # Adjust to next day midnight for proper slot calculation
-    next_day_start = day_start + timedelta(days=1)
+    # Adjust to next day midnight for consistency with the example
+    day_end = day_start + timedelta(days=1)
     
     # Filter events for the specified date
     events_on_date = []
@@ -42,8 +42,8 @@ def get_available_slots(self, date):
         if event_end > current_time:
             current_time = event_end
     
-    # Check if there's time remaining after the last event until midnight
-    if current_time < next_day_start:
-        available_slots.append((current_time, next_day_start))
+    # Check if there's time remaining after the last event
+    if current_time < day_end:
+        available_slots.append((current_time, day_end))
     
     return available_slots

@@ -16,7 +16,10 @@ def answer(self, expression):
     numbers_in_expr = [int(n) for n in numbers_in_expr]
     
     # Verifica che i numeri usati corrispondano esattamente alle carte disponibili
-    if sorted(numbers_in_expr) != sorted(self.nums):
+    sorted_nums = sorted(self.nums)
+    sorted_expr_nums = sorted(numbers_in_expr)
+    
+    if sorted_nums != sorted_expr_nums:
         return False
     
     # Valuta l'espressione

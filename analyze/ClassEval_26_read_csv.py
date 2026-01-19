@@ -15,7 +15,6 @@ def read_csv(self, file_name):
     with open(file_name, 'r', encoding='utf-8') as file:
         csv_reader = csv.reader(file)
         title = next(csv_reader)
-        for row in csv_reader:
-            data.append(row)
+        data = [row for row in csv_reader]
     
     return title, data

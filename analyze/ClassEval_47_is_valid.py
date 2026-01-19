@@ -26,6 +26,9 @@ def is_valid(self):
         if not part.isdigit():
             return False
         
+        if part[0] == '0' and len(part) > 1:
+            return False
+        
         num = int(part)
         if num < 0 or num > 255:
             return False

@@ -17,11 +17,11 @@ def merge_pdfs(self, output_filepath):
         for page in reader.pages:
             writer.add_page(page)
     
+    # Aggiorna il numero totale di pagine
+    self.page_count = len(writer.pages)
+    
     # Salva il PDF unito su disco
     with open(output_filepath, 'wb') as output_file:
         writer.write(output_file)
-    
-    # Aggiorna il numero totale di pagine
-    self.page_count = len(writer.pages)
     
     return f"PDF uniti salvati in {output_filepath}"

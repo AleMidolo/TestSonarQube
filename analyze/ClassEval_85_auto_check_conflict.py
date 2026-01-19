@@ -11,16 +11,14 @@ def auto_check_conflict(self):
     """
     # Se la temperatura attuale è minore della temperatura target
     if self.current_temperature < self.target_temperature:
-        # Dovremmo riscaldare (heat)
+        # Dovremmo riscaldare (heat), non raffreddare (cool)
         if self.mode == 'cool':
-            # Conflitto: stiamo raffreddando ma dovremmo riscaldare
             self.mode = 'heat'
             return False
     # Se la temperatura attuale è maggiore della temperatura target
     elif self.current_temperature > self.target_temperature:
-        # Dovremmo raffreddare (cool)
+        # Dovremmo raffreddare (cool), non riscaldare (heat)
         if self.mode == 'heat':
-            # Conflitto: stiamo riscaldando ma dovremmo raffreddare
             self.mode = 'cool'
             return False
     

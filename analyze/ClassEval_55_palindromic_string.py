@@ -7,7 +7,7 @@ def palindromic_string(self):
     'ababa'
 
     """
-    if not self.string:
+    if not self.string or len(self.string) == 0:
         return ""
     
     # Transform string to handle even-length palindromes
@@ -15,7 +15,7 @@ def palindromic_string(self):
     transformed = '#'.join('^{}$'.format(self.string))
     n = len(transformed)
     
-    # Array to store palindrome lengths
+    # Array to store palindrome radii
     p = [0] * n
     center = 0
     right = 0
