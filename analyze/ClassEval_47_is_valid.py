@@ -6,8 +6,6 @@ def is_valid(self):
         >>> ipaddress.is_valid()
         True
         """
-    if not isinstance(self.ip_address, str):
-        return False
     parts = self.ip_address.split('.')
     if len(parts) != 4:
         return False

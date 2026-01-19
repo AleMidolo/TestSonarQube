@@ -12,8 +12,8 @@ def answer(self, expression):
     if not self.evaluate_expression(expression):
         return False
     import re
-    numbers_in_expr = re.findall('\\d', expression)
+    numbers_in_expr = re.findall('\\d+', expression)
     numbers_in_expr = [int(num) for num in numbers_in_expr]
-    if len(numbers_in_expr) != 4:
+    if sorted(numbers_in_expr) != sorted(self.nums):
         return False
-    return sorted(numbers_in_expr) == sorted(self.nums)
+    return True
