@@ -7,7 +7,7 @@ def select_all(self):
         [[1], [2], [3], [1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2], [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
 
         """
-    all_arrangements = []
+    result = []
     for i in range(1, len(self.datas) + 1):
-        all_arrangements.extend(self.select(i))
-    return all_arrangements
+        result.extend(self.select(i))
+    return result

@@ -11,6 +11,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         >>> interpolation = Interpolation()
         >>> interpolation.interpolate_2d([1, 2, 3], [1, 2, 3], [[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1.5, 2.5], [1.5, 2.5])
         [3.0, 7.0]
+
         """
     z_interp = []
     for xi, yi in zip(x_interp, y_interp):
@@ -24,4 +25,7 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
                     z_interp_value = (z11 * (x[i + 1] - xi) * (y[j + 1] - yi) + z21 * (xi - x[i]) * (y[j + 1] - yi) + z12 * (x[i + 1] - xi) * (yi - y[j]) + z22 * (xi - x[i]) * (yi - y[j])) / ((x[i + 1] - x[i]) * (y[j + 1] - y[j]))
                     z_interp.append(z_interp_value)
                     break
+            else:
+                continue
+            break
     return z_interp
