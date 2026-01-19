@@ -17,16 +17,16 @@ def calculate(self, expression):
             if item == '~':
                 if result_stack:
                     operand = result_stack.pop()
-                    result_stack.append(Decimal(0) - Decimal(operand))
-            elif len(result_stack) >= 2:
+                    result_stack.append(str(-Decimal(operand)))
+            else:
+                if len(result_stack) < 2:
+                    raise ValueError('Invalid expression: insufficient operands')
                 second = result_stack.pop()
                 first = result_stack.pop()
                 result = self._calculate(first, second, item)
-                result_stack.append(result)
+                result_stack.append(str(result))
         else:
             result_stack.append(item)
-    if result_stack:
-        result = float(result_stack.pop())
-        return result
-    else:
-        return 0.0
+    if not result_stack:
+        raise ValueError('Invalid expression: no result')
+    return float(Decimal(result_stack.pop()))

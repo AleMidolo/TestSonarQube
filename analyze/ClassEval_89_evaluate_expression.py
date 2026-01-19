@@ -10,7 +10,10 @@ def evaluate_expression(self, expression):
         True
         """
     try:
+        expression = expression.replace(' ', '')
+        if '/0' in expression or '/ 0' in expression:
+            return False
         result = eval(expression)
         return abs(result - 24) < 1e-10
-    except:
+    except (SyntaxError, ZeroDivisionError, TypeError, NameError):
         return False

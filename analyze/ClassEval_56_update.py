@@ -19,3 +19,5 @@ def update(self, predicted_labels, true_labels):
             self.false_negatives += 1
         elif pred == 0 and true == 0:
             self.true_negatives += 1
+        else:
+            raise ValueError('Labels must be 0 or 1')

@@ -16,9 +16,6 @@ def extract_file(self, file_name, output_path):
             if os.path.exists(extracted_path):
                 return True
             else:
-                for root, dirs, files in os.walk(output_path):
-                    if os.path.basename(file_name) in files:
-                        return True
                 return False
     except:
         return False
