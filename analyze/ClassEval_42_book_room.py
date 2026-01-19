@@ -20,15 +20,19 @@ def book_room(self, room_type, room_number, name):
         >>> hotel.book_room('triple', 1, 'huésped 1')
         False
         """
-    if room_type not in self.available_rooms or self.available_rooms[room_type] < room_number:
-        if room_type in self.available_rooms and self.available_rooms[room_type] > 0:
-            return self.available_rooms[room_type]
+    if room_type not in self.available_rooms:
         return False
-    if room_type not in self.booked_rooms:
-        self.booked_rooms[room_type] = {}
-    if name in self.booked_rooms[room_type]:
-        self.booked_rooms[room_type][name] += room_number
+    available = self.available_rooms[room_type]
+    if room_number <= available:
+        self.available_rooms[room_type] -= room_number
+        if room_type not in self.booked_rooms:
+            self.booked_rooms[room_type] = {}
+        if name in self.booked_rooms[room_type]:
+            self.booked_rooms[room_type][name] += room_number
+        else:
+            self.booked_rooms[room_type][name] = room_number
+        return '¡Éxito!'
+    elif available > 0:
+        return available
     else:
-        self.booked_rooms[room_type][name] = room_number
-    self.available_rooms[room_type] -= room_number
-    return '¡Éxito!'
+        return False

@@ -8,4 +8,4 @@ def write_file(self, content):
         '¡Hola mundo!'
         """
     with open(self.file_path, 'w') as file:
-        file.write(content)
+        file.write(str(content))

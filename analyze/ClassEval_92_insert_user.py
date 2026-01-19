@@ -8,5 +8,5 @@ def insert_user(self, username, password):
         >>> user_db.create_table()
         >>> user_db.insert_user('user1', 'pass1')
         """
-    self.cursor.execute('\n                INSERT INTO users (username, password) VALUES (?, ?)\n            ', (username, password))
+    self.cursor.execute('\n            INSERT INTO users (username, password) VALUES (?, ?)\n        ', (username, password))
     self.connection.commit()

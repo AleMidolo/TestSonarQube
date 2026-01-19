@@ -5,7 +5,9 @@ def calculate_binary_info(self):
         >>> bdp.calculate_binary_info()
         {'Ceros': 0.475, 'Unos': 0.525, 'Longitud de bits': 40}
         """
+    if not self.binary_string:
+        return {'Ceros': 0.0, 'Unos': 0.0, 'Longitud de bits': 0}
     total_bits = len(self.binary_string)
     count_zeros = self.binary_string.count('0')
     count_ones = self.binary_string.count('1')
-    return {'Ceros': count_zeros / total_bits, 'Unos': count_ones / total_bits, 'Longitud de bits': total_bits}
+    return {'Ceros': round(count_zeros / total_bits, 3), 'Unos': round(count_ones / total_bits, 3), 'Longitud de bits': total_bits}

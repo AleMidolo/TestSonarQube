@@ -9,6 +9,7 @@ def get_employee(self, employee_id):
         {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 100000}
         >>> hrManagementSystem.get_employee(2)
         False
+
         """
     if employee_id in self.employees:
         return self.employees[employee_id]

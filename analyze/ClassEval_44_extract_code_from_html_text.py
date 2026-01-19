@@ -20,6 +20,12 @@ def extract_code_from_html_text(self, html_text):
     if html_text is None or len(html_text) == 0:
         return []
     soup = BeautifulSoup(html_text, 'lxml')
-    code_tags = soup.find_all(name=['pre', 'code'])
-    code_list = [tag.get_text() for tag in code_tags]
-    return code_list
+    code_elements = soup.find_all(name=['pre', 'code'])
+    extracted_codes = []
+    for element in code_elements:
+        code_text = element.get_text().strip()
+        if code_text:
+            code_text = re.sub('\\r\\n', '\n', code_text)
+            code_text = re.sub('\\r', '\n', code_text)
+            extracted_codes.append(code_text)
+    return extracted_codes

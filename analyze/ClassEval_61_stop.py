@@ -7,9 +7,9 @@ def stop(self):
         >>> musicPlayer.current_song = "canción1"
         >>> musicPlayer.stop()
         True
-
         """
     if self.current_song:
         self.current_song = None
         return True
-    return False
+    else:
+        return False

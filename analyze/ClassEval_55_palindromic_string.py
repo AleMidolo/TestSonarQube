@@ -5,20 +5,35 @@ def palindromic_string(self):
         >>> manacher = Manacher('ababaxse')
         >>> manacher.palindromic_string()
         'ababa'
+
         """
-    transformed_string = '|'.join(f'^{self.input_string}$')
-    n = len(transformed_string)
-    L = [0] * n
-    C = R = 0
-    for i in range(1, n - 1):
-        mirror = 2 * C - i
-        if R > i:
-            L[i] = min(R - i, L[mirror])
-        while transformed_string[i + L[i] + 1] == transformed_string[i - L[i] - 1]:
-            L[i] += 1
-        if i + L[i] > R:
-            C, R = (i, i + L[i])
-    max_len = max(L)
-    center_index = L.index(max_len)
-    start = (center_index - max_len) // 2
-    return self.input_string[start:start + max_len]
+    if not self.input_string:
+        return ''
+    transformed = '|'.join(self.input_string)
+    p = [0] * len(transformed)
+    center = 0
+    right = 0
+    for i in range(len(transformed)):
+        mirror = 2 * center - i
+        if i < right:
+            p[i] = min(right - i, p[mirror])
+        left_idx = i - (1 + p[i])
+        right_idx = i + (1 + p[i])
+        while left_idx >= 0 and right_idx < len(transformed) and (transformed[left_idx] == transformed[right_idx]):
+            p[i] += 1
+            left_idx -= 1
+            right_idx += 1
+        if i + p[i] > right:
+            center = i
+            right = i + p[i]
+    max_len = 0
+    center_idx = 0
+    for i in range(len(p)):
+        if p[i] > max_len:
+            max_len = p[i]
+            center_idx = i
+    start = center_idx - max_len
+    end = center_idx + max_len + 1
+    palindrome = transformed[start:end]
+    result = palindrome.replace('|', '')
+    return result

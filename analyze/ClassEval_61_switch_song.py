@@ -9,9 +9,12 @@ def switch_song(self):
         True
 
         """
-    if self.current_song and self.current_song in self.playlist:
+    if self.current_song:
         current_index = self.playlist.index(self.current_song)
         if current_index < len(self.playlist) - 1:
             self.current_song = self.playlist[current_index + 1]
             return True
-    return False
+        else:
+            return False
+    else:
+        return False

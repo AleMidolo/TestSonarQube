@@ -4,7 +4,6 @@ def calculate_annulus_area(self, inner_radius, outer_radius):
         :param inner_radius: radio interno del sector, float
         :param outer_radius: radio externo del sector, float
         :return: área del anillo, float
-        >>> areaCalculator = AreaCalculator(2)
         >>> areaCalculator.calculate_annulus_area(2, 3)
         15.707963267948966
         """

@@ -6,10 +6,39 @@ def replace(self, string):
         >>> unescaper = NumericEntityUnescaper()
         >>> unescaper.replace("&#65;&#66;&#67;")
         'ABC'
-        """
-    import re
 
-    def replace_entity(match):
-        code = int(match.group(1))
-        return chr(code)
-    return re.sub('&#(\\d+);', replace_entity, string)
+        """
+    if not string:
+        return string
+    result = []
+    i = 0
+    length = len(string)
+    while i < length:
+        if string[i:i + 2] == '&#':
+            j = i + 2
+            is_hex = False
+            if j < length and string[j] in 'xX':
+                is_hex = True
+                j += 1
+            start_num = j
+            while j < length and string[j] != ';':
+                j += 1
+            if j < length and string[j] == ';':
+                num_str = string[start_num:j]
+                if num_str:
+                    try:
+                        if is_hex:
+                            code_point = int(num_str, 16)
+                        else:
+                            code_point = int(num_str)
+                        if 0 <= code_point <= 1114111:
+                            result.append(chr(code_point))
+                        else:
+                            result.append(string[i:j + 1])
+                    except (ValueError, OverflowError):
+                        result.append(string[i:j + 1])
+                    i = j + 1
+                    continue
+        result.append(string[i])
+        i += 1
+    return ''.join(result)

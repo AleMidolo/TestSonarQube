@@ -7,12 +7,13 @@ def mode(data):
         >>> statistics3 = Statistics3()
         >>> statistics3.mode([1, 2, 3, 3])
         [3]
-
+    
         """
-    from collections import Counter
     if not data:
-        return []
-    count = Counter(data)
-    max_count = max(count.values())
-    modes = [key for key, value in count.items() if value == max_count]
+        return None
+    frequency = {}
+    for value in data:
+        frequency[value] = frequency.get(value, 0) + 1
+    max_freq = max(frequency.values())
+    modes = [key for key, value in frequency.items() if value == max_freq]
     return modes

@@ -8,5 +8,5 @@ def _to_camel_case(key):
         >>> camelize_map._to_camel_case('first_name')
         'firstName'
         """
-    components = key.split('_')
-    return components[0] + ''.join((x.title() for x in components[1:]))
+    parts = key.split('_')
+    return parts[0] + ''.join((part.capitalize() for part in parts[1:]))
