@@ -6,12 +6,14 @@ def get_jwt_user(self, request):
         >>> filter = AccessGatewayFilter()
         >>> filter.get_jwt_user({'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1'+str(datetime.date.today())}}})
         {'user': {'name': 'user1'}}
-
         """
     try:
         auth_header = request.get('headers', {}).get('Authorization', {})
-        if isinstance(auth_header, dict) and 'user' in auth_header:
-            return {'user': auth_header['user']}
-        return None
+        jwt_token = auth_header.get('jwt', '')
+        user_info = auth_header.get('user', {})
+        if jwt_token and user_info:
+            return {'user': user_info}
+        else:
+            return None
     except:
         return None

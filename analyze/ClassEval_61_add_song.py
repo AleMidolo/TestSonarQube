@@ -7,7 +7,4 @@ def add_song(self, song):
         >>> musicPlayer.playlist
         ['song1']
         """
-    if song and isinstance(song, str):
-        self.playlist.append(song)
-        if self.current_song is None and len(self.playlist) == 1:
-            self.current_song = song
+    self.playlist.append(song)
