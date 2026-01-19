@@ -10,7 +10,6 @@ def update_employee(self, employee_id: int, employee_info: dict):
         True
         >>> hrManagementSystem.update_employee(2, {'name': 'John', 'position': 'Manager', 'department': 'Sales', 'salary': 20000})
         False
-
         """
     if employee_id in self.employees:
         self.employees[employee_id].update(employee_info)

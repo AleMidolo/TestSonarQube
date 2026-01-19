@@ -1,13 +1,13 @@
 def rail_fence_decipher(self, encrypted_text, rails):
     """
-        दिए गए ciphertext को Rail Fence cipher का उपयोग करके डिकोड करता है
-        :param encrypted_text: डिकोड करने के लिए ciphertext, str.
-        :param rails: डिक्रिप्शन के लिए उपयोग करने के लिए रेल की संख्या, int.
-        :return: डिकोड किया गया plaintext, str.
-        >>> d = DecryptionUtils('key')
-        >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)
-        'Hello, World!'
-        """
+    दिए गए ciphertext को Rail Fence cipher का उपयोग करके डिकोड करता है
+    :param encrypted_text: डिकोड करने के लिए ciphertext, str.
+    :param rails: डिक्रिप्शन के लिए उपयोग करने के लिए रेल की संख्या, int.
+    :return: डिकोड किया गया plaintext, str.
+    >>> d = DecryptionUtils('key')
+    >>> d.rail_fence_decipher('Hoo!el,Wrdl l', 3)
+    'Hello, World!'
+    """
     rail = [['\n' for i in range(len(encrypted_text))] for j in range(rails)]
     dir_down = None
     row, col = (0, 0)
@@ -35,7 +35,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
             dir_down = True
         if row == rails - 1:
             dir_down = False
-        if rail[row][col] != '*':
+        if rail[row][col] != '\n':
             result.append(rail[row][col])
             col += 1
         if dir_down:

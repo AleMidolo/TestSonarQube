@@ -22,19 +22,24 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     if type(data) != list and type(data) != tuple:
-        raise Exception('the input must be a tuple or a list of tuples')
-    if type(data) == tuple:
-        data = [data]
-    reciprocal_ranks = []
-    for sub_list, total_num in data:
+        raise Exception('the input must be a tuple([0,...,1,...],int) or a iteration of list of tuple')
+    if len(data) == 0:
+        return (0.0, [0.0])
+
+    def calculate_mrr(sub_list, total_num):
         if total_num == 0:
-            reciprocal_ranks.append(0.0)
-            continue
+            return 0.0
         for idx, value in enumerate(sub_list):
             if value == 1:
-                reciprocal_ranks.append(1.0 / (idx + 1))
-                break
-        else:
-            reciprocal_ranks.append(0.0)
-    mean_reciprocal_rank = np.mean(reciprocal_ranks)
-    return (mean_reciprocal_rank, reciprocal_ranks)
+                return 1.0 / (idx + 1)
+        return 0.0
+    if type(data) == tuple:
+        sub_list, total_num = data
+        mrr_value = calculate_mrr(sub_list, total_num)
+        return (mrr_value, [mrr_value])
+    if type(data) == list:
+        mrr_values = []
+        for sub_list, total_num in data:
+            mrr_value = calculate_mrr(sub_list, total_num)
+            mrr_values.append(mrr_value)
+        return (np.mean(mrr_values), mrr_values)

@@ -22,5 +22,5 @@ def format_line_html_text(self, html_text):
     """
     soup = BeautifulSoup(html_text, 'lxml')
     for code in soup.find_all(['pre', 'code']):
-        code.insert_before('-CODE-')
-    return soup.get_text()
+        code.insert_before(self.CODE_MARK)
+    return '\n'.join(soup.stripped_strings)

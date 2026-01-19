@@ -1,8 +1,8 @@
 def trans_three(self, s):
     """
-        Converts a three-digit number into words format
-        :param s: str, the three-digit number
-        :return: str, the number in words format
+        तीन अंकों की संख्या को शब्दों के प्रारूप में परिवर्तित करता है
+        :param s: str, तीन अंकों की संख्या
+        :return: str, संख्या शब्दों के प्रारूप में
         >>> formatter = NumberWordFormatter()
         >>> formatter.trans_three("123")
         "ONE HUNDRED AND TWENTY THREE"
