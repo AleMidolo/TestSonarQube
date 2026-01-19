@@ -13,19 +13,14 @@ def _calculate(first_value, second_value, current_op):
     first = Decimal(first_value)
     second = Decimal(second_value)
     if current_op == '+':
-        result = first + second
+        return first + second
     elif current_op == '-':
-        result = first - second
+        return first - second
     elif current_op == '*':
-        result = first * second
+        return first * second
     elif current_op == '/':
-        if second == Decimal(0):
-            raise ZeroDivisionError('Division by zero')
-        result = first / second
+        return first / second
     elif current_op == '%':
-        if second == Decimal(0):
-            raise ZeroDivisionError('Modulo by zero')
-        result = first % second
+        return first % second
     else:
         raise ValueError(f'Unsupported operator: {current_op}')
-    return result

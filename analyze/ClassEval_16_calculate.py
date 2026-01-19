@@ -40,9 +40,6 @@ def calculate(self, expression):
                     operand_stack.append(num)
                     i = j
                     continue
-                elif expression[i] == '+':
-                    i += 1
-                    continue
                 else:
                     return None
             while operator_stack and operator_stack[-1] != '(' and (self.precedence(operator_stack[-1]) >= self.precedence(expression[i])):

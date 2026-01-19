@@ -9,9 +9,6 @@ def compare(self, cur, peek):
         True
 
         """
-    op_map = {'+': 0, '-': 1, '*': 2, '/': 3, '(': 4, ')': 5, '#': 6, '%': 7}
-    if cur not in op_map or peek not in op_map:
-        return False
-    cur_priority = self.operat_priority[op_map[cur]]
-    peek_priority = self.operat_priority[op_map[peek]]
-    return cur_priority <= peek_priority
+    cur_priority = self.get_priority(cur)
+    peek_priority = self.get_priority(peek)
+    return cur_priority >= peek_priority

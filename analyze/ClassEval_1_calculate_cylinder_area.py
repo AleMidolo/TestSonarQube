@@ -7,6 +7,4 @@ def calculate_cylinder_area(self, height):
         >>> areaCalculator.calculate_cylinder_area(3)
         62.83185307179586
         """
-    base_area = math.pi * self.radius ** 2
-    lateral_area = 2 * math.pi * self.radius * height
-    return 2 * base_area + lateral_area
+    return 2 * math.pi * self.radius * (self.radius + height)

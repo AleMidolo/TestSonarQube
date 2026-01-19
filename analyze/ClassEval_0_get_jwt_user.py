@@ -9,8 +9,12 @@ def get_jwt_user(self, request):
         """
     try:
         auth_header = request.get('headers', {}).get('Authorization', {})
-        if isinstance(auth_header, dict) and 'user' in auth_header:
-            return {'user': auth_header['user']}
-        return None
-    except:
+        jwt_token = auth_header.get('jwt', '')
+        user_info = auth_header.get('user', {})
+        if str(datetime.date.today()) in jwt_token:
+            return {'user': user_info}
+        else:
+            return None
+    except Exception as e:
+        logging.error(f'Error extracting JWT user: {e}')
         return None

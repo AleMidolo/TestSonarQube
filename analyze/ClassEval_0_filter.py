@@ -6,7 +6,6 @@ def filter(self, request):
         >>> filter = AccessGatewayFilter()
         >>> filter.filter({'path': '/login', 'method': 'POST'})
         True
-
         """
     if self.is_start_with(request.get('path', '')):
         return True
@@ -15,6 +14,6 @@ def filter(self, request):
         if user_info is not None:
             self.set_current_user_info_and_log(user_info.get('user', {}))
             return True
-    except (KeyError, TypeError):
+    except (KeyError, ValueError, AttributeError):
         pass
     return False

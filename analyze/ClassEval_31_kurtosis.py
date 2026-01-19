@@ -10,11 +10,11 @@ def kurtosis(data):
         """
     n = len(data)
     if n < 4:
-        raise ValueError('Data must have at least 4 elements to calculate kurtosis')
+        return float('nan')
     mean = sum(data) / n
     variance = sum(((x - mean) ** 2 for x in data)) / n
     if variance == 0:
-        return 0
+        return float('nan')
     m4 = sum(((x - mean) ** 4 for x in data)) / n
     kurt = m4 / variance ** 2 - 3
     return kurt
