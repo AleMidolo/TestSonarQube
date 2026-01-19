@@ -14,35 +14,44 @@ def replace(self, string):
     i = 0
     n = len(string)
     while i < n:
-        if string[i] == '&' and i + 1 < n and (string[i + 1] == '#'):
+        if string[i:i + 2] == '&#':
             j = i + 2
             is_hex = False
-            if j < n and (string[j] == 'x' or string[j] == 'X'):
+            if j < n and string[j] == 'x':
                 is_hex = True
                 j += 1
             start_num = j
             while j < n and string[j] != ';':
-                if is_hex:
-                    if not self.is_hex_char(string[j]):
-                        break
-                elif not string[j].isdigit():
-                    break
                 j += 1
-            if j < n and string[j] == ';' and (j > start_num):
+            if j < n and string[j] == ';':
                 num_str = string[start_num:j]
-                try:
-                    if is_hex:
-                        code_point = int(num_str, 16)
-                    else:
-                        code_point = int(num_str)
-                    if 0 <= code_point <= 1114111:
-                        result.append(chr(code_point))
-                        i = j + 1
-                        continue
-                except (ValueError, OverflowError):
-                    pass
-            result.append(string[i])
-            i += 1
+                if num_str:
+                    try:
+                        if is_hex:
+                            if all((self.is_hex_char(c) for c in num_str)):
+                                code_point = int(num_str, 16)
+                            else:
+                                result.append(string[i:j + 1])
+                                i = j + 1
+                                continue
+                        elif num_str.isdigit():
+                            code_point = int(num_str)
+                        else:
+                            result.append(string[i:j + 1])
+                            i = j + 1
+                            continue
+                        if 0 <= code_point <= 1114111:
+                            result.append(chr(code_point))
+                        else:
+                            result.append(string[i:j + 1])
+                    except (ValueError, OverflowError):
+                        result.append(string[i:j + 1])
+                else:
+                    result.append(string[i:j + 1])
+                i = j + 1
+            else:
+                result.append(string[i])
+                i += 1
         else:
             result.append(string[i])
             i += 1

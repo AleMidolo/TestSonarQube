@@ -7,25 +7,40 @@ def text2int(self, textnum):
         >>> w2n.text2int("thirty-two")
         "32"
         """
-    if not self.is_valid_input(textnum):
-        return None
-    textnum = textnum.lower().replace('-', ' ')
-    words = textnum.split()
+    textnum = textnum.replace('-', ' ')
+    for ordinal, value in self.ordinal_words.items():
+        if ordinal in textnum:
+            textnum = textnum.replace(ordinal, self.units[value])
+    for ending, replacement in self.ordinal_endings:
+        if textnum.endswith(ending):
+            textnum = textnum[:-len(ending)] + replacement
+    words = textnum.lower().split()
     current = 0
     result = 0
     for word in words:
-        if word in self.ordinal_words:
-            current += self.ordinal_words[word]
-        else:
-            for ending, replacement in self.ordinal_endings:
-                if word.endswith(ending):
-                    word = word[:-len(ending)] + replacement
-                    break
-            if word not in self.numwords:
+        if word == 'and':
+            continue
+        if word not in self.numwords:
+            if word in self.tens:
                 continue
+            else:
+                for i in range(len(word) - 1, 0, -1):
+                    if word[:i] in self.numwords and word[i:] in self.numwords:
+                        scale1, increment1 = self.numwords[word[:i]]
+                        scale2, increment2 = self.numwords[word[i:]]
+                        current = current * scale1 + increment1
+                        current += increment2
+                        break
+                else:
+                    continue
+        else:
             scale, increment = self.numwords[word]
-            current = current * scale + increment
             if scale > 100:
+                result += current * scale
+                current = 0
+            else:
+                current = current * scale + increment
+            if scale > current:
                 result += current
                 current = 0
     result += current

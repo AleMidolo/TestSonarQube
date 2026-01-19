@@ -16,7 +16,7 @@ def lemmatize_sentence(self, sentence):
     for word, tag in tagged_words:
         wordnet_tag = self.get_wordnet_pos(tag)
         if wordnet_tag:
-            lemmatized_word = self.lemmatizer.lemmatize(word, wordnet_tag)
+            lemmatized_word = self.lemmatizer.lemmatize(word, pos=wordnet_tag)
         else:
             lemmatized_word = self.lemmatizer.lemmatize(word)
         lemmatized_words.append(lemmatized_word)

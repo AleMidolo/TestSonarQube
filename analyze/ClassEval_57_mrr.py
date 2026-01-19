@@ -24,23 +24,23 @@ def mrr(data):
         else:
             positions = np.where(sub_list == 1)[0]
             if len(positions) == 0:
-                mrr_val = 0.0
+                mrr_value = 0.0
             else:
                 first_correct_pos = positions[0] + 1
-                mrr_val = 1.0 / first_correct_pos
-            return (mrr_val, [mrr_val])
+                mrr_value = 1.0 / first_correct_pos
+            return (mrr_value, [mrr_value])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
             sub_list = np.array(sub_list)
             if total_num == 0:
-                mrr_val = 0.0
+                mrr_value = 0.0
             else:
                 positions = np.where(sub_list == 1)[0]
                 if len(positions) == 0:
-                    mrr_val = 0.0
+                    mrr_value = 0.0
                 else:
                     first_correct_pos = positions[0] + 1
-                    mrr_val = 1.0 / first_correct_pos
-            separate_result.append(mrr_val)
+                    mrr_value = 1.0 / first_correct_pos
+            separate_result.append(mrr_value)
         return (np.mean(separate_result), separate_result)

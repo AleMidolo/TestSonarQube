@@ -9,4 +9,3 @@ def send(self, info):
     if not isinstance(info, dict) or 'addr' not in info or 'content' not in info:
         return "Error: Invalid info format. Must be a dict with 'addr' and 'content' keys."
     self.send_struct = {'addr': info['addr'], 'content': info['content']}
-    return None

@@ -12,5 +12,6 @@ def read_excel(self, file_name):
             data.append(row)
         workbook.close()
         return data
-    except:
+    except Exception as e:
+        print(f'Error reading Excel file: {e}')
         return None

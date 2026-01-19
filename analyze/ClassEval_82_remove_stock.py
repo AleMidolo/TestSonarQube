@@ -14,8 +14,10 @@ def remove_stock(self, stock):
         if pf['name'] == stock['name']:
             if pf['quantity'] < stock['quantity']:
                 return False
-            pf['quantity'] -= stock['quantity']
-            if pf['quantity'] == 0:
+            elif pf['quantity'] == stock['quantity']:
                 self.portfolio.remove(pf)
-            return True
+                return True
+            else:
+                pf['quantity'] -= stock['quantity']
+                return True
     return False

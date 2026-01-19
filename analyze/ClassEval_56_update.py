@@ -10,19 +10,12 @@ def update(self, predicted_labels, true_labels):
         """
     if len(predicted_labels) != len(true_labels):
         raise ValueError('predicted_labels and true_labels must have the same length')
-    tp = fp = fn = tn = 0
     for pred, true in zip(predicted_labels, true_labels):
         if pred == 1 and true == 1:
-            tp += 1
+            self.true_positives += 1
         elif pred == 1 and true == 0:
-            fp += 1
+            self.false_positives += 1
         elif pred == 0 and true == 1:
-            fn += 1
+            self.false_negatives += 1
         elif pred == 0 and true == 0:
-            tn += 1
-        else:
-            raise ValueError('Labels must be 0 or 1')
-    self.true_positives = tp
-    self.false_positives = fp
-    self.false_negatives = fn
-    self.true_negatives = tn
+            self.true_negatives += 1
