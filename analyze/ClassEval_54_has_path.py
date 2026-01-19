@@ -12,59 +12,66 @@ def has_path(self, pos1, pos2):
         return False
     
     # Check if both positions have the same icon (required for Mahjong Connect)
-    y1, x1 = pos1
-    y2, x2 = pos2
+    x1, y1 = pos1
+    x2, y2 = pos2
     
-    # Boundary checks
-    if not (0 <= y1 < len(self.board) and 0 <= x1 < len(self.board[0])):
-        return False
-    if not (0 <= y2 < len(self.board) and 0 <= x2 < len(self.board[0])):
-        return False
-    
-    # Check if icons match (if they exist)
     if self.board[y1][x1] != self.board[y2][x2]:
         return False
     
+    # If either position is empty, no valid path
+    if self.board[y1][x1] is None or self.board[y2][x2] is None:
+        return False
+    
     # BFS to find path with at most 2 turns (3 line segments)
-    # State: (y, x, direction, turns)
-    # direction: 0=start, 1=horizontal, 2=vertical
-    queue = deque([(y1, x1, 0, 0)])
-    visited = set()
-    visited.add((y1, x1, 0))
+    rows = len(self.board)
+    cols = len(self.board[0])
+    
+    # Queue stores: (x, y, direction, turns)
+    # direction: 0=right, 1=down, 2=left, 3=up, -1=start
+    queue = deque([(x1, y1, -1, 0)])
+    visited = {}  # (x, y, direction): turns
+    
+    directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]  # right, down, left, up
     
     while queue:
-        y, x, direction, turns = queue.popleft()
+        x, y, prev_dir, turns = queue.popleft()
         
-        # Try all four directions
-        for dy, dx, new_dir in [(0, 1, 1), (0, -1, 1), (1, 0, 2), (-1, 0, 2)]:
-            ny, nx = y + dy, x + dx
+        # Check if we reached the destination
+        if (x, y) == pos2:
+            return True
+        
+        # Try all 4 directions
+        for dir_idx, (dx, dy) in enumerate(directions):
+            nx, ny = x + dx, y + dy
             
-            # Check boundaries (allow one step outside the board)
-            if ny < -1 or ny > len(self.board) or nx < -1 or nx > len(self.board[0]):
-                continue
-            
-            # Calculate new turn count
-            new_turns = turns
-            if direction != 0 and direction != new_dir:
-                new_turns += 1
-            
-            # Maximum 2 turns allowed (3 line segments)
-            if new_turns > 2:
-                continue
-            
-            # Check if we reached the destination
-            if (ny, nx) == (y2, x2):
-                return True
-            
-            # Check if cell is empty or outside board
-            if 0 <= ny < len(self.board) and 0 <= nx < len(self.board[0]):
-                if self.board[ny][nx] is not None and (ny, nx) != (y2, x2):
+            # Check bounds (can go one step outside the board)
+            if -1 <= nx <= cols and -1 <= ny <= rows:
+                # Calculate new turn count
+                new_turns = turns
+                if prev_dir != -1 and prev_dir != dir_idx:
+                    new_turns += 1
+                
+                # Maximum 2 turns allowed (3 line segments)
+                if new_turns > 2:
                     continue
-            
-            # Add to queue if not visited with this state
-            state = (ny, nx, new_dir)
-            if state not in visited:
-                visited.add(state)
-                queue.append((ny, nx, new_dir, new_turns))
+                
+                # Check if this cell is valid
+                # Can pass through empty cells or the destination
+                is_valid = False
+                if (nx, ny) == pos2:
+                    is_valid = True
+                elif -1 <= nx < cols and -1 <= ny < rows:
+                    if 0 <= nx < cols and 0 <= ny < rows:
+                        if self.board[ny][nx] is None or (nx, ny) == pos1:
+                            is_valid = True
+                    else:
+                        # Outside board is considered empty
+                        is_valid = True
+                
+                if is_valid:
+                    state = (nx, ny, dir_idx)
+                    if state not in visited or visited[state] > new_turns:
+                        visited[state] = new_turns
+                        queue.append((nx, ny, dir_idx, new_turns))
     
     return False

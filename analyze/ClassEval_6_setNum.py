@@ -7,6 +7,7 @@ def setNum(self):
     (2, 0)
 
     """
-    block_size = len(self.data) // self.num_partitions
-    remainder = len(self.data) % self.num_partitions
+    total_length = len(self.data)
+    block_size = total_length // self.num_partitions
+    remainder = total_length % self.num_partitions
     return (block_size, remainder)

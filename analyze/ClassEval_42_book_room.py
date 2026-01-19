@@ -35,7 +35,7 @@ def book_room(self, room_type, room_number, name):
     if room_number > available_quantity:
         return available_quantity
     
-    # If we have enough rooms, proceed with booking
+    # If we can book the rooms, proceed with booking
     self.available_rooms[room_type] -= room_number
     
     # Add to booked_rooms

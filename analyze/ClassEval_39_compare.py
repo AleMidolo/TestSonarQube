@@ -9,11 +9,5 @@ def compare(self, cur, peek):
     True
 
     """
-    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
-    
-    # Get precedence values, default to 0 if operator not found
-    cur_precedence = precedence.get(cur, 0)
-    peek_precedence = precedence.get(peek, 0)
-    
-    # Return True if current operator has higher or equal precedence
-    return cur_precedence >= peek_precedence
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
+    return precedence.get(cur, 0) >= precedence.get(peek, 0)

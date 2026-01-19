@@ -10,7 +10,7 @@ def convert(self, amount, from_currency, to_currency):
     10.0
     """
     # Based on the example: 64 CNY = 10 USD
-    # This implies: 1 USD = 6.4 CNY
+    # This means 1 USD = 6.4 CNY
     
     # Define exchange rates relative to USD as base currency
     exchange_rates = {

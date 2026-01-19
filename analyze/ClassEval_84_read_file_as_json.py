@@ -11,7 +11,7 @@ def read_file_as_json(self):
     """
     import json
     
-    with open(self.file_path, 'r') as file:
-        data = json.load(file)
+    with open(self.file_path, 'r') as f:
+        data = json.load(f)
     
     return data

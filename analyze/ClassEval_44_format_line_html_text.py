@@ -20,20 +20,38 @@ def format_line_html_text(self, html_text):
     Another paragraph.
     -CODE-
     """
-    from bs4 import BeautifulSoup
+    from html.parser import HTMLParser
     
-    # Parse the HTML
-    soup = BeautifulSoup(html_text, 'html.parser')
+    class CodeReplacer(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.result = []
+            self.in_pre = False
+            self.in_code = False
+            
+        def handle_starttag(self, tag, attrs):
+            if tag == 'pre':
+                self.in_pre = True
+            elif tag == 'code':
+                self.in_code = True
+                
+        def handle_endtag(self, tag):
+            if tag == 'pre':
+                if self.in_pre:
+                    self.result.append('-CODE-')
+                self.in_pre = False
+            elif tag == 'code':
+                self.in_code = False
+                
+        def handle_data(self, data):
+            if not self.in_pre and not self.in_code:
+                text = data.strip()
+                if text:
+                    self.result.append(text)
+                    
+        def get_result(self):
+            return '\n'.join(self.result)
     
-    # Find all <pre> tags (which typically contain code)
-    for pre_tag in soup.find_all('pre'):
-        # Replace the <pre> tag with -CODE- placeholder
-        pre_tag.replace_with('-CODE-')
-    
-    # Get the text content, which will strip HTML tags
-    text = soup.get_text()
-    
-    # Clean up extra whitespace while preserving the structure
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    
-    return '\n'.join(lines)
+    parser = CodeReplacer()
+    parser.feed(html_text)
+    return parser.get_result()

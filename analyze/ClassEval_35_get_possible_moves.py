@@ -20,19 +20,19 @@ def get_possible_moves(self, state):
     
     # Check each possible direction
     # 'up' means moving a tile up into the empty space (empty tile moves down)
-    if empty_row < 2:  # Can move up if empty tile is not in the bottom row
+    if empty_row < 2:  # Can move down (tile from below moves up)
         moves.append('up')
     
     # 'down' means moving a tile down into the empty space (empty tile moves up)
-    if empty_row > 0:  # Can move down if empty tile is not in the top row
+    if empty_row > 0:  # Can move up (tile from above moves down)
         moves.append('down')
     
     # 'left' means moving a tile left into the empty space (empty tile moves right)
-    if empty_col < 2:  # Can move left if empty tile is not in the rightmost column
+    if empty_col < 2:  # Can move right (tile from right moves left)
         moves.append('left')
     
     # 'right' means moving a tile right into the empty space (empty tile moves left)
-    if empty_col > 0:  # Can move right if empty tile is not in the leftmost column
+    if empty_col > 0:  # Can move left (tile from left moves right)
         moves.append('right')
     
     return moves

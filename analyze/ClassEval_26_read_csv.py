@@ -9,7 +9,7 @@ def read_csv(self, file_name):
     """
     import csv
     
-    with open(file_name, 'r', encoding='utf-8') as file:
+    with open(file_name, 'r', newline='', encoding='utf-8') as file:
         csv_reader = csv.reader(file)
         rows = list(csv_reader)
         

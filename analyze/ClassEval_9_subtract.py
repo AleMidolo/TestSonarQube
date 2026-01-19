@@ -41,7 +41,7 @@ def subtract(num1, num2):
     if len(num1) > len(num2):
         larger, smaller = num1, num2
         result_negative = False
-    elif len(num1) < len(num2):
+    elif len(num2) > len(num1):
         larger, smaller = num2, num1
         result_negative = True
     else:

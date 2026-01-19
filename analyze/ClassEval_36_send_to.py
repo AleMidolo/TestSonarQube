@@ -18,32 +18,29 @@ def send_to(self, recv, content, size):
     # Check if receiver has enough space in their inbox
     current_size = sum(email.get('size', 0) for email in recv.inbox) if isinstance(recv.inbox, list) else recv.inbox.get('size', 0) if isinstance(recv.inbox, dict) else 0
     
-    # If inbox is a list, calculate total size
+    # If recv.inbox is a list, calculate total size
     if isinstance(recv.inbox, list):
         current_size = sum(email.get('size', 0) for email in recv.inbox)
-    elif isinstance(recv.inbox, dict) and recv.inbox:
+    elif isinstance(recv.inbox, dict):
         current_size = recv.inbox.get('size', 0)
     else:
         current_size = 0
     
-    # Check if there's enough capacity (assuming recv has a capacity attribute)
-    if hasattr(recv, 'capacity') and current_size + size > recv.capacity:
+    # Check if adding this email would exceed capacity
+    if current_size + size > recv.capacity:
         return False
     
     # Create email object
     email = {
         'sender': self.email,
-        'receiver': recv.email if hasattr(recv, 'email') else recv,
+        'receiver': recv.email,
         'content': content,
         'size': size,
         'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'state': 'unread'
     }
     
-    # Add to receiver's inbox
-    if isinstance(recv.inbox, list):
-        recv.inbox.append(email)
-    else:
-        recv.inbox = email
+    # Add email to receiver's inbox
+    recv.inbox = email
     
     return True

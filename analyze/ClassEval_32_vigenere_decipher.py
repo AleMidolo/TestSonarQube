@@ -21,21 +21,17 @@ def vigenere_decipher(self, ciphertext):
             # Get the key character for this position
             key_char = key[i % key_length]
             
-            # Convert characters to numbers (a=0, b=1, ..., z=25)
-            char_num = ord(char) - ord('a')
-            key_num = ord(key_char) - ord('a')
+            # Calculate the shift value from the key character
+            shift = ord(key_char) - ord('a')
             
-            # Decipher: subtract key from ciphertext (mod 26)
-            plain_num = (char_num - key_num) % 26
-            
-            # Convert back to character
-            plain_char = chr(plain_num + ord('a'))
+            # Decipher by subtracting the shift
+            deciphered_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
             
             # Restore original case
             if is_upper:
-                plain_char = plain_char.upper()
+                deciphered_char = deciphered_char.upper()
             
-            plaintext.append(plain_char)
+            plaintext.append(deciphered_char)
         else:
             # Non-alphabetic characters remain unchanged
             plaintext.append(char)

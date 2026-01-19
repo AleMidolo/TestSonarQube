@@ -20,18 +20,18 @@ def check_winner(self):
             
             current_symbol = self.board[row][col]
             
-            # Check in each direction
+            # Check in all four directions
             for dr, dc in directions:
                 count = 1  # Count the current cell
                 
-                # Check forward in the direction
+                # Check in the positive direction
                 r, c = row + dr, col + dc
                 while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == current_symbol:
                     count += 1
                     r += dr
                     c += dc
                 
-                # Check backward in the direction
+                # Check in the negative direction
                 r, c = row - dr, col - dc
                 while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == current_symbol:
                     count += 1

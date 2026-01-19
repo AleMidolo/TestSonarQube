@@ -9,23 +9,25 @@ def filter(self, request):
 
     """
     # Define allowed paths and methods
-    allowed_endpoints = {
-        '/login': ['POST'],
-        '/register': ['POST'],
-        '/public': ['GET'],
-        '/health': ['GET'],
-        '/api/data': ['GET', 'POST'],
-    }
+    allowed_public_paths = ['/login', '/register', '/health', '/public']
+    allowed_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
     
     # Extract path and method from request
     path = request.get('path', '')
     method = request.get('method', '')
     
-    # Check if path exists in allowed endpoints
-    if path in allowed_endpoints:
-        # Check if method is allowed for this path
-        if method in allowed_endpoints[path]:
+    # Check if method is valid
+    if method not in allowed_methods:
+        return False
+    
+    # Check if path is in allowed public paths
+    for allowed_path in allowed_public_paths:
+        if path.startswith(allowed_path):
             return True
+    
+    # Check if request has valid authentication token
+    if 'token' in request and request['token']:
+        return True
     
     # Default: deny access
     return False
