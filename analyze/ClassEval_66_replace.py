@@ -26,8 +26,9 @@ def replace(self, string):
         
         return chr(char_code)
     
-    # Pattern to match both decimal (&#123;) and hexadecimal (&#x7B; or &#X7B;) numeric entities
+    # Pattern to match numeric character references
+    # Matches &#digits; or &#xhexdigits; or &#Xhexdigits;
     pattern = r'&#[xX]?[0-9a-fA-F]+;'
-    result = re.sub(pattern, replace_entity, string)
     
+    result = re.sub(pattern, replace_entity, string)
     return result

@@ -11,16 +11,20 @@ def extract_file(self, file_name, output_path):
     import os
     
     try:
-        # Crea la directory di output se non esiste
-        os.makedirs(output_path, exist_ok=True)
+        # Verifica se il file zip esiste
+        if not hasattr(self, 'zip_file') or not os.path.exists(self.zip_file):
+            return False
         
-        # Apri l'archivio zip
+        # Apre l'archivio zip
         with zipfile.ZipFile(self.zip_file, 'r') as zip_ref:
             # Verifica se il file esiste nell'archivio
             if file_name not in zip_ref.namelist():
                 return False
             
-            # Estrai il file specifico
+            # Crea la directory di output se non esiste
+            os.makedirs(output_path, exist_ok=True)
+            
+            # Estrae il file specifico
             zip_ref.extract(file_name, output_path)
             
         return True

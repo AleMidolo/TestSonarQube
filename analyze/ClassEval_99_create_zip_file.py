@@ -31,5 +31,5 @@ def create_zip_file(self, files, output_file_name):
                     return False
         
         return True
-    except Exception:
+    except Exception as e:
         return False

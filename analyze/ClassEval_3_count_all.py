@@ -11,8 +11,8 @@ def count_all(n):
     import math
     
     total = 0
+    # Per ogni k da 1 a n, calcola il numero di permutazioni P(n, k) = n! / (n-k)!
     for k in range(1, n + 1):
-        # P(n, k) = n! / (n-k)!
         total += math.factorial(n) // math.factorial(n - k)
     
     return total

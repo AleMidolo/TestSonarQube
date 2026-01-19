@@ -12,20 +12,20 @@ def cosine_similarities(vector_1, vectors_all):
     """
     import numpy as np
     
-    # Convert vectors_all to numpy array if it's a list
+    # Convert list to numpy array if needed
     if isinstance(vectors_all, list):
         vectors_all = np.array(vectors_all)
     
-    # Calculate the dot product between vector_1 and all vectors
+    # Normalize vector_1
+    norm_1 = np.linalg.norm(vector_1)
+    
+    # Compute dot products between vector_1 and all vectors
     dot_products = np.dot(vectors_all, vector_1)
     
-    # Calculate the norm of vector_1
-    norm_vector_1 = np.linalg.norm(vector_1)
+    # Compute norms of all vectors
+    norms_all = np.linalg.norm(vectors_all, axis=1)
     
-    # Calculate the norms of all vectors in vectors_all
-    norms_vectors_all = np.linalg.norm(vectors_all, axis=1)
-    
-    # Calculate cosine similarities
-    cosine_sims = dot_products / (norm_vector_1 * norms_vectors_all)
+    # Compute cosine similarities
+    cosine_sims = dot_products / (norm_1 * norms_all)
     
     return cosine_sims

@@ -14,10 +14,10 @@ def caesar_cipher(self, plaintext, shift):
         if char.isalpha():
             # Determina se il carattere è maiuscolo o minuscolo
             if char.isupper():
-                # Sposta il carattere maiuscolo
+                # Cripta caratteri maiuscoli
                 shifted = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
             else:
-                # Sposta il carattere minuscolo
+                # Cripta caratteri minuscoli
                 shifted = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
             ciphertext += shifted
         else:

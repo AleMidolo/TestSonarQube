@@ -24,13 +24,5 @@ def query(self, weather_list, tmp_units='celsius'):
             temperature = (temperature * 9/5) + 32
         elif current_units == 'fahrenheit' and tmp_units == 'celsius':
             temperature = (temperature - 32) * 5/9
-        elif current_units == 'celsius' and tmp_units == 'kelvin':
-            temperature = temperature + 273.15
-        elif current_units == 'kelvin' and tmp_units == 'celsius':
-            temperature = temperature - 273.15
-        elif current_units == 'fahrenheit' and tmp_units == 'kelvin':
-            temperature = (temperature - 32) * 5/9 + 273.15
-        elif current_units == 'kelvin' and tmp_units == 'fahrenheit':
-            temperature = (temperature - 273.15) * 9/5 + 32
     
     return (temperature, weather)

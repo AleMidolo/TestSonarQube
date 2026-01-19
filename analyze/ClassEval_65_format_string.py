@@ -13,15 +13,14 @@ def format_string(self, x):
     # Rimuovi zeri iniziali
     x = x.lstrip('0') or '0'
     
-    # Definizioni per la conversione
+    # Definizioni base
     unita = ['', 'UNO', 'DUE', 'TRE', 'QUATTRO', 'CINQUE', 'SEI', 'SETTE', 'OTTO', 'NOVE']
     decine_speciali = ['DIECI', 'UNDICI', 'DODICI', 'TREDICI', 'QUATTORDICI', 'QUINDICI', 
                        'SEDICI', 'DICIASSETTE', 'DICIOTTO', 'DICIANNOVE']
     decine = ['', '', 'VENTI', 'TRENTA', 'QUARANTA', 'CINQUANTA', 'SESSANTA', 'SETTANTA', 'OTTANTA', 'NOVANTA']
     
-    def converti_centinaia(num_str):
-        """Converte un numero di massimo 3 cifre in parole"""
-        num = int(num_str)
+    def converti_centinaia(num):
+        """Converte un numero da 0 a 999 in parole"""
         if num == 0:
             return ''
         
@@ -53,29 +52,23 @@ def format_string(self, x):
         
         return ' '.join(risultato)
     
-    # Dividi il numero in gruppi di 3 cifre da destra
-    lunghezza = len(x)
+    # Dividi il numero in gruppi di tre cifre da destra
+    num_int = int(x)
     
-    if lunghezza <= 3:
-        risultato = converti_centinaia(x)
-    elif lunghezza <= 6:
-        # Migliaia
-        migliaia = x[:-3]
-        centinaia = x[-3:]
-        
-        parti = []
-        parte_migliaia = converti_centinaia(migliaia)
-        if parte_migliaia:
-            parti.append(parte_migliaia)
-            parti.append('MILA')
-        
-        parte_centinaia = converti_centinaia(centinaia)
-        if parte_centinaia:
-            parti.append(parte_centinaia)
-        
-        risultato = ' '.join(parti)
-    else:
-        # Per numeri più grandi
-        risultato = converti_centinaia(x[-3:])
+    if num_int == 0:
+        return "ZERO SOLO"
     
-    return risultato + ' SOLO' if risultato else 'SOLO'
+    # Gestisci migliaia e unità
+    migliaia = num_int // 1000
+    unita_parte = num_int % 1000
+    
+    risultato_finale = []
+    
+    if migliaia > 0:
+        risultato_finale.append(converti_centinaia(migliaia))
+        risultato_finale.append('MILA')
+    
+    if unita_parte > 0:
+        risultato_finale.append(converti_centinaia(unita_parte))
+    
+    return ' '.join(risultato_finale) + ' SOLO'

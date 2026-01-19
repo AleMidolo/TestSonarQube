@@ -1,3 +1,6 @@
+import json
+import os
+
 def read_json(self, file_path):
     """
     Leggi un file JSON e restituisci i dati.
@@ -7,9 +10,6 @@ def read_json(self, file_path):
     >>> json.read_json('test.json')
     {'name': 'test', 'age': 14}
     """
-    import json
-    import os
-    
     if not os.path.exists(file_path):
         return 0
     

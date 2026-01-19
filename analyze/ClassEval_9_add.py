@@ -9,31 +9,63 @@ def add(num1, num2):
     '111111111011111111100'
 
     """
-    # Handle empty strings
-    if not num1:
-        return num2 if num2 else "0"
-    if not num2:
-        return num1
+    # Handle negative numbers
+    if num1.startswith('-') and num2.startswith('-'):
+        return '-' + add(num1[1:], num2[1:])
+    elif num1.startswith('-'):
+        return subtract(num2, num1[1:])
+    elif num2.startswith('-'):
+        return subtract(num1, num2[1:])
     
     # Make sure num1 is the longer number
-    if len(num2) > len(num1):
+    if len(num1) < len(num2):
         num1, num2 = num2, num1
     
-    # Pad the shorter number with zeros on the left
+    # Pad the shorter number with zeros
     num2 = num2.zfill(len(num1))
     
     result = []
     carry = 0
     
-    # Add digits from right to left
+    # Add from right to left
     for i in range(len(num1) - 1, -1, -1):
         digit_sum = int(num1[i]) + int(num2[i]) + carry
         result.append(str(digit_sum % 10))
         carry = digit_sum // 10
     
-    # If there's a remaining carry, add it
+    # Add remaining carry if any
     if carry:
         result.append(str(carry))
     
-    # Reverse the result to get the correct order
+    # Reverse to get the correct order
     return ''.join(reversed(result))
+
+def subtract(num1, num2):
+    """Helper function for handling subtraction in negative cases"""
+    # Determine which number is larger
+    is_negative = False
+    if len(num1) < len(num2) or (len(num1) == len(num2) and num1 < num2):
+        num1, num2 = num2, num1
+        is_negative = True
+    
+    # Pad the shorter number
+    num2 = num2.zfill(len(num1))
+    
+    result = []
+    borrow = 0
+    
+    for i in range(len(num1) - 1, -1, -1):
+        diff = int(num1[i]) - int(num2[i]) - borrow
+        if diff < 0:
+            diff += 10
+            borrow = 1
+        else:
+            borrow = 0
+        result.append(str(diff))
+    
+    # Remove leading zeros
+    while len(result) > 1 and result[-1] == '0':
+        result.pop()
+    
+    result_str = ''.join(reversed(result))
+    return '-' + result_str if is_negative else result_str

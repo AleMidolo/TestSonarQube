@@ -8,23 +8,18 @@ def check_course_conflict(self, new_course):
     >>> classroom.check_course_conflict({'name': 'SE', 'start_time': '9:40', 'end_time': '10:40'})
     False
     """
-    def time_to_minutes(time_str):
-        """Convert time string 'HH:MM' to minutes since midnight"""
-        hours, minutes = map(int, time_str.split(':'))
-        return hours * 60 + minutes
+    new_start = new_course['start_time']
+    new_end = new_course['end_time']
     
-    new_start = time_to_minutes(new_course['start_time'])
-    new_end = time_to_minutes(new_course['end_time'])
-    
-    # Check against all existing courses
+    # Assuming self.courses is a list of course dictionaries
     for course in self.courses:
-        existing_start = time_to_minutes(course['start_time'])
-        existing_end = time_to_minutes(course['end_time'])
+        existing_start = course['start_time']
+        existing_end = course['end_time']
         
-        # Check for overlap (including boundary times)
-        # Conflict exists if:
+        # Check for overlap (including boundary cases)
+        # Conflict occurs if:
         # - new course starts before existing ends AND new course ends after existing starts
-        # This includes the case where boundary times are equal
+        # Since boundary times are considered conflicts, we use <= and >=
         if new_start < existing_end and new_end > existing_start:
             return False
     

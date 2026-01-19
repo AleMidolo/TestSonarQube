@@ -15,11 +15,12 @@ def split_sentences(self, text):
     # Remove empty strings from the result
     sentences = [s.strip() for s in sentences if s.strip()]
     
-    # If the original text ends with punctuation, preserve it on the last sentence
+    # If the original text ends with punctuation, we need to add it back to the last sentence
     if sentences and text.strip():
         # Find the last punctuation mark(s) in the original text
         match = re.search(r'[.?!]+\s*$', text)
         if match:
+            # Add the punctuation back to the last sentence
             sentences[-1] += match.group().strip()
     
     return sentences

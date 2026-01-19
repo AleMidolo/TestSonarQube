@@ -20,7 +20,7 @@ def has_path(self, pos1, pos2):
     
     # BFS to find path with at most 2 turns
     rows = len(self.board)
-    cols = len(self.board[0]) if rows > 0 else 0
+    cols = len(self.board[0])
     
     # Queue stores: (x, y, direction, turns)
     # direction: 0=right, 1=down, 2=left, 3=up, -1=start
@@ -37,16 +37,12 @@ def has_path(self, pos1, pos2):
         for dir_idx, (dx, dy) in enumerate(directions):
             nx, ny = x + dx, y + dy
             
-            # Check bounds (allow one step outside the board)
-            if nx < -1 or nx > cols or ny < -1 or ny > rows:
-                continue
-            
-            # Calculate number of turns
+            # Calculate turns
             new_turns = turns
             if prev_dir != -1 and prev_dir != dir_idx:
                 new_turns += 1
             
-            # Maximum 2 turns allowed
+            # Max 2 turns allowed
             if new_turns > 2:
                 continue
             
@@ -54,12 +50,16 @@ def has_path(self, pos1, pos2):
             if (nx, ny) == (x2, y2):
                 return True
             
+            # Check bounds (can go one step outside the board)
+            if nx < -1 or nx > cols or ny < -1 or ny > rows:
+                continue
+            
             # Check if position is valid (empty or outside board)
             if 0 <= nx < cols and 0 <= ny < rows:
                 if self.board[ny][nx] is not None and (nx, ny) != (x2, y2):
                     continue
             
-            # Avoid revisiting same state
+            # Check if already visited with this direction
             state = (nx, ny, dir_idx)
             if state in visited:
                 continue

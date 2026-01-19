@@ -7,12 +7,10 @@ def trans_three(self, s):
     >>> formatter.trans_three("123")
     "UNO CENTO E VENTI TRE"
     """
-    # Definizione delle parole per i numeri
+    # Definizione dei numeri in italiano
     ones = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
-    teens = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", 
-             "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
-    tens = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", 
-            "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
+    tens = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
+    teens = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
     
     # Rimuovi zeri iniziali e gestisci il caso vuoto
     s = s.lstrip('0')
@@ -36,13 +34,23 @@ def trans_three(self, s):
     tens_digit = int(s[1])
     ones_digit = int(s[2])
     
-    if tens_digit == 1:
+    if tens_digit == 0 and ones_digit == 0:
+        pass  # Niente da aggiungere
+    elif tens_digit == 1:
         # Numeri da 10 a 19
+        if result:
+            result.append("E")
         result.append(teens[ones_digit])
+    elif tens_digit >= 2:
+        # Numeri da 20 in su
+        if result:
+            result.append("E")
+        result.append(tens[tens_digit] + (" " + ones[ones_digit] if ones_digit > 0 else ""))
     else:
-        if tens_digit > 0:
-            result.append(tens[tens_digit])
+        # Solo unità (0-9)
         if ones_digit > 0:
+            if result:
+                result.append("E")
             result.append(ones[ones_digit])
     
-    return " E ".join(result)
+    return " ".join(result)

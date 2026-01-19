@@ -9,11 +9,10 @@ def count(n: int, m: int) -> int:
     """
     if m > n or m < 0 or n < 0:
         return 0
-    
     if m == 0 or m == n:
         return 1
     
-    # Calculate C(n, m) = n! / (m! * (n-m)!)
+    # Calculate C(n, m) = n! / (m! * (n - m)!)
     # Optimize by using C(n, m) = C(n, n-m) and choosing the smaller value
     m = min(m, n - m)
     

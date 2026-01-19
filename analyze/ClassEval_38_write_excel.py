@@ -17,15 +17,15 @@ def write_excel(self, data, file_name):
     try:
         import openpyxl
         
-        # Create a new workbook and select the active sheet
+        # Crea un nuovo workbook
         workbook = openpyxl.Workbook()
         sheet = workbook.active
         
-        # Write data to the sheet
+        # Scrivi i dati nel foglio
         for row_data in data:
             sheet.append(row_data)
         
-        # Save the workbook to the specified file
+        # Salva il file
         workbook.save(file_name)
         
         return 1

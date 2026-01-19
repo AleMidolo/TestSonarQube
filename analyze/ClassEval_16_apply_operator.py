@@ -18,7 +18,7 @@ def apply_operator(self, operand_stack, operator_stack):
     operand2 = operand_stack.pop()
     operand1 = operand_stack.pop()
     
-    # Apply the operator
+    # Perform the operation
     if operator == '+':
         result = operand1 + operand2
     elif operator == '-':

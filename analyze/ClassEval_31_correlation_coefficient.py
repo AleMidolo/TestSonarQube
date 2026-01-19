@@ -22,5 +22,5 @@ def correlation_coefficient(data1, data2):
     sum_sq2 = sum((y - mean2) ** 2 for y in data2)
     denominator = (sum_sq1 ** 0.5) * (sum_sq2 ** 0.5)
     
-    # Return Pearson correlation coefficient
+    # Return correlation coefficient
     return numerator / denominator

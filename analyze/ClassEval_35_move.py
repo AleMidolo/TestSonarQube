@@ -21,6 +21,7 @@ def move(self, state, direction):
             break
     
     # Determina la nuova posizione in base alla direzione
+    # Nota: la direzione indica dove si muove il blocco vuoto
     if direction == 'su':
         new_row, new_col = empty_row - 1, empty_col
     elif direction == 'giù':

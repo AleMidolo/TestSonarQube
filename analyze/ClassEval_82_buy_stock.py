@@ -15,7 +15,19 @@ def buy_stock(self, stock):
     
     if self.balance >= total_cost:
         self.balance -= total_cost
-        self.portfolio.append(stock)
+        
+        # Cerca se l'azione esiste già nel portafoglio
+        found = False
+        for existing_stock in self.portfolio:
+            if existing_stock["name"] == stock["name"]:
+                existing_stock["quantity"] += stock["quantity"]
+                found = True
+                break
+        
+        # Se non esiste, aggiungila al portafoglio
+        if not found:
+            self.portfolio.append(stock.copy())
+        
         return True
     else:
         return False

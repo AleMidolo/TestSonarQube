@@ -8,6 +8,6 @@ def search_student_by_name(self, name):
     >>> result = processor.search_student_by_name("John")
     """
     cursor = self.conn.cursor()
-    cursor.execute("SELECT * FROM students WHERE name = ?", (name,))
+    cursor.execute("SELECT * FROM students WHERE name LIKE ?", ('%' + name + '%',))
     results = cursor.fetchall()
     return results

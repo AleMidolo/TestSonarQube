@@ -27,14 +27,14 @@ def subtract(num1, num2):
     
     if negative1 and negative2:
         # -a - (-b) = b - a
-        return BigNumCalculator.subtract(num2, num1)
+        return subtract(num2, num1)
     elif negative1:
         # -a - b = -(a + b)
-        result = BigNumCalculator.add(num1, num2)
+        result = add(num1, num2)
         return '-' + result if result != '0' else '0'
     elif negative2:
         # a - (-b) = a + b
-        return BigNumCalculator.add(num1, num2)
+        return add(num1, num2)
     
     # Both positive: num1 - num2
     # Determine which is larger
@@ -88,3 +88,26 @@ def subtract(num1, num2):
         return '0'
     
     return '-' + result_str if result_negative else result_str
+
+
+def add(num1, num2):
+    """Helper function to add two positive number strings."""
+    num1 = num1[::-1]
+    num2 = num2[::-1]
+    
+    max_len = max(len(num1), len(num2))
+    result = []
+    carry = 0
+    
+    for i in range(max_len):
+        digit1 = int(num1[i]) if i < len(num1) else 0
+        digit2 = int(num2[i]) if i < len(num2) else 0
+        
+        total = digit1 + digit2 + carry
+        result.append(str(total % 10))
+        carry = total // 10
+    
+    if carry:
+        result.append(str(carry))
+    
+    return ''.join(reversed(result))
