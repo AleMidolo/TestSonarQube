@@ -1,27 +1,18 @@
 def simulate_operation(self):
     """
-    थर्मोस्टेट के संचालन का अनुकरण करें। यह स्वचालित रूप से संचालन मोड सेट करने के लिए auto_set_mode विधि शुरू करेगा,
-    और फिर लक्षित तापमान तक पहुँचने तक संचालन मोड के अनुसार वर्तमान तापमान को स्वचालित रूप से समायोजित करेगा।
-    :return time: int, अनुकरण पूरा करने में लगा समय।
-    >>> thermostat = Thermostat(20.4, 37.5, 'cool')
-    >>> thermostat.simulate_operation()
-    18
-    """
-    # First, automatically set the mode based on current and target temperature
+        simula la operación del termostato. Iniciará automáticamente el método auto_set_mode para establecer el modo de operación,
+        y luego ajustará automáticamente la temperatura actual de acuerdo con el modo de operación hasta que se alcance la temperatura objetivo.
+        :return time: int, el tiempo que tomó completar la simulación.
+        >>> thermostat = Thermostat(20.4, 37.5, 'cool')
+        >>> thermostat.simulate_operation()
+        18
+        """
     self.auto_set_mode()
-    
-    time = 0
-    
-    # Continue adjusting temperature until target is reached
-    while self.current_temp != self.target_temp:
+    start_time = time.time()
+    while abs(self.current_temperature - self.target_temperature) > 0.1:
         if self.mode == 'heat':
-            # Heating mode: increase temperature
-            self.current_temp += 1
-        elif self.mode == 'cool':
-            # Cooling mode: decrease temperature
-            self.current_temp -= 1
-        # If mode is 'off', temperature doesn't change
-        
-        time += 1
-    
-    return time
+            self.current_temperature += 1
+        else:
+            self.current_temperature -= 1
+        time.sleep(0.1)
+    return int(time.time() - start_time)

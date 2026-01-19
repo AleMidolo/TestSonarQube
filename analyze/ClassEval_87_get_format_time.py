@@ -1,14 +1,15 @@
 def get_format_time(self, year, month, day, hour, minute, second):
     """
-    समय को प्रारूपित करें
+    obtener tiempo formateado
     :param year: int
     :param month: int
     :param day: int
     :param hour: int
     :param minute: int
     :param second: int
-    :return: प्रारूपित समय स्ट्रिंग
+    :return: cadena de tiempo formateada
     >>> timeutils.get_format_time(2001, 7, 18, 1, 1, 1)
     "2001-07-18 01:01:01"
     """
-    return f"{year:04d}-{month:02d}-{day:02d} {hour:02d}:{minute:02d}:{second:02d}"
+    formatted_time = datetime.datetime(year, month, day, hour, minute, second)
+    return formatted_time.strftime('%Y-%m-%d %H:%M:%S')

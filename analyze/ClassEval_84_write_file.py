@@ -1,11 +1,11 @@
 def write_file(self, content):
     """
-    सामग्री को self.file_path फ़ाइल में लिखें, और यदि फ़ाइल पहले से मौजूद है तो उसे ओवरराइट करें।
-    :param content: कोई भी सामग्री
-    >>> textFileProcessor = TextFileProcessor('test.json')
-    >>> textFileProcessor.write_file('Hello world!')
-    >>> textFileProcessor.read_file()
-    'Hello world!'
-    """
-    with open(self.file_path, 'w', encoding='utf-8') as f:
-        f.write(content)
+        Escribe contenido en el archivo self.file_path, y sobrescribe si el archivo ya existía.
+        :param content: cualquier contenido
+        >>> textFileProcessor = TextFileProcessor('test.json')
+        >>> textFileProcessor.write_file('¡Hola mundo!')
+        >>> textFileProcessor.read_file()
+        '¡Hola mundo!'
+        """
+    with open(self.file_path, 'w') as file:
+        file.write(content)

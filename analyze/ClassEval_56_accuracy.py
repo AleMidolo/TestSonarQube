@@ -1,18 +1,15 @@
 def accuracy(self, predicted_labels, true_labels):
     """
-    सटीकता की गणना करें
-    :param predicted_labels: सूची, पूर्वानुमानित परिणाम
-    :param true_labels: सूची, सही लेबल
-    :return: फ्लोट
-    >>> mc = MetricsCalculator()
-    >>>mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])
-    0.5
-    """
-    if len(predicted_labels) != len(true_labels):
-        raise ValueError("Lists must have the same length")
-    
-    if len(predicted_labels) == 0:
+        Calcular la precisión
+        :param predicted_labels: lista, resultados predichos
+        :param true_labels: lista, etiquetas verdaderas
+        :return: float
+        >>> mc = MetricsCalculator()
+        >>> mc.accuracy([1, 1, 0, 0], [1, 0, 0, 1])
+        0.5
+        """
+    self.update(predicted_labels, true_labels)
+    total = self.true_positives + self.false_positives + self.false_negatives + self.true_negatives
+    if total == 0:
         return 0.0
-    
-    correct = sum(1 for pred, true in zip(predicted_labels, true_labels) if pred == true)
-    return correct / len(predicted_labels)
+    return (self.true_positives + self.true_negatives) / total

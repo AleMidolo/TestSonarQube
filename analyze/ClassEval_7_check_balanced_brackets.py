@@ -1,21 +1,19 @@
 def check_balanced_brackets(self):
     """
-    जांचता है कि अभिव्यक्ति में संतुलित ब्रैकेट हैं या नहीं।
-    :return: यदि अभिव्यक्ति में संतुलित ब्रैकेट हैं, तो True, अन्यथा False।
-    >>> b = BalancedBrackets("a(b)c")
-    >>> b.check_balanced_brackets()
-    True
-
-    """
-    stack = []
-    brackets = {')': '(', '}': '{', ']': '['}
-    
-    for char in self.expression:
-        if char in '({[':
-            stack.append(char)
-        elif char in ')}]':
-            if not stack or stack[-1] != brackets[char]:
+        Verifica si la expresión tiene paréntesis balanceados.
+        :return: True si la expresión tiene paréntesis balanceados, False en caso contrario.
+        >>> b = BalancedBrackets("a(b)c")
+        >>> b.check_balanced_brackets()
+        True
+        """
+    self.clear_expr()
+    for char in self.expr:
+        if char in self.left_brackets:
+            self.stack.append(char)
+        elif char in self.right_brackets:
+            if not self.stack:
                 return False
-            stack.pop()
-    
-    return len(stack) == 0
+            top = self.stack.pop()
+            if self.left_brackets.index(top) != self.right_brackets.index(char):
+                return False
+    return len(self.stack) == 0

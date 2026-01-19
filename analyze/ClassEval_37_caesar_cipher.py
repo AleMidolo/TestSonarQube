@@ -1,26 +1,19 @@
 def caesar_cipher(self, plaintext, shift):
     """
-    प्लेनटेक्स्ट को सीज़र सिफर का उपयोग करके एन्क्रिप्ट करता है।
-    :param plaintext: एन्क्रिप्ट करने के लिए प्लेनटेक्स्ट, str.
-    :param shift: प्लेनटेक्स्ट में प्रत्येक वर्ण को स्थानांतरित करने के लिए वर्णों की संख्या, int.
-    :return: ciphertext, str.
+    Cifra el texto plano utilizando el cifrado César.
+    :param plaintext: El texto plano a encriptar, str.
+    :param shift: El número de caracteres para desplazar cada carácter en el texto plano, int.
+    :return: El texto cifrado, str.
     >>> e = EncryptionUtils("key")
     >>> e.caesar_cipher("abc", 1)
     'bcd'
-
     """
-    ciphertext = ""
+    encrypted_text = ''
     for char in plaintext:
         if char.isalpha():
-            # Determine if the character is uppercase or lowercase
-            if char.isupper():
-                # Shift uppercase letters
-                shifted = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
-            else:
-                # Shift lowercase letters
-                shifted = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
-            ciphertext += shifted
+            shift_base = ord('A') if char.isupper() else ord('a')
+            encrypted_char = chr((ord(char) - shift_base + shift) % 26 + shift_base)
+            encrypted_text += encrypted_char
         else:
-            # Non-alphabetic characters remain unchanged
-            ciphertext += char
-    return ciphertext
+            encrypted_text += char
+    return encrypted_text

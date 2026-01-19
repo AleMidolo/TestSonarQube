@@ -1,21 +1,18 @@
 def add_argument(self, arg, required=False, arg_type=str):
     """
-    self.types और self.required में एक तर्क जोड़ता है।
-    यह जांचता है कि क्या यह एक आवश्यक तर्क है और तर्क प्रकार को संग्रहीत करता है।
-    यदि तर्क को आवश्यक के रूप में सेट किया गया है, तो इसे आवश्यक सेट में जोड़ा जाएगा।
-    तर्क प्रकार और नाम को types शब्दकोश में कुंजी-मूल्य जोड़ों के रूप में संग्रहीत किया जाता है।
-    :param arg: str, तर्क का नाम
-    :param required: bool, क्या तर्क आवश्यक है, डिफ़ॉल्ट False है
-    :param arg_type:str, तर्क प्रकार, डिफ़ॉल्ट str है
-    >>> parser.add_argument('arg1', True, 'int')
-    >>> parser.required
-    {'arg1'}
-    >>> parser.types
-    {'arg1': 'int'}
-    """
-    # तर्क प्रकार को types शब्दकोश में संग्रहीत करें
+        Agrega un argumento a self.types y self.required.
+        Verifica si es un argumento requerido y almacena el tipo de argumento.
+        Si el argumento se establece como requerido, se añadirá al conjunto de requeridos.
+        El tipo y el nombre del argumento se almacenan en el diccionario types como pares clave-valor.
+        :param arg: str, nombre del argumento
+        :param required: bool, si el argumento es requerido, por defecto es False
+        :param arg_type: str, tipo de argumento, por defecto es str
+        >>> parser.add_argument('arg1', True, 'int')
+        >>> parser.required
+        {'arg1'}
+        >>> parser.types
+        {'arg1': 'int'}
+        """
     self.types[arg] = arg_type
-    
-    # यदि तर्क आवश्यक है, तो इसे required सेट में जोड़ें
     if required:
         self.required.add(arg)

@@ -1,28 +1,16 @@
 def convert(self, amount, from_currency, to_currency):
     """
-    एक दिए गए मुद्रा के मूल्य को दूसरे मुद्रा प्रकार में परिवर्तित करें
-    :param amount: float, एक दिए गए मुद्रा का मूल्य
-    :param from_currency: string, स्रोत मुद्रा प्रकार
-    :param to_currency: string, लक्ष्य मुद्रा प्रकार
-    :return: float, दूसरे मुद्रा प्रकार में परिवर्तित मूल्य
-    >>> cc = CurrencyConverter()
-    >>> cc.convert(64, 'CNY','USD')
-    10.0
-    """
-    # Exchange rates relative to USD
-    exchange_rates = {
-        'USD': 1.0,
-        'CNY': 6.4,
-        'EUR': 0.85,
-        'GBP': 0.75,
-        'JPY': 110.0,
-        'INR': 74.0,
-        'AUD': 1.35,
-        'CAD': 1.25
-    }
-    
-    # Convert from source currency to USD, then from USD to target currency
-    amount_in_usd = amount / exchange_rates[from_currency]
-    converted_amount = amount_in_usd * exchange_rates[to_currency]
-    
+        Convierte el valor de una moneda dada a otro tipo de moneda
+        :param amount: float, El valor de una moneda dada
+        :param from_currency: string, tipo de moneda de origen
+        :param to_currency: string, tipo de moneda de destino
+        :return: float, valor convertido a otro tipo de moneda
+        >>> cc = CurrencyConverter()
+        >>> cc.convert(64, 'CNY','USD')
+        10.0
+        """
+    if from_currency not in self.rates or to_currency not in self.rates:
+        raise ValueError('Unsupported currency type')
+    amount_in_usd = amount / self.rates[from_currency]
+    converted_amount = amount_in_usd * self.rates[to_currency]
     return converted_amount

@@ -1,17 +1,14 @@
 def shuffle(self):
     """
-    प्लेलिस्ट को शफल करता है।
-    :return: यदि प्लेलिस्ट शफल की गई है तो True, यदि प्लेलिस्ट खाली है तो False।
-    >>> musicPlayer = MusicPlayer()
-    >>> musicPlayer.playlist = ["song1", "song2"]
-    >>> musicPlayer.shuffle()
-    True
+        Mezcla la lista de reproducción.
+        :return: True si la lista de reproducción fue mezclada, False si la lista de reproducción estaba vacía.
+        >>> musicPlayer = MusicPlayer()
+        >>> musicPlayer.playlist = ["canción1", "canción2"]
+        >>> musicPlayer.shuffle()
+        True
 
-    """
-    import random
-    
-    if not self.playlist:
-        return False
-    
-    random.shuffle(self.playlist)
-    return True
+        """
+    if self.playlist:
+        random.shuffle(self.playlist)
+        return True
+    return False

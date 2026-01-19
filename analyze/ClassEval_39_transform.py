@@ -1,12 +1,12 @@
 @staticmethod
 def transform(expression):
     """
-    इनफिक्स अभिव्यक्ति को रूपांतरित करने के लिए उपयुक्त प्रारूप में बदलें
-    :param expression: स्ट्रिंग, रूपांतरित की जाने वाली इनफिक्स अभिव्यक्ति
-    :return: स्ट्रिंग, रूपांतरित अभिव्यक्ति
+    Transformar la expresión en notación infija a un formato adecuado para la conversión
+    :param expression: cadena, la expresión en notación infija a ser transformada
+    :return: cadena, la expresión transformada
     >>> expression_calculator = ExpressionCalculator()
     >>> expression_calculator.transform("2 + 3 * 4")
     "2+3*4"
 
     """
-    return expression.replace(" ", "")
+    return re.sub(r'\s+', '', expression)

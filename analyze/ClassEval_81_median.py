@@ -1,25 +1,19 @@
 def median(data):
     """
-    दी गई लिस्ट का मीडियन कैलकुलेट करता है।
+        calcula la mediana de la lista dada.
+        :param data: la lista dada, lista.
+        :return: la mediana de la lista dada, float.
+        >>> statistics3 = Statistics3()
+        >>> statistics3.median([1, 2, 3, 4])
+        2.5
 
-    :param data: list, दी गई लिस्ट
-    :return: float, दी गई लिस्ट का मीडियन
-
-    >>> statistics3 = Statistics3()
-    >>> statistics3.median([1, 2, 3, 4])
-    2.5
-    """
-    if not data:
+        """
+    n = len(data)
+    if n == 0:
         return None
-    
     sorted_data = sorted(data)
-    n = len(sorted_data)
-    
+    mid = n // 2
     if n % 2 == 0:
-        # यदि लिस्ट की लंबाई सम है, तो बीच के दो तत्वों का औसत लें
-        mid1 = sorted_data[n // 2 - 1]
-        mid2 = sorted_data[n // 2]
-        return (mid1 + mid2) / 2
+        return (sorted_data[mid - 1] + sorted_data[mid]) / 2.0
     else:
-        # यदि लिस्ट की लंबाई विषम है, तो बीच का तत्व लें
-        return float(sorted_data[n // 2])
+        return sorted_data[mid]

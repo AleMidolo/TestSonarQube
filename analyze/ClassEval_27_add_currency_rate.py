@@ -1,9 +1,9 @@
 def add_currency_rate(self, currency, rate):
     """
-    एक नया समर्थित मुद्रा प्रकार जोड़ें, यदि मुद्रा प्रकार पहले से समर्थन सूची में है तो False लौटाएं
-    :param currency:string, जो मुद्रा प्रकार जोड़ा जाना है
-    :param rate:float, इस मुद्रा प्रकार के लिए विनिमय दर
-    :return: यदि सफल, तो None लौटाता है; यदि असफल, तो False लौटाता है
+    Agrega un nuevo tipo de moneda soportada, devuelve False si el tipo de moneda ya está en la lista de soporte
+    :param currency:string, tipo de moneda a ser agregado
+    :param rate:float, tasa de cambio para este tipo de moneda
+    :return: Si es exitoso, devuelve None; si no es exitoso, devuelve False
     >>> cc = CurrencyConverter()
     >>> cc.add_currency_rate('KRW', 1308.84)
     self.rates['KRW'] = 1308.84
@@ -11,4 +11,3 @@ def add_currency_rate(self, currency, rate):
     if currency in self.rates:
         return False
     self.rates[currency] = rate
-    return None

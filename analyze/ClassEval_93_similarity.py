@@ -1,22 +1,16 @@
-import numpy as np
-
 def similarity(vector_1, vector_2):
     """
-    एक वेक्टर और दूसरे वेक्टर के बीच कोसाइन समानता की गणना करें।
-    :param vector_1: numpy.ndarray, वह वेक्टर जिससे समानताएँ निकाली जानी हैं, अपेक्षित आकार (dim,).
-    :param vector_2: numpy.ndarray, वह वेक्टर जिससे समानताएँ निकाली जानी हैं, अपेक्षित आकार (dim,).
-    :return: numpy.ndarray, `vector_1` और `vector_2` के बीच कोसाइन दूरी को शामिल करता है
-    >>> vector_1 = np.array([1, 1])
-    >>> vector_2 = np.array([1, 0])
-    >>> VectorUtil.similarity(vector_1, vector_2)
-    0.7071067811865475
-    """
-    dot_product = np.dot(vector_1, vector_2)
+        Calcula la similitud coseno entre un vector y otro vector.
+        :param vector_1: numpy.ndarray, Vector del cual se calcularán las similitudes, forma esperada (dim,).
+        :param vector_2: numpy.ndarray, Vector del cual se calcularán las similitudes, forma esperada (dim,).
+        :return: numpy.ndarray, Contiene la distancia coseno entre `vector_1` y `vector_2`
+        >>> vector_1 = np.array([1, 1])
+        >>> vector_2 = np.array([1, 0])
+        >>> similarity(vector_1, vector_2)
+        0.7071067811865475
+        """
     norm_1 = np.linalg.norm(vector_1)
     norm_2 = np.linalg.norm(vector_2)
-    
     if norm_1 == 0 or norm_2 == 0:
         return 0.0
-    
-    cosine_similarity = dot_product / (norm_1 * norm_2)
-    return cosine_similarity
+    return np.dot(vector_1, vector_2) / (norm_1 * norm_2)

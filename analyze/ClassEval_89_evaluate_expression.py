@@ -1,19 +1,17 @@
 def evaluate_expression(self, expression):
     """
-    एक गणितीय अभिव्यक्ति का मूल्यांकन करें और जांचें कि क्या परिणाम 24 है।
-    :param expression: स्ट्रिंग, गणितीय अभिव्यक्ति
-    :return: बूल, यदि अभिव्यक्ति 24 के बराबर है तो True, अन्यथा False
-    >>> game = TwentyFourPointGame()
-    >>> nums = [4, 3, 6, 6]
-    >>> ans = "4*3+6+6"
-    >>> ret = game.evaluate_expression(ans)
-    True
-    """
+        Evalúa una expresión matemática y verifica si el resultado es 24.
+        :param expression: cadena, expresión matemática
+        :return: bool, True si la expresión evalúa a 24, False en caso contrario
+        >>> game = TwentyFourPointGame()
+        >>> nums = [4, 3, 6, 6]
+        >>> ans = "4*3+6+6"
+        >>> ret = game.evaluate_expression(ans)
+        True
+        """
     try:
-        # Evaluate the expression safely
-        result = eval(expression)
-        # Check if the result equals 24 (with some tolerance for floating point)
-        return abs(result - 24) < 1e-6
-    except:
-        # If there's any error in evaluation, return False
+        return eval(expression) == 24
+    except ZeroDivisionError:
+        return False
+    except Exception:
         return False

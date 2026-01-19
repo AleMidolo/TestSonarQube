@@ -1,34 +1,24 @@
-from decimal import Decimal
-
 @staticmethod
 def _calculate(first_value, second_value, current_op):
     """
-    दिए गए ऑपरेटर और ऑपरेनड के आधार पर गणितीय गणना करें
-    :param first_value: string, पहला ऑपरेनड
-    :param second_value: string, दूसरा ऑपरेनड
-    :param current_op: string, ऑपरेटर
-    :return: decimal.Decimal, गणना किया गया परिणाम
-    >>> expression_calculator = ExpressionCalculator()
-    >>> expression_calculator._calculate("2", "3", "+")
-    5.0
-
-    """
-    num1 = Decimal(first_value)
-    num2 = Decimal(second_value)
-    
+        Realiza el cálculo matemático basado en los operandos y el operador dados
+        :param first_value: string, el primer operando
+        :param second_value: string, el segundo operando
+        :param current_op: string, el operador
+        :return: decimal.Decimal, el resultado calculado
+        >>> expression_calculator = ExpressionCalculator()
+        >>> expression_calculator._calculate("2", "3", "+")
+        5.0
+        """
+    first_value = Decimal(first_value)
+    second_value = Decimal(second_value)
     if current_op == '+':
-        return num1 + num2
+        return first_value + second_value
     elif current_op == '-':
-        return num1 - num2
+        return first_value - second_value
     elif current_op == '*':
-        return num1 * num2
-    elif current_op == '/':
-        return num1 / num2
-    elif current_op == '//':
-        return num1 // num2
+        return first_value * second_value
+    elif current_op == '\\/':
+        return first_value / second_value
     elif current_op == '%':
-        return num1 % num2
-    elif current_op == '**':
-        return num1 ** num2
-    else:
-        raise ValueError(f"Unsupported operator: {current_op}")
+        return first_value % second_value

@@ -1,27 +1,17 @@
 @staticmethod
 def mode(data):
     """
-    दी गई लिस्ट का मोड कैलकुलेट करता है।
+        calcula la moda de la lista dada.
+        :param data: la lista dada, lista.
+        :return: la moda de la lista dada, lista.
+        >>> statistics3 = Statistics3()
+        >>> statistics3.mode([1, 2, 3, 3])
+        [3]
 
-    :param data: list, दी गई लिस्ट
-    :return: list, दी गई लिस्ट का मोड
-
-    >>> statistics3 = Statistics3()
-    >>> statistics3.mode([1, 2, 3, 3])
-    [3]
-    """
+        """
+    from collections import Counter
     if not data:
         return []
-    
-    # Count frequency of each element
-    frequency = {}
-    for item in data:
-        frequency[item] = frequency.get(item, 0) + 1
-    
-    # Find maximum frequency
-    max_freq = max(frequency.values())
-    
-    # Find all elements with maximum frequency
-    modes = [key for key, value in frequency.items() if value == max_freq]
-    
-    return modes
+    count = Counter(data)
+    max_count = max(count.values())
+    return [num for num, freq in count.items() if freq == max_count]

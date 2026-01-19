@@ -1,10 +1,13 @@
 def read_file(self):
     """
-    self.file_path फ़ाइल की सामग्री पढ़ें और लौटाएं।
-    :return: read() विधि के समान लौटाएं
-    >>> textFileProcessor = TextFileProcessor('test.json')
-    >>> textFileProcessor.read_file()
-    '{\n    "name": "test",\n    "age": 12\n}'
-    """
-    with open(self.file_path, 'r', encoding='utf-8') as file:
+        Lee y devuelve el contenido del archivo self.file_path.
+        :return: el mismo retorno que el método read()
+        >>> textFileProcessor = TextFileProcessor('test.json')
+        >>> textFileProcessor.read_file()
+        '{
+    "name": "test",
+    "age": 12
+}'
+        """
+    with open(self.file_path, 'r') as file:
         return file.read()

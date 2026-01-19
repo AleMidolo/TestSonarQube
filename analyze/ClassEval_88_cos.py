@@ -1,12 +1,11 @@
-import math
-
 def cos(self, x):
     """
-    x-डिग्री कोण का कोस मान निकालें
-    :param x:float
-    :return:float
-    >>> tricalculator = TriCalculator()
-    >>> tricalculator.cos(60)
-    0.5
-    """
-    return math.cos(math.radians(x))
+        Calcular el valor del coseno del ángulo en grados x
+        :param x: float
+        :return: float
+        >>> tricalculator = TriCalculator()
+        >>> tricalculator.cos(60)
+        0.5
+        """
+    x = x / 180 * pi
+    return round(self.taylor(x * 180 / pi, 50), 10)

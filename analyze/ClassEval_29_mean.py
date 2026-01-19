@@ -1,17 +1,10 @@
 def mean(self, data):
     """
-    डेटा के ग्रुप की एवरेज वैल्यू कैलकुलेट करें, जो डेसिमल सेपरेटर के बाद दो डिजिट तक एक्यूरेट हो।
-
-    :param data: list, डेटा लिस्ट
-    :return: float, मीन वैल्यू
-
-    >>> ds = DataStatistics()
-    >>> ds.mean([1, 2, 3, 4, 5])
-    3.00
-    """
-    if not data:
-        return 0.00
-    
-    total = sum(data)
-    mean_value = total / len(data)
-    return round(mean_value, 2)
+        Calcular el valor promedio de un grupo de datos, con precision de dos dígitos después del separador decimal
+        :param data: list, lista de datos
+        :return: float, el valor medio
+        >>> ds = DataStatistics()
+        >>> ds.mean([1, 2, 3, 4, 5])
+        3.00
+        """
+    return round(sum(data) / len(data), 2)

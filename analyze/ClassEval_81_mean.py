@@ -1,14 +1,15 @@
 @staticmethod
 def mean(data):
     """
-    दिए गए सूची का औसत निकालता है।
-    :param data: दी गई सूची, सूची।
-    :return: दी गई सूची का औसत, फ्लोट।
-    >>> statistics3 = Statistics3()
-    >>> statistics3.mean([1, 2, 3])
-    2.0
+        calcula la media de la lista dada.
+        :param data: la lista dada, lista.
+        :return: la media de la lista dada, float.
+        >>> statistics3 = Statistics3()
+        >>> statistics3.mean([1, 2, 3])
+        2.0
 
-    """
-    if not data:
-        return 0.0
-    return float(sum(data)) / len(data)
+        """
+    n = len(data)
+    if n == 0:
+        return None
+    return sum(data) / n

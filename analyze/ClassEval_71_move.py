@@ -1,74 +1,42 @@
 def move(self, direction):
     """
-    निर्दिष्ट दिशा के आधार पर खिलाड़ी को स्थानांतरित करें और जांचें कि खेल जीता गया है या नहीं।
-    :param direction: str, खिलाड़ी की गति की दिशा। 
-        यह 'w', 's', 'a', या 'd' हो सकता है जो क्रमशः ऊपर, नीचे, बाएं, या दाएं का प्रतिनिधित्व करता है।
+        Mueve al jugador según la dirección especificada y verifica si el juego ha sido ganado.
+        :param direction: str, la dirección del movimiento del jugador. 
+            Puede ser 'w', 's', 'a' o 'd' que representan arriba, abajo, izquierda o derecha respectivamente.
 
-    :return: यदि खेल जीता गया है तो True, अन्यथा False।
-    """
-    # Direction mappings
-    directions = {
-        'w': (-1, 0),  # ऊपर (up)
-        's': (1, 0),   # नीचे (down)
-        'a': (0, -1),  # बाएं (left)
-        'd': (0, 1)    # दाएं (right)
-    }
-    
-    if direction not in directions:
+        :return: True si el juego ha sido ganado, False en caso contrario.
+        >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"])       
+        >>> game.print_map()
+        # # # # # 
+        # O     #
+        #   X   #
+        #     G #
+        # # # # #
+        >>> game.move('d')
+        False
+        >>> game.move('s')   
+        False
+        >>> game.move('a')   
+        False
+        >>> game.move('s') 
+        False
+        >>> game.move('d') 
+        True
+        """
+    direction_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
+    if direction not in direction_map:
         return False
-    
-    dy, dx = directions[direction]
-    
-    # Current player position
-    player_y, player_x = self.player_pos
-    
-    # New position for player
-    new_y = player_y + dy
-    new_x = player_x + dx
-    
-    # Check if new position is within bounds
-    if new_y < 0 or new_y >= len(self.map) or new_x < 0 or new_x >= len(self.map[0]):
+    new_player_row = self.player_row + direction_map[direction][0]
+    new_player_col = self.player_col + direction_map[direction][1]
+    if self.map[new_player_row][new_player_col] == '#':
         return False
-    
-    # Check what's at the new position
-    target_cell = self.map[new_y][new_x]
-    
-    # If it's a wall, can't move
-    if target_cell == '#':
-        return False
-    
-    # If it's empty space or goal, just move
-    if target_cell == ' ' or target_cell == 'G':
-        self.map[player_y][player_x] = ' '
-        self.map[new_y][new_x] = 'O'
-        self.player_pos = (new_y, new_x)
-    
-    # If it's a box, try to push it
-    elif target_cell == 'X':
-        # Position where box would move to
-        box_new_y = new_y + dy
-        box_new_x = new_x + dx
-        
-        # Check if box's new position is valid
-        if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[0]):
+    if (new_player_row, new_player_col) in self.boxes:
+        new_box_row = new_player_row + direction_map[direction][0]
+        new_box_col = new_player_col + direction_map[direction][1]
+        if self.map[new_box_row][new_box_col] == '#' or (new_box_row, new_box_col) in self.boxes:
             return False
-        
-        box_target_cell = self.map[box_new_y][box_new_x]
-        
-        # Box can only be pushed to empty space or goal
-        if box_target_cell == ' ' or box_target_cell == 'G':
-            # Move the box
-            self.map[box_new_y][box_new_x] = 'X'
-            # Move the player
-            self.map[player_y][player_x] = ' '
-            self.map[new_y][new_x] = 'O'
-            self.player_pos = (new_y, new_x)
-            
-            # Check if box is on goal
-            if box_target_cell == 'G':
-                return True
-        else:
-            # Can't push box (blocked by wall or another box)
-            return False
-    
-    return False
+        self.boxes.remove((new_player_row, new_player_col))
+        self.boxes.append((new_box_row, new_box_col))
+    self.player_row = new_player_row
+    self.player_col = new_player_col
+    return self.check_win()

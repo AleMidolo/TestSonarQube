@@ -1,14 +1,15 @@
 def play(self):
     """
-    प्लेलिस्ट में वर्तमान गीत चलाता है।
-    :return: प्लेलिस्ट में वर्तमान गीत, या यदि कोई वर्तमान गीत नहीं है तो False।
-    >>> musicPlayer = MusicPlayer()
-    >>> musicPlayer.playlist = ["song1", "song2"]
-    >>> musicPlayer.current_song = "song1"
-    >>> musicPlayer.play()
-    'song1'
+        Reproduce la canción actual en la lista de reproducción.
+        :return: La canción actual en la lista de reproducción, o False si no hay canción actual.
+        >>> musicPlayer = MusicPlayer()
+        >>> musicPlayer.playlist = ["canción1", "canción2"]
+        >>> musicPlayer.current_song = "canción1"
+        >>> musicPlayer.play()
+        'canción1'
 
-    """
-    if hasattr(self, 'current_song') and self.current_song:
+        """
+    if self.current_song:
         return self.current_song
-    return False
+    else:
+        return False

@@ -1,33 +1,19 @@
 def create_order(self, order_id, product_id, quantity):
     """
-    एक ऑर्डर बनाएं जिसमें उत्पाद की जानकारी शामिल हो, जैसे कि आईडी और मात्रा।
-    और नए ऑर्डर को self.orders में डालें।
-    स्थिति का डिफ़ॉल्ट मान 'Shipped' है।
-    :param order_id: int
-    :param product_id: int
-    :param quantity: चयनित उत्पाद की मात्रा।
-    :return False: केवल तभी यदि product_id इन्वेंटरी में नहीं है या मात्रा पर्याप्त नहीं है
-    >>> warehouse.add_product(1, "product1", 3)
-    >>> warehouse.create_order(1, 1, 2)
-    >>> warehouse.orders
-    {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}
-    >>> warehouse.create_order(1, 2, 2)
-    False
-    """
-    # Check if product_id exists in inventory
-    if product_id not in self.inventory:
+        Crear un pedido que incluye la información del producto, como id y cantidad.
+        Y poner el nuevo pedido en self.orders.
+        El valor predeterminado de estado es 'Shipped'.
+        :param order_id: int
+        :param product_id: int
+        :param quantity: la cantidad de producto que se ha seleccionado.
+        :return False: solo si product_id no está en el inventario o la cantidad no es adecuada
+        >>> warehouse.add_product(1, "product1", 3)
+        >>> warehouse.create_order(1, 1, 2)
+        >>> warehouse.orders
+        {1: {'product_id': 1, 'quantity': 2, 'status': 'Shipped'}}
+        >>> warehouse.create_order(1, 2, 2)
+        False
+        """
+    if product_id not in self.inventory or self.inventory[product_id]['quantity'] < quantity:
         return False
-    
-    # Check if quantity is sufficient
-    if self.inventory[product_id]['quantity'] < quantity:
-        return False
-    
-    # Create the order
-    self.orders[order_id] = {
-        'product_id': product_id,
-        'quantity': quantity,
-        'status': 'Shipped'
-    }
-    
-    # Optionally reduce inventory (based on the context, this might be needed)
-    # self.inventory[product_id]['quantity'] -= quantity
+    self.orders[order_id] = {'product_id': product_id, 'quantity': quantity, 'status': 'Shipped'}

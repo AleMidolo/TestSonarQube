@@ -1,39 +1,38 @@
 def book_room(self, room_type, room_number, name):
     """
-    निर्दिष्ट प्रकार के कमरों की उपलब्धता की जांच करें।
-    यदि कमरे पर्याप्त हैं, तो उपलब्ध_rooms और booked_rooms को संशोधित करें और बुकिंग समाप्त करें, अन्यथा बुकिंग विफल करें।
-    :param room_type: str
-    :param room_number: int, बुक किए जाने वाले निर्दिष्ट प्रकार के कमरों की अपेक्षित संख्या
-    :param name: str, मेहमान का नाम
-    :return: यदि बुक किए जाने वाले कमरों की संख्या शेष कमरों से अधिक नहीं है, तो str 'Success!' लौटाएं।
-            यदि अधिक है लेकिन उपलब्ध कमरों की मात्रा शून्य के बराबर नहीं है, तो int (इस कमरे के प्रकार की शेष मात्रा) लौटाएं।
-            यदि अधिक है और मात्रा शून्य है या room_type उपलब्ध_room में नहीं है, तो False लौटाएं।
-    """
-    # Check if room_type exists in available_rooms
+        Verifica si hay habitaciones del tipo especificado disponibles.
+        Si las habitaciones son adecuadas, modifica available_rooms y booked_rooms y finaliza la reserva, o falla en la reserva de lo contrario.
+        :param room_type: str
+        :param room_number: int, el número esperado de habitaciones del tipo especificado a reservar
+        :param name: str, nombre del huésped
+        :return: si el número de habitaciones a reservar no excede las habitaciones restantes, devuelve str '¡Éxito!'
+                si excede pero la cantidad de habitaciones disponibles no es igual a cero, devuelve int (la cantidad restante de este tipo de habitación).
+                si excede y la cantidad es cero o el room_type no está en available_room, devuelve False.
+        >>> hotel = Hotel('hotel paz', {'single': 5, 'double': 3})
+        >>> hotel.book_room('single', 1, 'huésped 1')
+        '¡Éxito!'
+        >>> hotel.book_room('single', 5, 'huésped 1')
+        4
+        >>> hotel.book_room('single', 4, 'huésped 1')
+        '¡Éxito!'
+        >>> hotel.book_room('single', 1, 'huésped 1')
+        False
+        >>> hotel.book_room('triple', 1, 'huésped 1')
+        False
+        """
     if room_type not in self.available_rooms:
         return False
-    
-    # Get the current available count for this room type
-    available_count = self.available_rooms[room_type]
-    
-    # If no rooms available, return False
-    if available_count == 0:
+    if self.available_rooms[room_type] >= room_number:
+        self.available_rooms[room_type] -= room_number
+        if room_type not in self.booked_rooms:
+            self.booked_rooms[room_type] = {}
+        if name in self.booked_rooms[room_type]:
+            self.booked_rooms[room_type][name] += room_number
+        else:
+            self.booked_rooms[room_type][name] = room_number
+        return '¡Éxito!'
+    else:
+        remaining = self.available_rooms[room_type]
+        if remaining > 0:
+            return remaining
         return False
-    
-    # If requested rooms exceed available rooms
-    if room_number > available_count:
-        return available_count
-    
-    # If we have enough rooms, proceed with booking
-    self.available_rooms[room_type] -= room_number
-    
-    # Add to booked_rooms
-    if name not in self.booked_rooms:
-        self.booked_rooms[name] = {}
-    
-    if room_type not in self.booked_rooms[name]:
-        self.booked_rooms[name][room_type] = 0
-    
-    self.booked_rooms[name][room_type] += room_number
-    
-    return 'Success!'

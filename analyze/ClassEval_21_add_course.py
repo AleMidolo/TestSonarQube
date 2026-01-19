@@ -1,9 +1,9 @@
 def add_course(self, course):
     """
-    यदि पाठ्यक्रम self.courses सूची में नहीं है तो पाठ्यक्रम को जोड़ें।
-    :param course: dict, पाठ्यक्रम की जानकारी, जिसमें 'start_time', 'end_time' और 'name' शामिल हैं
+    Agrega el curso a la lista self.courses si el curso no estaba en ella.
+    :param course: dict, información del curso, incluyendo 'start_time', 'end_time' y 'name'
     >>> classroom = Classroom(1)
     >>> classroom.add_course({'name': 'math', 'start_time': '8:00', 'end_time': '9:40'})
     """
-    if course not in self.courses:
+    if course not in self.courses and self.check_course_conflict(course):
         self.courses.append(course)

@@ -1,14 +1,12 @@
 def remove_job(self, job):
     """
-    यह फ़ंक्शन पदों को हटाने के लिए उपयोग किया जाता है, और job_listings सूची से पद की जानकारी को हटाता है।
-    :param job: हटाने के लिए पद की जानकारी, dict.
-    :return: None
-    >>> jobMarketplace = JobMarketplace()
-    >>> jobMarketplace.job_listings = [{"job_title": "सॉफ़्टवेयर इंजीनियर", "company": "एबीसी कंपनी", "requirements": ['आवश्यकता1', 'आवश्यकता2']}]
-    >>> jobMarketplace.remove_job(jobMarketplace.job_listings[0])
-    >>> jobMarketplace.job_listings
-    []
-
-    """
-    if job in self.job_listings:
-        self.job_listings.remove(job)
+        Esta función se utiliza para eliminar posiciones y eliminar la información de la posición de la lista job_listings.
+        :param job: La información de la posición a ser eliminada, dict.
+        :return: Ninguno
+        >>> jobMarketplace = JobMarketplace()
+        >>> jobMarketplace.job_listings = [{"job_title": "Ingeniero de Software", "company": "Compañía ABC", "requirements": ['requisito1', 'requisito2']}]
+        >>> jobMarketplace.remove_job(jobMarketplace.job_listings[0])
+        >>> jobMarketplace.job_listings
+        []
+        """
+    self.job_listings.remove(job)

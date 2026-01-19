@@ -1,19 +1,14 @@
 @staticmethod
 def delete(table, where=None):
     """
-    दिए गए पैरामीटर से DELETE SQL कथन उत्पन्न करें।
-    :param table: str, वह तालिका जिस पर DELETE ऑपरेशन डेटाबेस में निष्पादित किया जाएगा
-    :param where: dict, {key1: value1, key2: value2 ...}. क्वेरी की शर्त।
-    :return query: str, SQL delete कथन।
-    >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})
-    "DELETE FROM table1 WHERE name='Test' AND age='14'"
-    """
-    query = f"DELETE FROM {table}"
-    
+        Genera la declaración SQL DELETE a partir de los parámetros dados.
+        :param table: str, la tabla que se ejecutará con la operación DELETE en la base de datos
+        :param where: dict, {key1: value1, key2: value2 ...}. La condición de la consulta.
+        :return query: str, la declaración SQL de eliminación.
+        >>> SQLQueryBuilder.delete('table1', {'name': 'Test', 'age': 14})
+        "DELETE FROM table1 WHERE name='Test' AND age='14'"
+        """
+    query = f'DELETE FROM {table}'
     if where:
-        conditions = []
-        for key, value in where.items():
-            conditions.append(f"{key}='{value}'")
-        query += " WHERE " + " AND ".join(conditions)
-    
+        query += ' WHERE ' + ' AND '.join((f"{k}='{v}'" for k, v in where.items()))
     return query

@@ -1,38 +1,21 @@
 def create_board(self):
     """
-    दिए गए बोर्ड आकार और आइकनों के साथ खेल का बोर्ड बनाएं
-    :return: 2-आयामी सूची, खेल का बोर्ड
-    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
-    >>> mc.create_board()
-    mc.board = [['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a']]
-    """
-    import random
-    
-    rows, cols = self.board_size[0], self.board_size[1]
-    total_cells = rows * cols
-    
-    # Create a flat list with pairs of icons
-    tiles = []
-    icon_index = 0
-    
-    # We need total_cells tiles, and each icon should appear in pairs
-    for i in range(total_cells):
-        tiles.append(self.icons[icon_index % len(self.icons)])
-        icon_index += 1
-    
-    # Shuffle the tiles
-    random.shuffle(tiles)
-    
-    # Create 2D board from flat list
+        crea el tablero de juego con el tamaño de tablero y los íconos dados
+        :return: lista bidimensional, el tablero de juego
+        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
+        >>> mc.create_board()
+        mc.board = [['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a']]
+        """
+    num_icons = len(self.ICONS)
+    total_cells = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
+    icons_to_place = total_cells // 2 * 2
+    icons = (self.ICONS * (icons_to_place // num_icons))[:icons_to_place]
+    random.shuffle(icons)
     board = []
-    for i in range(rows):
-        row = []
-        for j in range(cols):
-            row.append(tiles[i * cols + j])
+    for i in range(self.BOARD_SIZE[0]):
+        row = icons[i * self.BOARD_SIZE[1]:(i + 1) * self.BOARD_SIZE[1]]
         board.append(row)
-    
-    self.board = board
     return board

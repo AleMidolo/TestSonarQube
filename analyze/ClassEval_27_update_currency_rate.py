@@ -1,18 +1,13 @@
 def update_currency_rate(self, currency, new_rate):
     """
-    एक निश्चित मुद्रा के लिए विनिमय दर को अपडेट करें
-    :param currency:string
-    :param new_rate:float
-    :return:यदि सफल, तो None लौटाता है; यदि असफल, तो False लौटाता है
-    >>> cc = CurrencyConverter()
-    >>> cc.update_currency_rate('CNY', 7.18)
-    self.rates['CNY'] = 7.18
-    """
-    if not isinstance(currency, str) or not currency:
+        Actualiza el tipo de cambio para una cierta moneda
+        :param currency:string
+        :param new_rate:float
+        :return:Si es exitoso, devuelve None; si no es exitoso, devuelve False
+        >>> cc = CurrencyConverter()
+        >>> cc.update_currency_rate('CNY', 7.18)
+        self.rates['CNY'] = 7.18
+        """
+    if currency not in self.rates:
         return False
-    
-    if not isinstance(new_rate, (int, float)) or new_rate <= 0:
-        return False
-    
     self.rates[currency] = new_rate
-    return None

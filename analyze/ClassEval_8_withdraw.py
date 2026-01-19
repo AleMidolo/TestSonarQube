@@ -1,15 +1,13 @@
 def withdraw(self, amount):
     """
-    खाते से एक निश्चित राशि निकालता है, खाते के संतुलन को कम करता है, वर्तमान खाते का संतुलन लौटाता है।
-    यदि राशि नकारात्मक है, तो ValueError("अमान्य राशि") उठाएं।
-    यदि निकासी राशि खाते के संतुलन से अधिक है, तो ValueError("पर्याप्त संतुलन नहीं है।") उठाएं।
-    :param amount: int
-    """
+        Retira una cierta cantidad de la cuenta, disminuyendo el saldo de la cuenta, y devuelve el saldo actual de la cuenta.
+        Si la cantidad es negativa, se genera un ValueError("Cantidad inválida").
+        Si la cantidad de retiro es mayor que el saldo de la cuenta, se genera un ValueError("Saldo insuficiente.").
+        :param amount: int
+        """
     if amount < 0:
-        raise ValueError("अमान्य राशि")
-    
+        raise ValueError('Cantidad inválida')
     if amount > self.balance:
-        raise ValueError("पर्याप्त संतुलन नहीं है।")
-    
+        raise ValueError('Saldo insuficiente.')
     self.balance -= amount
     return self.balance

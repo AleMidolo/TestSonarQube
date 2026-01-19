@@ -1,39 +1,20 @@
 def bad_character_heuristic(self):
     """
-    पाठ में पैटर्न की सभी उपस्थिति को खोजता है।
-    :return: पाठ में पैटर्न के सभी स्थानों की एक सूची, सूची।
-    >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
-    >>> boyerMooreSearch.bad_character_heuristic()
-    [0, 3]
-
-    """
-    text = self.text
-    pattern = self.pattern
-    m = len(pattern)
-    n = len(text)
-    result = []
-    
-    # Create bad character table
-    bad_char = {}
-    for i in range(m):
-        bad_char[pattern[i]] = i
-    
-    # Search for pattern in text
-    s = 0  # shift of the pattern with respect to text
-    while s <= n - m:
-        j = m - 1
-        
-        # Keep reducing j while characters of pattern and text match
-        while j >= 0 and pattern[j] == text[s + j]:
-            j -= 1
-        
-        # If pattern is present at current shift
-        if j < 0:
-            result.append(s)
-            # Shift pattern so next character in text aligns with last occurrence in pattern
-            s += (m - bad_char.get(text[s + m], -1) - 1) if s + m < n else 1
+        Encuentra todas las ocurrencias del patrón en el texto.
+        :return: Una lista de todas las posiciones del patrón en el texto, lista.
+        >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
+        >>> boyerMooreSearch.bad_character_heuristic()
+        [0, 3]
+        """
+    positions = []
+    currentPos = 0
+    while currentPos <= self.textLen - self.patLen:
+        mismatchPos = self.mismatch_in_text(currentPos)
+        if mismatchPos == -1:
+            positions.append(currentPos)
+            currentPos += 1
         else:
-            # Shift pattern so bad character in text aligns with last occurrence in pattern
-            s += max(1, j - bad_char.get(text[s + j], -1))
-    
-    return result
+            badCharIndex = self.match_in_pattern(self.text[mismatchPos])
+            shift = max(1, mismatchPos - (currentPos + badCharIndex))
+            currentPos += shift
+    return positions

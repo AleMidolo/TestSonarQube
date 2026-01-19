@@ -1,10 +1,11 @@
 @staticmethod
 def decimal_to_hex(decimal_num):
     """
-    दशमलव प्रारूप से हेक्स प्रारूप में एक संख्या को परिवर्तित करें।
-    :param decimal_num: int, दशमलव संख्या
-    :return hex_num: str, एक पूर्णांक का हेक्स प्रतिनिधित्व।
-    >>> NumberConverter.decimal_to_hex(42423)
-    'a5b7'
-    """
-    return hex(decimal_num)[2:]
+        Convierte un número del formato decimal al formato hexadecimal.
+        :param decimal_num: int, número decimal
+        :return hex_num: str, la representación hexadecimal de un entero.
+        >>> NumberConverter.decimal_to_hex(42423)
+        'a5b7'
+        """
+    hex_num = hex(decimal_num)[2:]
+    return hex_num

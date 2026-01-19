@@ -1,30 +1,18 @@
 @staticmethod
 def skewness(data):
     """
-    डेटा के एक सेट का स्क्यूनेस (skewness) निकालें।
-    :param data: इनपुट डेटा सूची, सूची।
-    :return: स्क्यूनेस, फ्लोट।
-    >>> DataStatistics4.skewness([1, 2, 5])
-    2.3760224064818463
-
-    """
+        Calcular la asimetría de un conjunto de datos.
+        :param data: La lista de datos de entrada, lista.
+        :return: La asimetría, float.
+        >>> DataStatistics4.skewness([1, 2, 5])
+        2.3760224064818463
+        """
     n = len(data)
     mean = sum(data) / n
-    
-    # Calculate standard deviation
-    variance = sum((x - mean) ** 2 for x in data) / n
-    std_dev = variance ** 0.5
-    
-    # Calculate skewness using the formula:
-    # skewness = (n / ((n-1) * (n-2))) * sum((x - mean)^3) / std_dev^3
+    std_dev = math.sqrt(sum(((x - mean) ** 2 for x in data)) / n)
     if std_dev == 0:
-        return 0.0
-    
-    m3 = sum((x - mean) ** 3 for x in data) / n
-    skewness = m3 / (std_dev ** 3)
-    
-    # Apply sample correction factor
-    if n > 2:
-        skewness = skewness * ((n * (n - 1)) ** 0.5) / (n - 2)
-    
-    return skewness
+        return math.nan
+    centered_data = [x - mean for x in data]
+    third_moment = sum((x ** 3 for x in centered_data)) / n
+    skewness_value = third_moment / std_dev ** 3
+    return skewness_value

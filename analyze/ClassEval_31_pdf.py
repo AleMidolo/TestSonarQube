@@ -1,22 +1,16 @@
-import math
-
 @staticmethod
 def pdf(data, mu, sigma):
     """
-    सामान्य वितरण के तहत डेटा के एक सेट का संभाव्यता घनत्व फ़ंक्शन (PDF) की गणना करें।
-    :param data: इनपुट डेटा सूची, सूची।
-    :param mu: सामान्य वितरण का औसत, फ्लोट।
-    :param sigma: सामान्य वितरण का मानक विचलन, फ्लोट।
-    :return: संभाव्यता घनत्व फ़ंक्शन (PDF), सूची।
-    >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
-    [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
-
-    """
-    result = []
+        Calcular la función de densidad de probabilidad (PDF) de un conjunto de datos bajo una distribución normal.
+        :param data: La lista de datos de entrada, lista.
+        :param mu: La media de la distribución normal, float.
+        :param sigma: La desviación estándar de la distribución normal, float.
+        :return: La función de densidad de probabilidad (PDF), lista.
+        >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
+        [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
+        """
+    pdf_values = []
     for x in data:
-        # Normal distribution PDF formula: (1 / (sigma * sqrt(2*pi))) * exp(-0.5 * ((x - mu) / sigma)^2)
-        coefficient = 1 / (sigma * math.sqrt(2 * math.pi))
-        exponent = -0.5 * ((x - mu) / sigma) ** 2
-        pdf_value = coefficient * math.exp(exponent)
-        result.append(pdf_value)
-    return result
+        pdf_value = 1 / (sigma * math.sqrt(2 * math.pi)) * math.exp(-0.5 * ((x - mu) / sigma) ** 2)
+        pdf_values.append(pdf_value)
+    return pdf_values

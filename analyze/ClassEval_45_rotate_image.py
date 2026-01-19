@@ -1,11 +1,9 @@
 def rotate_image(self, degrees):
     """
-    यदि छवि खोली गई है तो छवि को घुमाएँ
-    :param degrees: float, वह डिग्री जिसमें छवि को घुमाया जाएगा
-    >>> processor.load_image('test.jpg')
-    >>> processor.resize_image(90)
-    """
-    if hasattr(self, 'image') and self.image is not None:
-        self.image = self.image.rotate(degrees, expand=True)
-    else:
-        raise ValueError("No image loaded. Please load an image first.")
+        rota la imagen si la imagen está abierta
+        :param degrees: float, los grados en los que se rotará la imagen
+        >>> processor.load_image('test.jpg')
+        >>> processor.rotate_image(90)
+        """
+    if self.image:
+        self.image = self.image.rotate(degrees)

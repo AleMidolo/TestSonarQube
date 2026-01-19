@@ -1,27 +1,18 @@
 def add_dish(self, dish):
     """
-    self.menu की जांच करें और यदि डिश की संख्या मान्य है तो self.selected_dish में जोड़ें।
-    और यदि डिश सफलतापूर्वक जोड़ी गई है, तो self.menu में संख्या बदलें।
-    :param dish: dict, डिश की जानकारी। dish = {"dish": डिश का नाम, "count": संख्या, price: मूल्य}
-    :return: यदि सफलतापूर्वक जोड़ा गया तो True, अन्यथा False।
-    >>> order = Order()
-    >>> order.menu.append({"dish": "dish1", "price": 10, "count": 5})
-    >>> order.add_dish({"dish": "dish1", "price": 10, "count": 3})
-    True
-    """
-    # menu में डिश खोजें
+        Verifica el self.menu y añade a self.selected_dish si el conteo del plato es válido.
+        Y si el plato ha sido añadido con éxito, cambia el conteo en self.menu.
+        :param dish: dict, la información del plato. dish = {"dish": nombre del plato, "count": conteo, price: precio}
+        :return: True si se añadió con éxito, o False en caso contrario.
+        >>> order = Order()
+        >>> order.menu.append({"dish": "dish1", "price": 10, "count": 5})
+        >>> order.add_dish({"dish": "dish1", "price": 10, "count": 3})
+        True
+        """
     for menu_item in self.menu:
-        if menu_item["dish"] == dish["dish"]:
-            # जांचें कि क्या पर्याप्त संख्या उपलब्ध है
-            if menu_item["count"] >= dish["count"]:
-                # selected_dish में जोड़ें
-                self.selected_dish.append(dish)
-                # menu में संख्या घटाएं
-                menu_item["count"] -= dish["count"]
+        if menu_item['dish'] == dish['dish']:
+            if menu_item['count'] >= dish['count']:
+                self.selected_dishes.append(dish)
+                menu_item['count'] -= dish['count']
                 return True
-            else:
-                # पर्याप्त संख्या उपलब्ध नहीं है
-                return False
-    
-    # डिश menu में नहीं मिली
     return False

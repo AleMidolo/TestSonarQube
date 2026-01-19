@@ -1,12 +1,11 @@
 def findall(self, pattern, text):
     """
-    सभी मेल खाने वाले उपस्ट्रिंग्स को खोजें और सभी मेल खाने वाले उपस्ट्रिंग्स की एक सूची लौटाएं
-    :param pattern: स्ट्रिंग, नियमित अभिव्यक्ति पैटर्न
-    :param text: स्ट्रिंग, मेल खाने के लिए पाठ
-    :return: स्ट्रिंग की सूची, सभी मेल खाने वाले उपस्ट्रिंग्स की सूची
-    >>> ru = RegexUtils()
-    >>> ru.findall(r'\b\d{3}-\d{3}-\d{4}\b', "123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767")
-    ['123-456-7890', '876-286-9876', '987-762-9767']
-    """
-    import re
+        Encuentra todas las subcadenas que coinciden y devuelve una lista de todas las subcadenas coincidentes
+        :param pattern: cadena, Patrón de expresión regular
+        :param text: cadena, Texto a coincidir
+        :return: lista de cadena, Lista de todas las subcadenas coincidentes
+        >>> ru = RegexUtils()
+        >>> ru.findall(r'\x08\\d{3}-\\d{3}-\\d{4}\x08', "123-456-7890 abiguygusu 876-286-9876 kjgufwycs 987-762-9767")
+        ['123-456-7890', '876-286-9876', '987-762-9767']
+        """
     return re.findall(pattern, text)

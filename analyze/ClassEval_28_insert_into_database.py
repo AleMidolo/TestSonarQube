@@ -1,31 +1,17 @@
 def insert_into_database(self, table_name, data):
     """
-    निर्दिष्ट तालिका में डेटा डालें।
-    :param table_name: str, उस तालिका का नाम जिसमें डेटा डालना है।
-    :param data: list, शब्दकोशों की एक सूची जहाँ प्रत्येक शब्दकोश डेटा की एक पंक्ति का प्रतिनिधित्व करता है।
-    >>> db.insert_into_database('user', [
-            {'name': 'John', 'age': 25},
-            {'name': 'Alice', 'age': 30}
-        ])
-    """
-    if not data:
-        return
-    
-    # Get column names from the first dictionary
-    columns = list(data[0].keys())
-    column_names = ', '.join(columns)
-    placeholders = ', '.join(['?' for _ in columns])
-    
-    # Create the INSERT SQL query
-    query = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
-    
-    # Prepare the values for each row
-    values_list = []
-    for row in data:
-        values = tuple(row[col] for col in columns)
-        values_list.append(values)
-    
-    # Execute the query for all rows
-    cursor = self.connection.cursor()
-    cursor.executemany(query, values_list)
-    self.connection.commit()
+        Inserta datos en la tabla especificada en la base de datos.
+        :param table_name: str, el nombre de la tabla en la que se insertarán los datos.
+        :param data: list, una lista de diccionarios donde cada diccionario representa una fila de datos.
+        >>> db.insert_into_database('user', [
+                {'name': 'John', 'age': 25},
+                {'name': 'Alice', 'age': 30}
+            ])
+        """
+    conn = sqlite3.connect(self.database_name)
+    cursor = conn.cursor()
+    for entry in data:
+        insert_query = f"INSERT INTO {table_name} ({', '.join(entry.keys())}) VALUES ({', '.join(['?' for _ in entry.values()])})"
+        cursor.execute(insert_query, tuple(entry.values()))
+    conn.commit()
+    conn.close()

@@ -1,9 +1,9 @@
 def generate_split_sentences_pattern(self):
     """
-    दो वाक्यों के मध्य के अक्षरों से मेल खाने वाले नियमित अभिव्यक्ति पैटर्न उत्पन्न करें
-    :return: स्ट्रिंग, नियमित अभिव्यक्ति पैटर्न जो दो वाक्यों के मध्य के अक्षरों से मेल खाते हैं
-    >>> ru = RegexUtils()
-    >>> ru.generate_split_sentences_pattern()
-    '[.!?][\s]{1,2}(?=[A-Z])'
-    """
-    return r'[.!?][\s]{1,2}(?=[A-Z])'
+        Genera patrones de expresiones regulares que coinciden con los caracteres intermedios de dos oraciones
+        :return: cadena, patrones de expresiones regulares que coinciden con los caracteres intermedios de dos oraciones
+        >>> ru = RegexUtils()
+        >>> ru.generate_split_sentences_pattern()
+        '[.!?][\\s]{1,2}(?=[A-Z])'
+        """
+    return '[.!?][\\s]{1,2}(?=[A-Z])'
