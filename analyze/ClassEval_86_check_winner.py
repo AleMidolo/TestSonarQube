@@ -8,15 +8,14 @@ def check_winner(self):
         >>> ttt.check_winner()
         'X'
         """
-    n = len(self.board)
-    for i in range(n):
-        if self.board[i][0] != ' ' and all((self.board[i][j] == self.board[i][0] for j in range(n))):
-            return self.board[i][0]
-    for j in range(n):
-        if self.board[0][j] != ' ' and all((self.board[i][j] == self.board[0][j] for i in range(n))):
-            return self.board[0][j]
-    if self.board[0][0] != ' ' and all((self.board[i][i] == self.board[0][0] for i in range(n))):
+    for row in self.board:
+        if row[0] == row[1] == row[2] != ' ':
+            return row[0]
+    for col in range(3):
+        if self.board[0][col] == self.board[1][col] == self.board[2][col] != ' ':
+            return self.board[0][col]
+    if self.board[0][0] == self.board[1][1] == self.board[2][2] != ' ':
         return self.board[0][0]
-    if self.board[0][n - 1] != ' ' and all((self.board[i][n - 1 - i] == self.board[0][n - 1] for i in range(n))):
-        return self.board[0][n - 1]
+    if self.board[0][2] == self.board[1][1] == self.board[2][0] != ' ':
+        return self.board[0][2]
     return None

@@ -4,4 +4,6 @@ def __format_line_feed(self, text):
         :param text: लगातार लाइन ब्रेक के साथ स्ट्रिंग
         :return: स्ट्रिंग, एकल लाइन ब्रेक के साथ बदला हुआ टेक्स्ट
         """
-    return re.sub('\\n+', '\n', text).strip()
+    if not text:
+        return text
+    return re.sub('\\n+', '\n', text.strip())

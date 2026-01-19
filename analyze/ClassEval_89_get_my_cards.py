@@ -5,6 +5,5 @@ def get_my_cards(self):
         >>> game = TwentyFourPointGame()
         >>> game.get_my_cards()
         """
-    if not self.nums:
-        self._generate_cards()
+    self._generate_cards()
     return self.nums

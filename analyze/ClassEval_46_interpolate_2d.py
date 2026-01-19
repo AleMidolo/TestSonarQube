@@ -14,27 +14,27 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
 
         """
 
-    def find_segment(coord, value, coord_list):
-        for i in range(len(coord_list) - 1):
-            if coord_list[i] <= value <= coord_list[i + 1]:
-                return (i, i + 1)
-        return None
+    def find_segment(coord, value, coords):
+        """Find the segment index where value lies between coords[i] and coords[i+1]"""
+        for i in range(len(coords) - 1):
+            if coords[i] <= value <= coords[i + 1]:
+                return i
+        if value < coords[0]:
+            return 0
+        else:
+            return len(coords) - 2
     z_interp = []
     for xi, yi in zip(x_interp, y_interp):
-        x_segment = find_segment('x', xi, x)
-        y_segment = find_segment('y', yi, y)
-        if x_segment is None or y_segment is None:
-            raise ValueError(f'Interpolation point ({xi}, {yi}) is outside the data range')
-        i1, i2 = x_segment
-        j1, j2 = y_segment
-        x1, x2 = (x[i1], x[i2])
-        y1, y2 = (y[j1], y[j2])
-        z11 = z[j1][i1]
-        z12 = z[j1][i2]
-        z21 = z[j2][i1]
-        z22 = z[j2][i2]
+        i = find_segment('x', xi, x)
+        j = find_segment('y', yi, y)
+        x1, x2 = (x[i], x[i + 1])
+        y1, y2 = (y[j], y[j + 1])
+        z11 = z[j][i]
+        z12 = z[j][i + 1]
+        z21 = z[j + 1][i]
+        z22 = z[j + 1][i + 1]
         z_y1 = z11 + (z12 - z11) * (xi - x1) / (x2 - x1)
         z_y2 = z21 + (z22 - z21) * (xi - x1) / (x2 - x1)
-        z_interp_val = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
-        z_interp.append(z_interp_val)
+        zi = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
+        z_interp.append(zi)
     return z_interp

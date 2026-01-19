@@ -8,6 +8,6 @@ def compare(self, cur, peek):
         >>> expression_calculator.compare("+", "-")
         True
         """
-    cur_index = self._get_operator_index(cur)
-    peek_index = self._get_operator_index(peek)
-    return self.operat_priority[cur_index] <= self.operat_priority[peek_index]
+    cur_index = self.get_priority_index(cur)
+    peek_index = self.get_priority_index(peek)
+    return self.operat_priority[cur_index] >= self.operat_priority[peek_index]

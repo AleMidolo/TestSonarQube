@@ -14,7 +14,8 @@ def caesar_decipher(self, ciphertext, shift):
     for char in ciphertext:
         if char.isalpha():
             base = ord('A') if char.isupper() else ord('a')
-            plaintext += chr((ord(char) - base - shift) % 26 + base)
+            decrypted_char = chr((ord(char) - base - shift) % 26 + base)
+            plaintext += decrypted_char
         else:
             plaintext += char
     return plaintext

@@ -17,5 +17,3 @@ def gain_exp(self, amount):
         self.hp += 20
         self.attack_power += 5
         self.defense += 5
-    if self.level >= 100:
-        self.exp = 0

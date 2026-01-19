@@ -9,8 +9,8 @@ def _convert_type(self, arg, value):
         21
         """
     if arg in self.types:
+        arg_type = self.types[arg]
         try:
-            arg_type = self.types[arg]
             if arg_type == int:
                 return int(value)
             elif arg_type == float:
