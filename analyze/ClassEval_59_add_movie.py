@@ -1,5 +1,5 @@
-from datetime import datetime
 import numpy as np
+from datetime import datetime
 
 def add_movie(self, name, price, start_time, end_time, n):
     """

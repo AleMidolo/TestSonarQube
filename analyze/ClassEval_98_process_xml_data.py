@@ -15,21 +15,18 @@ def process_xml_data(self, file_name):
         # Read the XML data if not already loaded
         if not hasattr(self, 'root') or self.root is None:
             self.root = self.read_xml()
-        
-        if self.root is None:
-            return False
+            if self.root is None:
+                return False
         
         # Process/modify the XML data (example modifications)
-        # This could involve updating attributes, text content, etc.
+        # This could involve updating text, attributes, or structure
         for element in self.root.iter():
             # Example: modify text content if it exists
             if element.text and element.text.strip():
                 element.text = element.text.strip()
         
-        # Create an ElementTree object from the root
+        # Create an ElementTree object and write to file
         tree = ET.ElementTree(self.root)
-        
-        # Write the modified XML to the new file
         tree.write(file_name, encoding='utf-8', xml_declaration=True)
         
         return True

@@ -8,36 +8,34 @@ def interpret(self, display=False):
     [{'Acorde': 'C', 'Melodía': '53231323'}, {'Acorde': 'Em', 'Melodía': '43231323'}, {'Acorde': 'F', 'Melodía': '43231323'}, {'Acorde': 'G', 'Melodía': '63231323'}]
 
     """
-    # Verificar si la entrada está vacía o contiene solo espacios en blanco
-    if not hasattr(self, 'score') or not self.score or self.score.strip() == '':
+    # Check if the input is empty or contains only whitespace
+    if not hasattr(self, 'partitura') or not self.partitura or self.partitura.strip() == '':
         return []
     
-    # Dividir la partitura por espacios
-    parts = self.score.strip().split()
+    # Split the partitura by spaces
+    tokens = self.partitura.strip().split()
     
     result = []
     
-    for part in parts:
-        if not part:  # Saltar partes vacías
+    for token in tokens:
+        if not token:  # Skip empty tokens
             continue
         
-        # Separar el acorde (letras) de la melodía (números)
-        acorde = ''
-        melodia = ''
+        # Find where the chord ends and the melody begins
+        # The chord is the initial letters, the melody is the numbers
+        i = 0
+        while i < len(token) and not token[i].isdigit():
+            i += 1
         
-        for char in part:
-            if char.isalpha() or char == '#' or char == 'b':
-                acorde += char
-            elif char.isdigit():
-                melodia += char
+        acorde = token[:i]
+        melodia = token[i:]
         
-        # Solo agregar si hay tanto acorde como melodía
+        # Only add if we have both chord and melody
         if acorde and melodia:
             result.append({'Acorde': acorde, 'Melodía': melodia})
     
-    # Mostrar si display es True
+    # Display if requested
     if display:
-        for item in result:
-            print(f"Acorde: {item['Acorde']}, Melodía: {item['Melodía']}")
+        print(result)
     
     return result

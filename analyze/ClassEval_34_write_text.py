@@ -7,33 +7,36 @@ def write_text(self, content, font_size=12, alignment='left'):
     :return: bool, True si la operación de escritura es exitosa, False en caso contrario.
     """
     try:
-        from docx import Document
-        from docx.shared import Pt
         from docx.enum.text import WD_ALIGN_PARAGRAPH
         
-        # Si no existe un documento, crear uno nuevo
-        if not hasattr(self, 'document') or self.document is None:
-            self.document = Document()
+        # Validar parámetros
+        if not isinstance(content, str):
+            return False
         
-        # Agregar un párrafo con el contenido
-        paragraph = self.document.add_paragraph(content)
+        if not isinstance(font_size, int) or font_size <= 0:
+            return False
         
-        # Configurar el tamaño de fuente
-        for run in paragraph.runs:
-            run.font.size = Pt(font_size)
-        
-        # Configurar la alineación
+        # Mapeo de alineación
         alignment_map = {
             'left': WD_ALIGN_PARAGRAPH.LEFT,
             'center': WD_ALIGN_PARAGRAPH.CENTER,
             'right': WD_ALIGN_PARAGRAPH.RIGHT
         }
         
-        if alignment.lower() in alignment_map:
-            paragraph.alignment = alignment_map[alignment.lower()]
-        else:
-            paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        if alignment.lower() not in alignment_map:
+            return False
+        
+        # Agregar párrafo al documento
+        paragraph = self.add_paragraph(content)
+        
+        # Configurar tamaño de fuente
+        for run in paragraph.runs:
+            run.font.size = docx.shared.Pt(font_size)
+        
+        # Configurar alineación
+        paragraph.alignment = alignment_map[alignment.lower()]
         
         return True
+        
     except Exception as e:
         return False

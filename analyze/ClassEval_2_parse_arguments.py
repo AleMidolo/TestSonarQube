@@ -37,19 +37,13 @@ def parse_arguments(self, command_string):
                 parts = arg_name.split('=', 1)
                 arg_name = parts[0]
                 value = parts[1]
-                # Convert type if method exists
-                if hasattr(self, '_convert_type'):
-                    value = self._convert_type(arg_name, value)
-                self.arguments[arg_name] = value
+                self.arguments[arg_name] = self._convert_type(value)
                 i += 1
             else:
                 # Check if next token exists and is not an argument
                 if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
                     value = tokens[i + 1]
-                    # Convert type if method exists
-                    if hasattr(self, '_convert_type'):
-                        value = self._convert_type(arg_name, value)
-                    self.arguments[arg_name] = value
+                    self.arguments[arg_name] = self._convert_type(value)
                     i += 2
                 else:
                     # It's a flag/option (boolean)

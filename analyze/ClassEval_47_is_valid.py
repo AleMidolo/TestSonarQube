@@ -6,40 +6,31 @@ def is_valid(self):
     >>> ipaddress.is_valid()
     True
     """
-    # Assuming self has an attribute that stores the IP address string
-    # Common attribute names would be self.ip, self.address, etc.
-    # I'll use self.ip as the most likely attribute name
-    
-    if not hasattr(self, 'ip'):
-        # Try alternative attribute names
-        ip_str = getattr(self, 'address', getattr(self, 'ip_address', ''))
-    else:
-        ip_str = self.ip
-    
-    # Split by '.'
-    parts = ip_str.split('.')
-    
-    # Must have exactly 4 parts
-    if len(parts) != 4:
+    try:
+        # Dividir la dirección IP por '.'
+        parts = self.ip.split('.')
+        
+        # Debe tener exactamente 4 partes
+        if len(parts) != 4:
+            return False
+        
+        # Verificar cada parte
+        for part in parts:
+            # No debe estar vacío
+            if not part:
+                return False
+            
+            # No debe tener ceros a la izquierda (excepto "0" solo)
+            if len(part) > 1 and part[0] == '0':
+                return False
+            
+            # Debe ser un número válido
+            num = int(part)
+            
+            # Debe estar en el rango [0, 255]
+            if num < 0 or num > 255:
+                return False
+        
+        return True
+    except (ValueError, AttributeError):
         return False
-    
-    # Check each part
-    for part in parts:
-        # Check if part is empty
-        if not part:
-            return False
-        
-        # Check if part contains only digits
-        if not part.isdigit():
-            return False
-        
-        # Check for leading zeros (except for "0" itself)
-        if len(part) > 1 and part[0] == '0':
-            return False
-        
-        # Convert to integer and check range
-        num = int(part)
-        if num < 0 or num > 255:
-            return False
-    
-    return True

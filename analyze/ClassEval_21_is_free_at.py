@@ -14,29 +14,19 @@ def is_free_at(self, check_time):
     
     # Normalizar el formato del tiempo de verificación
     check_time_parts = check_time.split(':')
-    if len(check_time_parts[0]) == 1:
-        check_time = '0' + check_time
-    
-    # Convertir check_time a objeto datetime para comparación
-    check_dt = datetime.strptime(check_time, '%H:%M')
+    check_time_formatted = f"{int(check_time_parts[0]):02d}:{check_time_parts[1]}"
+    check_dt = datetime.strptime(check_time_formatted, '%H:%M')
     
     # Verificar si hay conflicto con algún curso
     for course in self.courses:
-        # Normalizar start_time y end_time
-        start_time = course['start_time']
-        end_time = course['end_time']
+        # Normalizar tiempos de inicio y fin del curso
+        start_parts = course['start_time'].split(':')
+        start_formatted = f"{int(start_parts[0]):02d}:{start_parts[1]}"
+        start_dt = datetime.strptime(start_formatted, '%H:%M')
         
-        start_parts = start_time.split(':')
-        if len(start_parts[0]) == 1:
-            start_time = '0' + start_time
-            
-        end_parts = end_time.split(':')
-        if len(end_parts[0]) == 1:
-            end_time = '0' + end_time
-        
-        # Convertir a datetime
-        start_dt = datetime.strptime(start_time, '%H:%M')
-        end_dt = datetime.strptime(end_time, '%H:%M')
+        end_parts = course['end_time'].split(':')
+        end_formatted = f"{int(end_parts[0]):02d}:{end_parts[1]}"
+        end_dt = datetime.strptime(end_formatted, '%H:%M')
         
         # Verificar si check_time está dentro del rango [start_time, end_time)
         if start_dt <= check_dt < end_dt:

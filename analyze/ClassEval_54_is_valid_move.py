@@ -18,7 +18,6 @@ def is_valid_move(self, pos1, pos2):
     # Verificar que las dos posiciones tengan el mismo ícono
     icon1 = self.board[pos1[1]][pos1[0]]
     icon2 = self.board[pos2[1]][pos2[0]]
-    
     if icon1 != icon2:
         return False
     
@@ -66,32 +65,28 @@ def has_valid_path(self, pos1, pos2):
     
     return False
 
-def is_direct_path(self, pos1, pos2):
-    """
-    Verifica si hay un camino directo (horizontal o vertical) sin obstáculos
-    """
-    if pos1[0] == pos2[0]:  # Mismo x, movimiento vertical
-        y_start = min(pos1[1], pos2[1])
-        y_end = max(pos1[1], pos2[1])
-        for y in range(y_start + 1, y_end):
-            if self.board[y][pos1[0]] is not None:
-                return False
-        return True
-    elif pos1[1] == pos2[1]:  # Mismo y, movimiento horizontal
-        x_start = min(pos1[0], pos2[0])
-        x_end = max(pos1[0], pos2[0])
-        for x in range(x_start + 1, x_end):
-            if self.board[pos1[1]][x] is not None:
-                return False
-        return True
-    return False
-
 def is_empty_or_target(self, pos, pos1, pos2):
-    """
-    Verifica si una posición está vacía o es una de las posiciones objetivo
-    """
+    """Verifica si una posición está vacía o es una de las posiciones objetivo"""
     if pos == pos1 or pos == pos2:
         return True
     if 0 <= pos[0] < len(self.board[0]) and 0 <= pos[1] < len(self.board):
-        return self.board[pos[1]][pos[0]] is None
+        return self.board[pos[1]][pos[0]] is None or self.board[pos[1]][pos[0]] == ''
+    return False
+
+def is_direct_path(self, pos1, pos2):
+    """Verifica si hay un camino directo (horizontal o vertical) sin obstáculos"""
+    if pos1[0] == pos2[0]:  # Vertical
+        y_start, y_end = min(pos1[1], pos2[1]), max(pos1[1], pos2[1])
+        for y in range(y_start, y_end + 1):
+            if (pos1[0], y) != pos1 and (pos1[0], y) != pos2:
+                if not (self.board[y][pos1[0]] is None or self.board[y][pos1[0]] == ''):
+                    return False
+        return True
+    elif pos1[1] == pos2[1]:  # Horizontal
+        x_start, x_end = min(pos1[0], pos2[0]), max(pos1[0], pos2[0])
+        for x in range(x_start, x_end + 1):
+            if (x, pos1[1]) != pos1 and (x, pos1[1]) != pos2:
+                if not (self.board[pos1[1]][x] is None or self.board[pos1[1]][x] == ''):
+                    return False
+        return True
     return False

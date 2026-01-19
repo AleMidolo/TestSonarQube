@@ -22,44 +22,51 @@ def subtract(num1, num2):
     # Convert subtraction to addition when dealing with negative numbers
     # a - b = a + (-b)
     # a - (-b) = a + b
-    # -a - b = -(a + b)
-    # -a - (-b) = -a + b = b - a
+    # (-a) - b = -(a + b)
+    # (-a) - (-b) = b - a
     
     if negative1 and negative2:
-        # -a - (-b) = b - a
+        # (-a) - (-b) = b - a
         return subtract(num2, num1)
     elif negative1:
-        # -a - b = -(a + b)
+        # (-a) - b = -(a + b)
         result = add(num1, num2)
         return '-' + result if result != '0' else '0'
     elif negative2:
         # a - (-b) = a + b
         return add(num1, num2)
     
-    # Both positive: a - b
+    # Both positive: perform actual subtraction
     # Determine which is larger
     if len(num1) > len(num2):
-        is_negative = False
-    elif len(num1) < len(num2):
-        is_negative = True
-        num1, num2 = num2, num1
+        larger = num1
+        smaller = num2
+        result_negative = False
+    elif len(num2) > len(num1):
+        larger = num2
+        smaller = num1
+        result_negative = True
     else:
+        # Same length, compare digit by digit
         if num1 >= num2:
-            is_negative = False
+            larger = num1
+            smaller = num2
+            result_negative = False
         else:
-            is_negative = True
-            num1, num2 = num2, num1
+            larger = num2
+            smaller = num1
+            result_negative = True
     
-    # Perform subtraction (num1 - num2, where num1 >= num2)
+    # Perform subtraction
+    larger = larger[::-1]
+    smaller = smaller[::-1]
+    
     result = []
     borrow = 0
     
-    # Pad num2 with zeros
-    num2 = num2.zfill(len(num1))
-    
-    for i in range(len(num1) - 1, -1, -1):
-        digit1 = int(num1[i])
-        digit2 = int(num2[i])
+    for i in range(len(larger)):
+        digit1 = int(larger[i])
+        digit2 = int(smaller[i]) if i < len(smaller) else 0
         
         diff = digit1 - digit2 - borrow
         
@@ -71,36 +78,36 @@ def subtract(num1, num2):
         
         result.append(str(diff))
     
-    # Reverse and remove leading zeros
-    result.reverse()
-    result_str = ''.join(result).lstrip('0')
+    # Remove leading zeros
+    while len(result) > 1 and result[-1] == '0':
+        result.pop()
     
-    if not result_str:
-        result_str = '0'
+    result_str = ''.join(result[::-1])
     
-    if is_negative and result_str != '0':
-        result_str = '-' + result_str
+    if result_str == '0':
+        return '0'
     
-    return result_str
+    return '-' + result_str if result_negative else result_str
 
 
 def add(num1, num2):
     """Helper function to add two positive number strings"""
-    if len(num1) < len(num2):
-        num1, num2 = num2, num1
+    num1 = num1[::-1]
+    num2 = num2[::-1]
     
+    max_len = max(len(num1), len(num2))
     result = []
     carry = 0
     
-    num2 = num2.zfill(len(num1))
-    
-    for i in range(len(num1) - 1, -1, -1):
-        digit_sum = int(num1[i]) + int(num2[i]) + carry
-        result.append(str(digit_sum % 10))
-        carry = digit_sum // 10
+    for i in range(max_len):
+        digit1 = int(num1[i]) if i < len(num1) else 0
+        digit2 = int(num2[i]) if i < len(num2) else 0
+        
+        total = digit1 + digit2 + carry
+        result.append(str(total % 10))
+        carry = total // 10
     
     if carry:
         result.append(str(carry))
     
-    result.reverse()
-    return ''.join(result)
+    return ''.join(result[::-1])

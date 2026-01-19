@@ -40,16 +40,16 @@ def format_line_html_text(self, html_text):
                 self.tag_stack.pop()
             
             if tag in self.code_tags:
-                # Check if we're still in a code block
-                self.in_code_block = any(t in self.code_tags for t in self.tag_stack)
-                if not self.in_code_block:
+                # Check if we're exiting all code blocks
+                if not any(t in self.code_tags for t in self.tag_stack):
+                    self.in_code_block = False
                     self.result.append('-CODE-')
         
         def handle_data(self, data):
             if not self.in_code_block:
-                stripped = data.strip()
-                if stripped:
-                    self.result.append(stripped)
+                text = data.strip()
+                if text:
+                    self.result.append(text)
     
     parser = CodeReplacer()
     parser.feed(html_text)

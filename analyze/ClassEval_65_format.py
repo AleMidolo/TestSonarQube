@@ -59,7 +59,6 @@ def format(self, x):
     
     result = ""
     
-    # Millones
     if integer_part >= 1000000:
         millones = integer_part // 1000000
         if millones == 1:
@@ -70,7 +69,6 @@ def format(self, x):
         if integer_part > 0:
             result += " "
     
-    # Miles
     if integer_part >= 1000:
         miles = integer_part // 1000
         if miles == 1:
@@ -81,7 +79,6 @@ def format(self, x):
         if integer_part > 0:
             result += " "
     
-    # Unidades, decenas y centenas
     if integer_part > 0:
         result += convert_group(integer_part)
     

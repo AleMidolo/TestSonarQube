@@ -10,22 +10,20 @@ def kurtosis(data):
     """
     n = len(data)
     if n < 4:
-        raise ValueError("Se necesitan al menos 4 datos para calcular la curtosis")
+        raise ValueError("Kurtosis requires at least 4 data points")
     
-    # Calcular la media
+    # Calculate mean
     mean = sum(data) / n
     
-    # Calcular la desviación estándar
+    # Calculate standard deviation
     variance = sum((x - mean) ** 2 for x in data) / n
     std_dev = variance ** 0.5
     
     if std_dev == 0:
-        raise ValueError("La desviación estándar es cero")
+        raise ValueError("Standard deviation is zero")
     
-    # Calcular el cuarto momento central
+    # Calculate kurtosis (excess kurtosis)
     fourth_moment = sum((x - mean) ** 4 for x in data) / n
+    kurtosis_value = (fourth_moment / (variance ** 2)) - 3
     
-    # Calcular la curtosis (exceso de curtosis)
-    kurt = (fourth_moment / (variance ** 2)) - 3
-    
-    return kurt
+    return kurtosis_value

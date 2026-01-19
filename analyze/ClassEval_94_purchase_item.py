@@ -16,6 +16,7 @@ def purchase_item(self, item_name):
     if item_name not in self.inventory:
         return False
     
+    # Get item details
     item = self.inventory[item_name]
     
     # Check if item is in stock

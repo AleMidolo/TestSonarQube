@@ -10,13 +10,14 @@ def query(self, weather_list, tmp_units = 'celsius'):
     (27, 'sunny')
 
     """
+    # Get the city information from weather_list
     if self.city not in weather_list:
         return None
     
-    city_data = weather_list[self.city]
-    weather = city_data['weather']
-    temperature = city_data['temperature']
-    current_units = city_data['temperature units']
+    city_info = weather_list[self.city]
+    weather = city_info['weather']
+    temperature = city_info['temperature']
+    current_units = city_info['temperature units']
     
     # Convert temperature if needed
     if current_units != tmp_units:

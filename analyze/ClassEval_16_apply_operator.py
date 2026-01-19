@@ -8,7 +8,7 @@ def apply_operator(self, operand_stack, operator_stack):
     >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
     ([1, -1], ['-'])
     """
-    if len(operand_stack) < 2 or len(operator_stack) < 1:
+    if len(operand_stack) < 2 or len(operator_stack) == 0:
         return operand_stack, operator_stack
     
     # Extraer el operador de la parte superior de la pila de operadores

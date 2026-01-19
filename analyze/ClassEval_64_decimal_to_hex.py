@@ -13,14 +13,16 @@ def decimal_to_hex(decimal_num):
     hex_digits = '0123456789abcdef'
     hex_num = ''
     
-    num = abs(decimal_num)
+    # Handle negative numbers
+    is_negative = decimal_num < 0
+    decimal_num = abs(decimal_num)
     
-    while num > 0:
-        remainder = num % 16
+    while decimal_num > 0:
+        remainder = decimal_num % 16
         hex_num = hex_digits[remainder] + hex_num
-        num = num // 16
+        decimal_num = decimal_num // 16
     
-    if decimal_num < 0:
+    if is_negative:
         hex_num = '-' + hex_num
     
     return hex_num

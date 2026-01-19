@@ -18,16 +18,17 @@ def map(data):
         if ground_truth_count == 0:
             return 0.0
         
-        ap = 0.0
         correct_count = 0
+        precision_sum = 0.0
         
         for i, pred in enumerate(predictions):
             if pred == 1:
                 correct_count += 1
                 precision_at_i = correct_count / (i + 1)
-                ap += precision_at_i
+                precision_sum += precision_at_i
         
-        return ap / ground_truth_count
+        ap = precision_sum / ground_truth_count
+        return ap
     
     # Check if data is a single tuple or a list of tuples
     if isinstance(data, tuple):

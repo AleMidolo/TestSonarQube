@@ -26,7 +26,7 @@ def process_csv_data(self, N, save_file_name):
         if N < 0 or N >= len(title):
             return 0
         
-        # Process data: keep only Nth column and capitalize
+        # Process data: keep only N-th column and capitalize
         processed_data = []
         for row in data:
             if N < len(row):
@@ -35,17 +35,14 @@ def process_csv_data(self, N, save_file_name):
                 return 0
         
         # Create new filename with '_process' suffix
-        if '.' in save_file_name:
-            name_parts = save_file_name.rsplit('.', 1)
-            new_file_name = name_parts[0] + '_process.' + name_parts[1]
+        if save_file_name.endswith('.csv'):
+            new_file_name = save_file_name[:-4] + '_process.csv'
         else:
             new_file_name = save_file_name + '_process'
         
         # Write to new CSV file
-        self.title = title
-        self.data = processed_data
-        write_result = self.write_csv(new_file_name)
+        result = self.write_csv(title, processed_data, new_file_name)
         
-        return write_result
+        return result
     except:
         return 0

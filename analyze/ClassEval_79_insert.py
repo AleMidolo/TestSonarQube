@@ -12,23 +12,23 @@ def insert(self, data):
     # Obtener las columnas y valores
     columns = ', '.join(data.keys())
     
-    # Formatear los valores (agregar comillas simples a strings)
-    formatted_values = []
+    # Formatear los valores - agregar comillas simples a los strings
+    values = []
     for value in data.values():
         if isinstance(value, str):
             # Escapar comillas simples en el valor
             escaped_value = value.replace("'", "''")
-            formatted_values.append(f"'{escaped_value}'")
+            values.append(f"'{escaped_value}'")
         elif value is None:
-            formatted_values.append('NULL')
+            values.append('NULL')
         elif isinstance(value, bool):
-            formatted_values.append('TRUE' if value else 'FALSE')
+            values.append('TRUE' if value else 'FALSE')
         else:
-            formatted_values.append(str(value))
+            values.append(str(value))
     
-    values = ', '.join(formatted_values)
+    values_str = ', '.join(values)
     
     # Asumir que self.table contiene el nombre de la tabla
     table_name = getattr(self, 'table', 'table1')
     
-    return f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
+    return f"INSERT INTO {table_name} ({columns}) VALUES ({values_str});"

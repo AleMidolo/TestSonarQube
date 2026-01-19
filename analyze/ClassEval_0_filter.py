@@ -28,8 +28,8 @@ def filter(self, request):
         if method in allowed_routes[path]:
             return True
     
-    # Check for public paths (paths starting with /public)
-    if path.startswith('/public'):
+    # Check for authenticated requests (if token is present)
+    if request.get('token') or request.get('authenticated'):
         return True
     
     # Default: deny access

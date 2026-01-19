@@ -11,15 +11,15 @@ def check_course_conflict(self, new_course):
     new_start = new_course['start_time']
     new_end = new_course['end_time']
     
-    # Iterate through existing courses in the classroom
+    # Check against all existing courses
     for course in self.courses:
         existing_start = course['start_time']
         existing_end = course['end_time']
         
-        # Check for conflicts:
+        # Check if there's any overlap or touching boundaries
         # Conflict occurs if:
         # 1. New course starts before existing ends AND new course ends after existing starts
-        # 2. Including boundary cases where times are equal (same time limit)
+        # 2. Including when boundaries touch (same time limit)
         if not (new_end <= existing_start or new_start >= existing_end):
             return False
     

@@ -19,10 +19,10 @@ def init_game(self):
     for row in range(len(self.map)):
         for col in range(len(self.map[row])):
             cell = self.map[row][col]
-            if cell == 'O':  # Player position
+            if cell == 'O':  # Jugador
                 self.player_row = row
                 self.player_col = col
-            elif cell == 'X':  # Box position
+            elif cell == 'X':  # Caja
                 self.boxes.append((row, col))
-            elif cell == 'G':  # Goal/target position
+            elif cell == 'G':  # Objetivo
                 self.targets.append((row, col))

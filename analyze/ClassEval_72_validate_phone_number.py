@@ -9,9 +9,10 @@ def validate_phone_number(self, phone_number):
     """
     import re
     
+    if not phone_number:
+        return False
+    
     # Pattern for phone numbers in format: XXX-XXX-XXXX
     pattern = r'^\d{3}-\d{3}-\d{4}$'
     
-    if re.match(pattern, phone_number):
-        return True
-    return False
+    return bool(re.match(pattern, phone_number))
