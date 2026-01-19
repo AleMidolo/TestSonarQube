@@ -11,7 +11,7 @@ def delete_from_database(self, table_name, name):
     columns_info = cursor.fetchall()
     name_column = None
     for col_info in columns_info:
-        if col_info[2] == 'TEXT':
+        if col_info[2] == 'TEXT' and col_info[1] != 'id':
             name_column = col_info[1]
             break
     if name_column is None:

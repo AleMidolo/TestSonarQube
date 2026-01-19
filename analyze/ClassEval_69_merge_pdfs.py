@@ -8,11 +8,12 @@ def merge_pdfs(self, output_filepath):
         >>> handler.merge_pdfs('out.pdf')
         PDF uniti salvati in out.pdf
         """
-    pdf_writer = PyPDF2.PdfFileWriter()
+    if not self.readers:
+        raise ValueError('No PDF files to merge')
+    merger = PyPDF2.PdfMerger()
     for reader in self.readers:
-        for page_num in range(len(reader.pages)):
-            page = reader.pages[page_num]
-            pdf_writer.addPage(page)
+        merger.append(reader)
     with open(output_filepath, 'wb') as output_file:
-        pdf_writer.write(output_file)
+        merger.write(output_file)
+    merger.close()
     return f'PDF uniti salvati in {output_filepath}'

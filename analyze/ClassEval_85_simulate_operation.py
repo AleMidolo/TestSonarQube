@@ -15,5 +15,5 @@ def simulate_operation(self):
         else:
             self.current_temperature -= 1.0
         time_taken += 1
-        time.sleep(0.01)
+        time.sleep(0.1)
     return time_taken

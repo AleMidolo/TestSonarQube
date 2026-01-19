@@ -9,17 +9,21 @@ def split_sentences(self, sentences_string):
         """
     if not sentences_string:
         return []
-    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)\\.\\s+|\\?\\s+'
-    sentences = re.split(pattern, sentences_string)
-    sentences = [s.strip() for s in sentences if s.strip()]
-    result = []
-    matches = list(re.finditer(pattern, sentences_string))
-    for i, sentence in enumerate(sentences):
-        if i < len(matches):
-            punct = matches[i].group().strip()
-            result.append(sentence + punct)
-        elif sentence and (sentence.endswith('.') or sentence.endswith('?')):
-            result.append(sentence)
+    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)(?<!Prof)(?<!Sr)(?<!Jr)\\.\\s|\\?\\s'
+    parts = re.split(pattern, sentences_string)
+    sentences = []
+    for i in range(len(parts) - 1):
+        end_match = re.search('[.?]\\s', sentences_string)
+        if end_match:
+            end_char = end_match.group()[0]
+            sentences.append(parts[i].strip() + end_char)
+            sentences_string = sentences_string[end_match.end():]
         else:
-            result.append(sentence)
-    return result
+            sentences.append(parts[i].strip() + '.')
+    if parts[-1].strip():
+        if parts[-1].strip()[-1] in '.?':
+            sentences.append(parts[-1].strip())
+        else:
+            sentences.append(parts[-1].strip() + '.')
+    sentences = [s for s in sentences if s.strip()]
+    return sentences

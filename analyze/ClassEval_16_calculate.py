@@ -28,26 +28,23 @@ def calculate(self, expression):
             operand_stack.append(num)
             i = j
         elif expression[i] in self.operators:
-            if i == 0 or expression[i - 1] in self.operators or expression[i - 1] == '(':
-                if expression[i] == '-':
-                    j = i + 1
-                    while j < n and (expression[j].isdigit() or expression[j] == '.'):
-                        j += 1
-                    try:
-                        num = float(expression[i + 1:j])
-                    except ValueError:
-                        return None
-                    operand_stack.append(-num)
-                    i = j
-                    continue
-                else:
+            if expression[i] == '-' and (i == 0 or expression[i - 1] in self.operators or expression[i - 1] == '('):
+                j = i + 1
+                while j < n and (expression[j].isdigit() or expression[j] == '.'):
+                    j += 1
+                try:
+                    num = float(expression[i:j])
+                except ValueError:
                     return None
+                operand_stack.append(num)
+                i = j
+                continue
             while operator_stack and operator_stack[-1] != '(' and (self.precedence(operator_stack[-1]) >= self.precedence(expression[i])):
                 operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
             operator_stack.append(expression[i])
             i += 1
         elif expression[i] == '(':
-            operator_stack.append('(')
+            operator_stack.append(expression[i])
             i += 1
         elif expression[i] == ')':
             while operator_stack and operator_stack[-1] != '(':

@@ -13,6 +13,6 @@ def extract_text_from_pdfs(self):
             page = reader.pages[page_num]
             page_text = page.extract_text()
             if page_text:
-                text += page_text + '\n'
-        pdf_texts.append(text.strip())
+                text += page_text
+        pdf_texts.append(text)
     return pdf_texts

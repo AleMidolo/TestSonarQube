@@ -9,17 +9,18 @@ def auto_check_conflict(self):
         >>> thermostat.mode
         'heat'
         """
-    if self.current_temperature < self.target_temperature:
-        if self.mode != 'heat':
-            self.mode = 'heat'
+    if self.mode == 'heat':
+        if self.current_temperature >= self.target_temperature:
+            self.auto_set_mode()
             return False
         else:
             return True
-    elif self.current_temperature > self.target_temperature:
-        if self.mode != 'cool':
-            self.mode = 'cool'
+    elif self.mode == 'cool':
+        if self.current_temperature <= self.target_temperature:
+            self.auto_set_mode()
             return False
         else:
             return True
     else:
-        return True
+        self.auto_set_mode()
+        return False

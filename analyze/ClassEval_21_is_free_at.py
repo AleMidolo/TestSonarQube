@@ -14,6 +14,6 @@ def is_free_at(self, check_time):
     for course in self.courses:
         start_time = datetime.strptime(course['start_time'], '%H:%M')
         end_time = datetime.strptime(course['end_time'], '%H:%M')
-        if start_time <= check_time_dt <= end_time:
+        if start_time <= check_time_dt < end_time:
             return False
     return True

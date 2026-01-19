@@ -6,5 +6,7 @@ def count_words(self, sentence):
         >>> ss.count_words("abc def")
         2
         """
-    words = re.findall('\\b[a-zA-Z]+\\b', sentence)
-    return len(words)
+    cleaned = re.sub('[^\\w\\s]', '', sentence)
+    words = cleaned.split()
+    valid_words = [word for word in words if not word.isdigit()]
+    return len(valid_words)

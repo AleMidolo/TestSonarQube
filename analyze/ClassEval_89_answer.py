@@ -11,14 +11,12 @@ def answer(self, expression):
         """
     if not self.evaluate_expression(expression):
         return False
-    import re
-    numbers_in_expr = re.findall('\\d+', expression)
-    numbers_in_expr = [int(num) for num in numbers_in_expr]
-    if len(numbers_in_expr) != 4:
+    try:
+        import re
+        numbers_in_expr = re.findall('\\d+', expression)
+        numbers_in_expr = [int(num) for num in numbers_in_expr]
+        if len(numbers_in_expr) != 4:
+            return False
+        return sorted(numbers_in_expr) == sorted(self.nums)
+    except:
         return False
-    if sorted(numbers_in_expr) != sorted(self.nums):
-        return False
-    from collections import Counter
-    if Counter(numbers_in_expr) != Counter(self.nums):
-        return False
-    return True

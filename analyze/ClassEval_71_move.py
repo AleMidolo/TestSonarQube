@@ -31,7 +31,9 @@ def move(self, direction):
     dr, dc = dir_map[direction]
     new_row = self.player_row + dr
     new_col = self.player_col + dc
-    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])) or (self.map[new_row][new_col] == '#'):
+    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])):
+        return False
+    if self.map[new_row][new_col] == '#':
         return False
     box_index = -1
     for i, box in enumerate(self.boxes):
