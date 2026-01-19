@@ -15,13 +15,13 @@ def get_primes(self):
         if self.limit < 2:
             return self.primes
         
-        # Sieve of Eratosthenes implementation
+        # Sieve of Eratosthenes
         is_prime = [True] * (self.limit + 1)
         is_prime[0] = is_prime[1] = False
         
-        for i in range(2, int(self.limit ** 0.5) + 1):
+        for i in range(2, int(self.limit**0.5) + 1):
             if is_prime[i]:
-                for j in range(i * i, self.limit + 1, i):
+                for j in range(i*i, self.limit + 1, i):
                     is_prime[j] = False
         
         self.primes = [i for i in range(2, self.limit + 1) if is_prime[i]]

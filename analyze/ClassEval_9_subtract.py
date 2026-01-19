@@ -51,10 +51,8 @@ def subtract(num1, num2):
         
         result.append(str(diff))
     
-    # Reverse the result
+    # Reverse and remove leading zeros
     result.reverse()
-    
-    # Remove leading zeros
     result_str = ''.join(result).lstrip('0')
     
     # Handle case where result is 0

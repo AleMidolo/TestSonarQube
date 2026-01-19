@@ -14,6 +14,6 @@ def send(self, info):
             return "错误: 信息字典必须包含'addr'和'content'键"
         
         self.send_struct = info
-        
+        return None
     except Exception as e:
         return f"错误: {str(e)}"

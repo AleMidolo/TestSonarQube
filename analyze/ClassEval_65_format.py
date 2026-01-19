@@ -32,31 +32,35 @@ def format(self, x):
                    "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
     self._tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
-    def convert_below_thousand(num):
-        if num == 0:
+    def convert_below_thousand(n):
+        if n == 0:
             return ""
-        elif num < 10:
-            return self._ones[num]
-        elif num < 20:
-            return self._teens[num - 10]
-        elif num < 100:
-            return self._tens[num // 10] + (" " + self._ones[num % 10] if num % 10 != 0 else "")
+        elif n < 10:
+            return self._ones[n]
+        elif n < 20:
+            return self._teens[n - 10]
+        elif n < 100:
+            result = self._tens[n // 10]
+            if n % 10 != 0:
+                result += " " + self._ones[n % 10]
+            return result
         else:
-            hundred_part = self._ones[num // 100] + " HUNDRED"
-            remainder = num % 100
-            if remainder > 0:
-                return hundred_part + " AND " + convert_below_thousand(remainder)
-            return hundred_part
+            result = self._ones[n // 100] + " HUNDRED"
+            remainder = n % 100
+            if remainder != 0:
+                result += " AND " + convert_below_thousand(remainder)
+            return result
     
-    # Break number into groups
+    # Handle large numbers
     if x < 1000:
-        result = convert_below_thousand(x)
+        return convert_below_thousand(x) + " ONLY"
     elif x < 1000000:
         thousands = x // 1000
         remainder = x % 1000
         result = convert_below_thousand(thousands) + " THOUSAND"
-        if remainder > 0:
+        if remainder != 0:
             result += " " + convert_below_thousand(remainder)
+        return result + " ONLY"
     elif x < 1000000000:
         millions = x // 1000000
         remainder = x % 1000000
@@ -65,8 +69,9 @@ def format(self, x):
             thousands = remainder // 1000
             result += " " + convert_below_thousand(thousands) + " THOUSAND"
             remainder = remainder % 1000
-        if remainder > 0:
+        if remainder != 0:
             result += " " + convert_below_thousand(remainder)
+        return result + " ONLY"
     else:
         billions = x // 1000000000
         remainder = x % 1000000000
@@ -79,7 +84,6 @@ def format(self, x):
             thousands = remainder // 1000
             result += " " + convert_below_thousand(thousands) + " THOUSAND"
             remainder = remainder % 1000
-        if remainder > 0:
+        if remainder != 0:
             result += " " + convert_below_thousand(remainder)
-    
-    return result + " ONLY"
+        return result + " ONLY"

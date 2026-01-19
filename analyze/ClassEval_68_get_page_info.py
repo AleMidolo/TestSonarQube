@@ -23,7 +23,7 @@ def get_page_info(self, page_number):
     start_index = (page_number - 1) * self.per_page
     end_index = min(start_index + self.per_page, total_items)
     
-    # Get the data for the current page
+    # Get data for the current page
     page_data = self.data[start_index:end_index]
     
     return {

@@ -2,7 +2,7 @@ def __setitem__(self, key, value):
     """
     将与键对应的值设置为指定的值
     :param key:str
-    :param value:str,指定的值
+    :param value:str，指定的值
     :return:None
     >>> camelize_map = CamelCaseMap()
     >>> camelize_map['first_name'] = 'John'
@@ -16,5 +16,5 @@ def __setitem__(self, key, value):
         return components[0] + ''.join(x.title() for x in components[1:])
     
     camel_key = snake_to_camel(key)
-    # Store using the camelCase key in the underlying dict
-    dict.__setitem__(self, camel_key, value)
+    # Store the value using the camelCase key in the internal dictionary
+    self.__dict__[camel_key] = value

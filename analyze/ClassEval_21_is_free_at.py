@@ -12,20 +12,17 @@ def is_free_at(self, check_time):
     """
     from datetime import datetime
     
-    # 将检查时间转换为标准格式 '%H:%M'
-    try:
-        check_time_obj = datetime.strptime(check_time, '%H:%M')
-    except ValueError:
-        # 如果已经是正确格式,直接使用
-        check_time_obj = datetime.strptime(check_time, '%H:%M')
+    # 将检查时间转换为标准格式
+    check_time_obj = datetime.strptime(check_time, '%H:%M')
     
-    # 遍历所有课程,检查是否有冲突
+    # 遍历所有课程,检查是否有时间冲突
     for course in self.courses:
         start_time_obj = datetime.strptime(course['start_time'], '%H:%M')
         end_time_obj = datetime.strptime(course['end_time'], '%H:%M')
         
-        # 检查 check_time 是否在课程时间范围内 [start_time, end_time)
+        # 如果检查时间在课程的开始时间(含)和结束时间(不含)之间,则不空闲
         if start_time_obj <= check_time_obj < end_time_obj:
             return False
     
+    # 如果没有冲突,则该时间空闲
     return True

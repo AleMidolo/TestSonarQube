@@ -13,24 +13,23 @@ def add_table(self, data):
             return False
         
         # 获取行数和列数
-        rows = len(data)
-        if rows == 0:
+        num_rows = len(data)
+        if num_rows == 0:
             return False
         
-        cols = len(data[0]) if data[0] else 0
-        if cols == 0:
+        num_cols = len(data[0]) if data[0] else 0
+        if num_cols == 0:
             return False
         
         # 创建表格
-        table = self.document.add_table(rows=rows, cols=cols)
-        table.style = 'Table Grid'
+        table = self.document.add_table(rows=num_rows, cols=num_cols)
         
         # 填充表格数据
         for i, row_data in enumerate(data):
             row_cells = table.rows[i].cells
             for j, cell_data in enumerate(row_data):
-                if j < cols:
-                    row_cells[j].text = str(cell_data) if cell_data is not None else ''
+                if j < num_cols:
+                    row_cells[j].text = str(cell_data) if cell_data is not None else ""
         
         return True
     except Exception as e:

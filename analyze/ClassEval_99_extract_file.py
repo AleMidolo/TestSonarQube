@@ -11,7 +11,7 @@ def extract_file(self, file_name, output_path):
     import os
     
     try:
-        # 确保输出路径存在
+        # 确保输出目录存在
         os.makedirs(output_path, exist_ok=True)
         
         # 打开zip文件

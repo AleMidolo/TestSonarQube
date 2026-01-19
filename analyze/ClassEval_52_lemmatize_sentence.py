@@ -1,8 +1,8 @@
 def lemmatize_sentence(self, sentence):
     """
-    移除句子中的标点符号并对输入句子进行分词,为每个单词标记词性标签,
-    根据它们的词性对单词进行词形还原,并将结果存储在一个列表中。
-    :param sentence: 一个句子,str
+    移除句子中的标点符号并对输入句子进行分词，为每个单词标记词性标签，
+    根据它们的词性对单词进行词形还原，并将结果存储在一个列表中。
+    :param sentence: 一个句子，str
     :return: 一个已进行词形还原的单词列表。
     >>> lemmatization = Lemmatization()
     >>> lemmatization.lemmatize_sentence("I am running in a race.")
@@ -11,8 +11,8 @@ def lemmatize_sentence(self, sentence):
     import string
     import nltk
     from nltk import word_tokenize, pos_tag
-    from nltk.corpus import wordnet
     from nltk.stem import WordNetLemmatizer
+    from nltk.corpus import wordnet
     
     # 移除标点符号
     sentence = sentence.translate(str.maketrans('', '', string.punctuation))

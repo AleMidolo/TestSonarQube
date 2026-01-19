@@ -68,13 +68,17 @@ def _check_one_corner(self, pos1, pos2):
     x2, y2 = pos2
     
     # 转折点1: (x1, y2)
-    if self._is_empty_or_endpoint(x1, y2, pos1, pos2):
-        if self._check_straight_line(pos1, (x1, y2)) and self._check_straight_line((x1, y2), pos2):
+    corner1 = (x1, y2)
+    if (corner1 == pos1 or corner1 == pos2 or 
+        self.board[y2][x1] is None or self.board[y2][x1] == ''):
+        if self._check_straight_line(pos1, corner1) and self._check_straight_line(corner1, pos2):
             return True
     
     # 转折点2: (x2, y1)
-    if self._is_empty_or_endpoint(x2, y1, pos1, pos2):
-        if self._check_straight_line(pos1, (x2, y1)) and self._check_straight_line((x2, y1), pos2):
+    corner2 = (x2, y1)
+    if (corner2 == pos1 or corner2 == pos2 or 
+        self.board[y1][x2] is None or self.board[y1][x2] == ''):
+        if self._check_straight_line(pos1, corner2) and self._check_straight_line(corner2, pos2):
             return True
     
     return False
@@ -87,33 +91,26 @@ def _check_two_corners(self, pos1, pos2):
     x1, y1 = pos1
     x2, y2 = pos2
     
-    # 尝试水平扫描
+    # 尝试水平方向的中间线
     for x in range(cols):
-        if self._is_empty_or_endpoint(x, y1, pos1, pos2) and self._is_empty_or_endpoint(x, y2, pos1, pos2):
-            if (self._check_straight_line(pos1, (x, y1)) and 
-                self._check_straight_line((x, y1), (x, y2)) and 
-                self._check_straight_line((x, y2), pos2)):
+        mid1 = (x, y1)
+        mid2 = (x, y2)
+        if ((mid1 == pos1 or self.board[y1][x] is None or self.board[y1][x] == '') and
+            (mid2 == pos2 or self.board[y2][x] is None or self.board[y2][x] == '')):
+            if (self._check_straight_line(pos1, mid1) and 
+                self._check_straight_line(mid1, mid2) and 
+                self._check_straight_line(mid2, pos2)):
                 return True
     
-    # 尝试垂直扫描
+    # 尝试垂直方向的中间线
     for y in range(rows):
-        if self._is_empty_or_endpoint(x1, y, pos1, pos2) and self._is_empty_or_endpoint(x2, y, pos1, pos2):
-            if (self._check_straight_line(pos1, (x1, y)) and 
-                self._check_straight_line((x1, y), (x2, y)) and 
-                self._check_straight_line((x2, y), pos2)):
+        mid1 = (x1, y)
+        mid2 = (x2, y)
+        if ((mid1 == pos1 or self.board[y][x1] is None or self.board[y][x1] == '') and
+            (mid2 == pos2 or self.board[y][x2] is None or self.board[y][x2] == '')):
+            if (self._check_straight_line(pos1, mid1) and 
+                self._check_straight_line(mid1, mid2) and 
+                self._check_straight_line(mid2, pos2)):
                 return True
     
     return False
-
-def _is_empty_or_endpoint(self, x, y, pos1, pos2):
-    """检查位置是否为空或是端点"""
-    rows = len(self.board)
-    cols = len(self.board[0]) if rows > 0 else 0
-    
-    if not (0 <= x < cols and 0 <= y < rows):
-        return False
-    
-    if (x, y) == pos1 or (x, y) == pos2:
-        return True
-    
-    return self.board[y][x] is None or self.board[y][x] == ''

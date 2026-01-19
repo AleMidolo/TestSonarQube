@@ -22,7 +22,7 @@ def prepare(self, expression):
     while i < len(expression):
         char = expression[i]
         
-        # 如果是数字，提取完整的数字（包括多位数和小数）
+        # 如果是数字，提取完整的数字（可能是多位数或小数）
         if char.isdigit() or char == '.':
             num = ''
             while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):

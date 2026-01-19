@@ -7,12 +7,12 @@ def convert_to_utf8(self):
 
     """
     binary_str = self.data
-    # 将二进制字符串按8位分组
+    # Split binary string into 8-bit chunks
     bytes_list = []
     for i in range(0, len(binary_str), 8):
         byte = binary_str[i:i+8]
-        # 将每8位二进制转换为整数，再转换为字节
-        bytes_list.append(int(byte, 2))
+        if len(byte) == 8:  # Only process complete bytes
+            bytes_list.append(int(byte, 2))
     
-    # 将字节列表转换为bytes对象，然后解码为utf-8字符串
+    # Convert bytes to UTF-8 string
     return bytes(bytes_list).decode('utf-8')

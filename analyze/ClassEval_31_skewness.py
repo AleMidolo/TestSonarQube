@@ -16,6 +16,6 @@ def skewness(data):
     std_dev = variance ** 0.5
     
     # Calculate skewness using the formula: E[((X - μ) / σ)^3]
-    skewness = sum(((x - mean) / std_dev) ** 3 for x in data) / n
+    skewness_value = sum(((x - mean) / std_dev) ** 3 for x in data) / n
     
-    return skewness
+    return skewness_value

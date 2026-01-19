@@ -8,18 +8,18 @@ def calculate_calorie_intake(self):
 
     """
     # 计算BMR（基础代谢率）
-    if self.gender.lower() == "male":
+    if self.gender == "male":
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age + 5
     else:  # female
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
     
-    # 根据用户状况计算卡路里摄入量
-    # 需要先判断用户的状况（假设有一个方法或属性来获取状况）
-    status = self.get_status()  # 假设有这个方法返回 "obese", "thin", "normal"
+    # 获取用户状况
+    status = self.get_status()
     
-    if status == "obese":
+    # 根据状况计算卡路里摄入量
+    if status == "overweight":
         calorie_intake = bmr * 1.2
-    elif status == "thin":
+    elif status == "underweight":
         calorie_intake = bmr * 1.6
     else:  # normal
         calorie_intake = bmr * 1.4

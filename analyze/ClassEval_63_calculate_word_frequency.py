@@ -13,7 +13,7 @@ def calculate_word_frequency(self, words_list):
         for word in word_list:
             word_freq[word] = word_freq.get(word, 0) + 1
     
-    # Sort by frequency in descending order
-    sorted_word_freq = dict(sorted(word_freq.items(), key=lambda item: item[1], reverse=True))
+    # Sort by frequency (descending) and then by word (for stable ordering)
+    sorted_word_freq = dict(sorted(word_freq.items(), key=lambda x: (-x[1], x[0])))
     
     return sorted_word_freq

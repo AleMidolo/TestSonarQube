@@ -9,4 +9,4 @@ def get_cookies(self, reponse):
     """
     if 'cookies' in reponse:
         self.cookies = reponse['cookies']
-        self._save_cookies()
+        self.save_cookies()

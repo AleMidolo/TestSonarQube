@@ -13,14 +13,13 @@ def get_correlation(self):
     
     # Create indices as x values (0, 1, 2, 3, ...)
     n = len(data)
-    if n == 0:
-        return 0.0
-    
     x = np.arange(n)
     y = np.array(data)
     
     # Calculate correlation coefficient between indices and values
-    correlation_matrix = np.corrcoef(x, y)
-    correlation = correlation_matrix[0, 1]
+    if n < 2:
+        return 1.0
+    
+    correlation = np.corrcoef(x, y)[0, 1]
     
     return float(correlation)

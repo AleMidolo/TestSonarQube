@@ -17,18 +17,17 @@ def is_valid_input(self, textnum):
     }
     
     # 将输入文本转换为小写并分割成单词
-    textnum = textnum.strip().lower()
+    textnum = textnum.lower().strip()
     
-    # 如果输入为空，返回 False
-    if not textnum:
-        return False
+    # 替换连字符为空格以分割复合数字（如 thirty-two）
+    textnum = textnum.replace('-', ' ')
     
-    # 替换连字符为空格，然后分割
-    words = textnum.replace('-', ' ').split()
+    # 分割成单词
+    words = textnum.split()
     
     # 检查每个单词是否在有效单词集合中
     for word in words:
-        if word not in valid_words:
+        if word and word not in valid_words:
             return False
     
     return True

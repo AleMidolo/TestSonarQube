@@ -13,24 +13,31 @@ def filter(self, request):
         '/login': ['POST', 'GET'],
         '/logout': ['POST'],
         '/register': ['POST'],
-        '/home': ['GET'],
         '/api/public': ['GET', 'POST'],
         '/health': ['GET'],
+        '/': ['GET']
     }
+    
+    # 定义公开路径（不需要认证）
+    public_paths = ['/login', '/register', '/health', '/api/public']
     
     # 获取请求的路径和方法
     path = request.get('path', '')
     method = request.get('method', '')
     
-    # 如果路径在允许列表中
+    # 检查路径是否在允许的路由中
     if path in allowed_routes:
         # 检查方法是否被允许
         if method in allowed_routes[path]:
             return True
     
-    # 允许所有以 /public/ 开头的路径
-    if path.startswith('/public/'):
+    # 检查是否是公开路径
+    if path in public_paths:
         return True
     
-    # 默认拒绝其他请求
+    # 检查是否有有效的认证令牌（如果请求中包含）
+    if 'token' in request and request['token']:
+        return True
+    
+    # 默认拒绝
     return False

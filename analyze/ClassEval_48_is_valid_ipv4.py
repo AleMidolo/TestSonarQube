@@ -31,7 +31,7 @@ def is_valid_ipv4(ip_address):
         if not part.isdigit():
             return False
         
-        # 检查数字是否在 0-255 范围内
+        # 检查数值范围是否在 0-255 之间
         num = int(part)
         if num < 0 or num > 255:
             return False

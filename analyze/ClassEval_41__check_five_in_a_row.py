@@ -6,18 +6,26 @@ def _check_five_in_a_row(self, row, col, direction):
     :param col: int, 给定单元格的列
     :param direction: tuple, (int, int)，命名为 (dx, dy)。行和列将分别加上若干 dx 和 dy。
     :return: 如果有五个连续的同一玩家的符号则返回 True，否则返回 False。
+    >>> gomokuGame = GomokuGame(10)
+    >>> moves = [(5, 5), (0, 0), (5, 4), (0, 1), (5, 3), (0, 2), (5, 2), (0, 3), (5, 1)]
+    >>> for move in moves:
+    ...     gomokuGame.make_move(move[0], move[1])
+    >>> gomokuGame._check_five_in_a_row(5, 1, (0, 1))
+    True
+    >>> gomokuGame._check_five_in_a_row(5, 1, (1, 1))
+    False
     """
-    # 获取起始位置的玩家符号
+    # Get the player at the starting position
     player = self.board[row][col]
     
-    # 如果起始位置为空，则返回 False
-    if player is None or player == '':
+    # If the cell is empty, return False
+    if player is None or player == 0 or player == '':
         return False
     
     dx, dy = direction
-    count = 1  # 从当前位置开始计数为1
+    count = 1  # Count the starting cell
     
-    # 向正方向检查
+    # Check in the positive direction
     current_row, current_col = row + dx, col + dy
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
@@ -26,7 +34,7 @@ def _check_five_in_a_row(self, row, col, direction):
         current_row += dx
         current_col += dy
     
-    # 向反方向检查
+    # Check in the negative direction
     current_row, current_col = row - dx, col - dy
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
@@ -35,5 +43,5 @@ def _check_five_in_a_row(self, row, col, direction):
         current_row -= dx
         current_col -= dy
     
-    # 如果连续数量大于等于5，返回 True
+    # Return True if we found 5 or more in a row
     return count >= 5

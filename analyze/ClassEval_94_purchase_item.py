@@ -1,6 +1,6 @@
 def purchase_item(self, item_name):
     """
-    从自动售货机购买产品,并在购买后返回余额,如果产品缺货则显示购买失败。
+    从自动售货机购买产品，并在购买后返回余额,如果产品缺货则显示购买失败。
     :param item_name: 要购买的产品名称,str。
     :return: 如果成功,返回购买后自动售货机的余额,float;否则,返回 False。
     >>> vendingMachine = VendingMachine()
@@ -31,4 +31,5 @@ def purchase_item(self, item_name):
     self.balance -= item['price']
     self.inventory[item_name]['quantity'] -= 1
     
+    # 返回购买后的余额
     return self.balance

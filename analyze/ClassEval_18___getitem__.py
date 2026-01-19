@@ -9,9 +9,9 @@ def __getitem__(self, key):
     'John'
     """
     # Convert snake_case key to camelCase
-    def snake_to_camel(snake_str):
+    def to_camel_case(snake_str):
         components = snake_str.split('_')
         return components[0] + ''.join(x.title() for x in components[1:])
     
-    camel_key = snake_to_camel(key)
+    camel_key = to_camel_case(key)
     return self.__dict__[camel_key]

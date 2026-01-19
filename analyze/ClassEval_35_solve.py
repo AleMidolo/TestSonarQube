@@ -10,12 +10,10 @@ def solve(self):
     >>> eightPuzzle.solve()
     ['right']
     """
-    from collections import deque
-    
-    # 初始化队列,存储 (当前状态, 路径)
+    # 初始化队列,存储 (当前状态, 路径) 元组
     open_list = [(self.state, [])]
     
-    # 用于记录已访问的状态,避免重复访问
+    # 使用集合记录已访问的状态,避免重复访问
     visited = set()
     visited.add(self._state_to_tuple(self.state))
     
@@ -39,14 +37,14 @@ def solve(self):
             # 执行移动获取新状态
             new_state = self.move(direction)
             
-            # 将状态转换为可哈希的元组用于检查是否访问过
+            # 将状态转换为可哈希的元组形式
             state_tuple = self._state_to_tuple(new_state)
             
-            # 如果新状态未被访问过,添加到队列
+            # 如果新状态未被访问过
             if state_tuple not in visited:
                 visited.add(state_tuple)
-                new_path = path + [direction]
-                open_list.append((new_state, new_path))
+                # 将新状态和对应路径添加到队列
+                open_list.append((new_state, path + [direction]))
         
         # 恢复原始状态
         self.state = original_state

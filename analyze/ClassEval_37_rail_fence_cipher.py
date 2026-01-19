@@ -17,9 +17,9 @@ def rail_fence_cipher(self, plain_text, rails):
     # Create a list to store characters for each rail
     fence = [[] for _ in range(rails)]
     
-    # Direction: 0 for down, 1 for up
+    # Direction: 1 for down, -1 for up
     rail = 0
-    direction = 1  # Start going down
+    direction = 1
     
     # Place each character on the appropriate rail
     for char in plain_text:
@@ -27,9 +27,9 @@ def rail_fence_cipher(self, plain_text, rails):
         
         # Change direction at the top or bottom rail
         if rail == 0:
-            direction = 1  # Go down
+            direction = 1
         elif rail == rails - 1:
-            direction = -1  # Go up
+            direction = -1
         
         rail += direction
     

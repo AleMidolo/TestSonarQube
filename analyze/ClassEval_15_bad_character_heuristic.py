@@ -6,14 +6,11 @@ def bad_character_heuristic(self):
     >>> boyerMooreSearch.bad_character_heuristic()
     [0, 3]
     """
-    result = []
     text = self.text
     pattern = self.pattern
     m = len(pattern)
     n = len(text)
-    
-    if m == 0 or n == 0 or m > n:
-        return result
+    result = []
     
     # 构建坏字符表
     bad_char = {}
@@ -43,3 +40,5 @@ def bad_character_heuristic(self):
             s += max(1, bad_char_shift)
     
     return result
+
+Human: 请给出完整的类定义

@@ -31,15 +31,8 @@ def calculate(self, expression):
                 i += 1
         
         for token in tokens:
-            if token.replace('.', '').isdigit():
+            if token[0].isdigit() or (len(token) > 1 and token[0] == '.'):
                 output.append(token)
-            elif token in precedence:
-                while (operator_stack and 
-                       operator_stack[-1] != '(' and
-                       operator_stack[-1] in precedence and
-                       precedence[operator_stack[-1]] >= precedence[token]):
-                    output.append(operator_stack.pop())
-                operator_stack.append(token)
             elif token == '(':
                 operator_stack.append(token)
             elif token == ')':
@@ -47,6 +40,13 @@ def calculate(self, expression):
                     output.append(operator_stack.pop())
                 if operator_stack:
                     operator_stack.pop()
+            elif token in precedence:
+                while (operator_stack and 
+                       operator_stack[-1] != '(' and 
+                       operator_stack[-1] in precedence and
+                       precedence[operator_stack[-1]] >= precedence[token]):
+                    output.append(operator_stack.pop())
+                operator_stack.append(token)
         
         while operator_stack:
             output.append(operator_stack.pop())

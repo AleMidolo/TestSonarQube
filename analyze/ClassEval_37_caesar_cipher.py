@@ -12,16 +12,15 @@ def caesar_cipher(self, plaintext, shift):
     ciphertext = ""
     for char in plaintext:
         if char.isalpha():
-            # 判断是大写还是小写
+            # Determine if the character is uppercase or lowercase
             if char.isupper():
-                # 大写字母处理
-                shifted = (ord(char) - ord('A') + shift) % 26
-                ciphertext += chr(shifted + ord('A'))
+                # Shift uppercase letters
+                shifted = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))
             else:
-                # 小写字母处理
-                shifted = (ord(char) - ord('a') + shift) % 26
-                ciphertext += chr(shifted + ord('a'))
+                # Shift lowercase letters
+                shifted = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+            ciphertext += shifted
         else:
-            # 非字母字符保持不变
+            # Non-alphabetic characters remain unchanged
             ciphertext += char
     return ciphertext

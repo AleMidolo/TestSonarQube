@@ -15,25 +15,21 @@ def simulate_operation(self):
     # 根据操作模式调整温度直到达到目标温度
     while self.current_temp != self.target_temp:
         if self.mode == 'heat':
-            # 加热模式：当前温度低于目标温度，每次增加温度
+            # 加热模式：当前温度低于目标温度，每次增加1度
             if self.current_temp < self.target_temp:
-                self.current_temp += 0.5
+                self.current_temp += 1
                 time += 1
             else:
                 break
         elif self.mode == 'cool':
-            # 冷却模式：当前温度高于目标温度，每次降低温度
+            # 制冷模式：当前温度高于目标温度，每次降低1度
             if self.current_temp > self.target_temp:
-                self.current_temp -= 0.5
+                self.current_temp -= 1
                 time += 1
             else:
                 break
         else:
-            # 其他模式（如 'auto' 或无效模式）不进行温度调整
+            # 其他模式（如 'idle'）不调整温度
             break
-        
-        # 防止浮点数精度问题，当非常接近目标温度时直接设置为目标温度
-        if abs(self.current_temp - self.target_temp) < 0.5:
-            self.current_temp = self.target_temp
     
     return time

@@ -22,7 +22,7 @@ def convert(self, amount, from_currency, to_currency):
             'JPY': 110.0
         }
     
-    # 先转换为 USD（基准货币），再转换为目标货币
+    # 先转换为 USD，再转换为目标货币
     amount_in_usd = amount / self.rates[from_currency]
     result = amount_in_usd * self.rates[to_currency]
     

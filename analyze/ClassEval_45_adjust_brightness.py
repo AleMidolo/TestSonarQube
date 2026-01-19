@@ -7,6 +7,8 @@ def adjust_brightness(self, factor):
     """
     from PIL import ImageEnhance
     
-    if self.image is not None:
-        enhancer = ImageEnhance.Brightness(self.image)
-        self.image = enhancer.enhance(factor)
+    if self.image is None:
+        return
+    
+    enhancer = ImageEnhance.Brightness(self.image)
+    self.image = enhancer.enhance(factor)

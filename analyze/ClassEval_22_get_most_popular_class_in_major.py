@@ -11,17 +11,19 @@ def get_most_popular_class_in_major(self, major):
     >>> registration_system.get_most_popular_class_in_major("计算机科学")
     "数据结构"
     """
+    # Count class registrations for students in the given major
+    class_count = {}
+    
     # Get all students in the specified major
     students_in_major = [student["name"] for student in self.students if student["major"] == major]
     
-    # Count class registrations for students in this major
-    class_count = {}
+    # Count registrations for each class
     for student_name in students_in_major:
         if student_name in self.students_registration_classes:
             for class_name in self.students_registration_classes[student_name]:
                 class_count[class_name] = class_count.get(class_name, 0) + 1
     
-    # Find the class with the maximum count
+    # Find the class with the most registrations
     if not class_count:
         return None
     

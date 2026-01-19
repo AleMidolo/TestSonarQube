@@ -10,9 +10,9 @@ def write_csv(self, data, file_name):
     import csv
     
     try:
-        with open(file_name, 'w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
+        with open(file_name, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
             writer.writerows(data)
         return 1
-    except Exception:
+    except:
         return 0

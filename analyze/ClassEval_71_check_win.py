@@ -7,13 +7,14 @@ def check_win(self):
     >>> game.check_win()
     """
     # 检查是否所有箱子都在目标位置上
-    # 遍历地图，查找是否还有箱子(X)不在目标位置
-    for row in self.map:
+    # 遍历地图，查找是否还有未放置在目标位置的箱子
+    for row in self.board:
         for cell in row:
-            if cell == 'X':  # 如果还有箱子不在目标位置
+            # 如果还有箱子(X)未在目标位置，游戏未获胜
+            if cell == 'X':
                 self.is_game_over = False
                 return self.is_game_over
     
-    # 如果没有找到任何不在目标位置的箱子，说明游戏获胜
+    # 如果没有找到任何箱子(X)，说明所有箱子都在目标位置上(显示为*)
     self.is_game_over = True
     return self.is_game_over

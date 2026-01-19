@@ -21,7 +21,4 @@ def parse(self, path, charset):
         return
     
     # 按斜杠分割路径
-    segments = path.split('/')
-    
-    # 过滤掉空字符串段
-    self.segments = [segment for segment in segments if segment]
+    self.segments = [segment for segment in path.split('/') if segment]

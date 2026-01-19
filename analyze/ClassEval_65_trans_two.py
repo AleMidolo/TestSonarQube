@@ -7,17 +7,21 @@ def trans_two(self, s):
     >>> formatter.trans_two("23")
     "TWENTY THREE"
     """
+    if not s or s == "00":
+        return ""
+    
+    # Define mappings
     ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
     teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
              "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
     tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
-    if not s or s == "00":
-        return ""
-    
+    # Convert to integer to handle leading zeros
     num = int(s)
     
-    if num < 10:
+    if num == 0:
+        return ""
+    elif num < 10:
         return ones[num]
     elif num < 20:
         return teens[num - 10]

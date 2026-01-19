@@ -8,36 +8,29 @@ def interpret(self, display=False):
     [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
 
     """
-    # 检查输入是否为空或仅包含空格
+    # Check if the input is empty or contains only spaces
     if not hasattr(self, 'score') or not self.score or self.score.strip() == '':
         return []
     
-    # 分割乐谱字符串
-    parts = self.score.strip().split()
-    
     result = []
+    tokens = self.score.split()
     
-    for part in parts:
-        # 找到字母和数字的分界点
+    for token in tokens:
+        # Separate chord (letters) from tune (numbers)
         chord = ''
         tune = ''
         
-        i = 0
-        # 提取和弦部分（字母）
-        while i < len(part) and (part[i].isalpha() or part[i] == '#' or part[i] == 'b'):
-            chord += part[i]
-            i += 1
+        for char in token:
+            if char.isalpha():
+                chord += char
+            elif char.isdigit():
+                tune += char
         
-        # 提取音调部分（数字）
-        while i < len(part) and part[i].isdigit():
-            tune += part[i]
-            i += 1
-        
-        # 只有当和弦和音调都存在时才添加到结果中
+        # Only add to result if both chord and tune exist
         if chord and tune:
             result.append({'Chord': chord, 'Tune': tune})
     
-    # 如果需要显示，打印解析后的乐谱
+    # Display if requested
     if display:
         print(result)
     

@@ -11,8 +11,8 @@ def create_table(self):
             title TEXT NOT NULL,
             author TEXT NOT NULL,
             isbn TEXT,
-            publication_year INTEGER,
-            quantity INTEGER DEFAULT 0
+            publication_date TEXT,
+            publisher TEXT
         )
     ''')
     self.connection.commit()

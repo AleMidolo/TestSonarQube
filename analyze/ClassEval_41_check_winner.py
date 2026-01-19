@@ -9,12 +9,12 @@ def check_winner(self):
     >>> gomokuGame.check_winner()
     'X'
     """
-    # 检查所有四个方向：水平、垂直、两个对角线
+    # 定义四个方向：水平、垂直、主对角线、副对角线
     directions = [
         (0, 1),   # 水平
         (1, 0),   # 垂直
-        (1, 1),   # 主对角线
-        (1, -1)   # 副对角线
+        (1, 1),   # 主对角线（左上到右下）
+        (1, -1)   # 副对角线（右上到左下）
     ]
     
     # 遍历棋盘上的每个位置
@@ -32,23 +32,25 @@ def check_winner(self):
                 
                 # 向正方向检查
                 r, c = row + dr, col + dc
-                while (0 <= r < self.board_size and 
-                       0 <= c < self.board_size and 
-                       self.board[r][c] == current_player):
-                    count += 1
-                    r += dr
-                    c += dc
+                while 0 <= r < self.board_size and 0 <= c < self.board_size:
+                    if self.board[r][c] == current_player:
+                        count += 1
+                        r += dr
+                        c += dc
+                    else:
+                        break
                 
                 # 向反方向检查
                 r, c = row - dr, col - dc
-                while (0 <= r < self.board_size and 
-                       0 <= c < self.board_size and 
-                       self.board[r][c] == current_player):
-                    count += 1
-                    r -= dr
-                    c -= dc
+                while 0 <= r < self.board_size and 0 <= c < self.board_size:
+                    if self.board[r][c] == current_player:
+                        count += 1
+                        r -= dr
+                        c -= dc
+                    else:
+                        break
                 
-                # 如果连续5个或以上，返回获胜者
+                # 如果连续5个或以上，返回获胜玩家
                 if count >= 5:
                     return current_player
     

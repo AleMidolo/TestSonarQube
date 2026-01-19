@@ -28,8 +28,8 @@ def get_binary(self):
             if num < 0 or num > 255:
                 return ''
             
-            # Convert to binary (remove '0b' prefix) and pad to 8 bits
-            binary = bin(num)[2:].zfill(8)
+            # Convert to 8-bit binary (without '0b' prefix)
+            binary = format(num, '08b')
             binary_octets.append(binary)
         
         # Join with dots

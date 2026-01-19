@@ -16,44 +16,46 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
     result = []
     
     for xi, yi in zip(x_interp, y_interp):
-        # Find the indices for interpolation
-        # Find x indices
-        x_idx = 0
+        # Find the bounding indices for x
+        x_idx = None
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
                 x_idx = i
                 break
         
-        # Find y indices
-        y_idx = 0
+        # Find the bounding indices for y
+        y_idx = None
         for j in range(len(y) - 1):
             if y[j] <= yi <= y[j + 1]:
                 y_idx = j
                 break
         
-        # Get the four corner points
-        x1, x2 = x[x_idx], x[x_idx + 1]
-        y1, y2 = y[y_idx], y[y_idx + 1]
+        # If point is outside bounds, handle edge cases
+        if x_idx is None:
+            x_idx = 0 if xi < x[0] else len(x) - 2
+        if y_idx is None:
+            y_idx = 0 if yi < y[0] else len(y) - 2
         
-        z11 = z[x_idx][y_idx]
-        z12 = z[x_idx][y_idx + 1]
-        z21 = z[x_idx + 1][y_idx]
-        z22 = z[x_idx + 1][y_idx + 1]
+        # Get the four corner points
+        x0, x1 = x[x_idx], x[x_idx + 1]
+        y0, y1 = y[y_idx], y[y_idx + 1]
+        
+        z00 = z[x_idx][y_idx]
+        z01 = z[x_idx][y_idx + 1]
+        z10 = z[x_idx + 1][y_idx]
+        z11 = z[x_idx + 1][y_idx + 1]
         
         # Bilinear interpolation
-        # First interpolate in x direction
-        if x2 - x1 != 0:
-            z_y1 = z11 + (z21 - z11) * (xi - x1) / (x2 - x1)
-            z_y2 = z12 + (z22 - z12) * (xi - x1) / (x2 - x1)
-        else:
-            z_y1 = z11
-            z_y2 = z12
+        # Normalize coordinates
+        tx = (xi - x0) / (x1 - x0) if x1 != x0 else 0
+        ty = (yi - y0) / (y1 - y0) if y1 != y0 else 0
         
-        # Then interpolate in y direction
-        if y2 - y1 != 0:
-            z_interp = z_y1 + (z_y2 - z_y1) * (yi - y1) / (y2 - y1)
-        else:
-            z_interp = z_y1
+        # Interpolate along x for both y values
+        z_y0 = z00 * (1 - tx) + z10 * tx
+        z_y1 = z01 * (1 - tx) + z11 * tx
+        
+        # Interpolate along y
+        z_interp = z_y0 * (1 - ty) + z_y1 * ty
         
         result.append(z_interp)
     
