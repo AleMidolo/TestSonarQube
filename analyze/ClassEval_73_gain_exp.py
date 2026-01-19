@@ -11,8 +11,8 @@ def gain_exp(self, amount):
         5
         """
     self.exp += amount
-    while self.level < 100 and self.exp >= 100 * self.level:
-        self.exp -= 100 * self.level
+    while self.level < 100 and self.exp >= self.level * 100:
+        self.exp -= self.level * 100
         self.level += 1
         self.hp += 20
         self.attack_power += 5
