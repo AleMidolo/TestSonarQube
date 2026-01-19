@@ -10,23 +10,22 @@ def parse_arguments(self, command_string):
         >>> parser.arguments
         {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
         """
-    args = command_string.split()[1:]
+    import re
+    pattern = '(--\\w+|-\\w+)(=([^ ]+)|\\s+([^ ]+))?'
+    matches = re.findall(pattern, command_string)
     missing_args = set()
-    for arg in args:
-        if '=' in arg:
-            key, value = arg.split('=', 1)
+    for match in matches:
+        arg_name = match[0].lstrip('-')
+        if match[2]:
+            value = match[2]
+        elif match[3]:
+            value = match[3]
         else:
-            key = arg
             value = True
-        if key.startswith('--'):
-            key = key[2:]
-        elif key.startswith('-'):
-            key = key[1:]
-        if key in self.types:
-            self.arguments[key] = self._convert_type(key, value)
-        else:
-            self.arguments[key] = value
-    for req in self.required:
-        if req not in self.arguments:
-            missing_args.add(req)
-    return (len(missing_args) == 0, missing_args if missing_args else None)
+        if arg_name in self.types:
+            value = self._convert_type(arg_name, value)
+        self.arguments[arg_name] = value
+    missing_args = self.required - self.arguments.keys()
+    if missing_args:
+        return (False, missing_args)
+    return (True, None)

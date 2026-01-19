@@ -7,22 +7,10 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
         """
-    if not x.isdigit():
-        return ''
-    n = int(x)
-    if n == 0:
-        return 'ZERO ONLY'
+    x = x[::-1]
+    groups = [x[i:i + 3][::-1] for i in range(0, len(x), 3)]
     words = []
-    if n < 0:
-        words.append('MINUS')
-        n = -n
-    groups = []
-    while n > 0:
-        groups.append(n % 1000)
-        n //= 1000
-    for i in range(len(groups)):
-        if groups[i] > 0:
-            words.append(self.trans_three(str(groups[i]).zfill(3)))
-            if i > 0:
-                words.append(self.parse_more(i))
-    return ' '.join(reversed(words)) + ' ONLY'
+    for i, group in enumerate(groups):
+        if group != '000':
+            words.append(self.trans_three(group) + (' ' + self.parse_more(i) if i > 0 else ''))
+    return ' AND '.join(reversed(words)).strip() + ' ONLY'

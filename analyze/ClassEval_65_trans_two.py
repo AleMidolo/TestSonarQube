@@ -12,4 +12,4 @@ def trans_two(self, s):
     elif s[0] == '0':
         return self.NUMBER[int(s[1])]
     else:
-        return f'{self.NUMBER_TEN[int(s[0]) - 1]} {self.NUMBER[int(s[1])]}'.strip()
+        return f'{self.NUMBER_TEN[int(s[0]) - 1]} {self.NUMBER[int(s[1])]}'

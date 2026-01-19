@@ -1,9 +1,9 @@
 def add_user(self, username):
     """
-        Agrega un usuario al sistema de inicio de sesión si el usuario no está en self.users.
-        Y el estado inicial es False.
-        :param username: str, el nombre de usuario que se va a agregar.
-        :return: bool, True si el usuario se agrega con éxito, False si el usuario ya existe.
+        Add a user to the sign-in system if the user is not in self.users.
+        And the initial state is False.
+        :param username: str, the username to be added.
+        :return: bool, True if the user is added successfully, False if the user already exists.
         >>> signInSystem.add_user("mike")
         True
         >>> signInSystem.add_user("mike")
