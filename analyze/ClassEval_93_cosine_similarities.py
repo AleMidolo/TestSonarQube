@@ -15,7 +15,6 @@ def cosine_similarities(vector_1, vectors_all):
     vectors_array = np.array(vectors_all)
     norm_vector_1 = matutils.unitvec(vector_1)
     norms = np.linalg.norm(vectors_array, axis=1, keepdims=True)
-    norms[norms == 0] = 1
-    norm_vectors_all = vectors_array / norms
+    norm_vectors_all = np.where(norms > 0, vectors_array / norms, 0)
     similarities = np.dot(norm_vectors_all, norm_vector_1)
     return similarities

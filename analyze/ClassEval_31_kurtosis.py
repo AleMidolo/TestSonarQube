@@ -4,17 +4,17 @@ def kurtosis(data):
         Calcola la curtosi di un insieme di dati.
         :param data: La lista di dati in input, list.
         :return: La curtosi, float.
-        >>> DataStatistics4.kurtosis([1, 20,100])
+        >>> DataStatistics4.kurtosis([1, 20, 100])
         -1.5000000000000007
 
         """
     n = len(data)
     if n < 4:
-        return 0.0
+        raise ValueError('Data must have at least 4 elements to calculate kurtosis')
     mean = sum(data) / n
     variance = sum(((x - mean) ** 2 for x in data)) / n
     if variance == 0:
-        return 0.0
+        return 0
     m4 = sum(((x - mean) ** 4 for x in data)) / n
     kurt = m4 / variance ** 2 - 3
     return kurt

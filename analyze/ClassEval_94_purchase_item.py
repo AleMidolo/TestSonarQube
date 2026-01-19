@@ -10,16 +10,15 @@ def purchase_item(self, item_name):
         0.0
         >>> vendingMachine.purchase_item('Pizza')
         False
-
         """
     if item_name not in self.inventory:
         return False
     item = self.inventory[item_name]
     if item['quantity'] <= 0:
-        print('acquisto non riuscito se il prodotto è esaurito')
+        print('Acquisto non riuscito: prodotto esaurito')
         return False
     if self.balance < item['price']:
-        print('acquisto non riuscito')
+        print('Acquisto non riuscito: saldo insufficiente')
         return False
     self.balance -= item['price']
     item['quantity'] -= 1

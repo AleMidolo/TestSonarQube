@@ -14,10 +14,13 @@ def query(self, weather_list, tmp_units='celsius'):
         return (None, None)
     city_data = weather_list[self.city]
     self.weather = city_data['weather']
-    self.temperature = city_data['temperature']
-    current_units = city_data.get('temperature units', 'celsius')
-    if tmp_units.lower() == 'fahrenheit' and current_units.lower() == 'celsius':
-        self.temperature = self.celsius_to_fahrenheit()
-    elif tmp_units.lower() == 'celsius' and current_units.lower() == 'fahrenheit':
-        self.temperature = self.fahrenheit_to_celsius()
-    return (self.temperature, self.weather)
+    temperature = city_data['temperature']
+    original_units = city_data['temperature units']
+    if tmp_units.lower() == 'fahrenheit' and original_units.lower() == 'celsius':
+        self.temperature = temperature
+        temperature = self.celsius_to_fahrenheit()
+    elif tmp_units.lower() == 'celsius' and original_units.lower() == 'fahrenheit':
+        self.temperature = temperature
+        temperature = self.fahrenheit_to_celsius()
+    self.temperature = temperature
+    return (temperature, self.weather)

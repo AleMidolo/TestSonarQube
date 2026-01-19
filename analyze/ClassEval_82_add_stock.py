@@ -7,8 +7,8 @@ def add_stock(self, stock):
         >>> tracker.portfolio
         [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
         """
-    for pf in self.portfolio:
-        if pf['name'] == stock['name']:
-            pf['quantity'] += stock['quantity']
+    for existing_stock in self.portfolio:
+        if existing_stock['name'] == stock['name']:
+            existing_stock['quantity'] += stock['quantity']
             return
     self.portfolio.append(stock.copy())
