@@ -16,7 +16,7 @@ def convert(self, amount, from_currency, to_currency):
         'EUR': 0.85,
         'GBP': 0.75,
         'JPY': 110.0,
-        'INR': 75.0,
+        'INR': 74.0,
         'AUD': 1.35,
         'CAD': 1.25
     }

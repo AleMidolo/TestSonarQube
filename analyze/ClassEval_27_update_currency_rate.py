@@ -8,11 +8,8 @@ def update_currency_rate(self, currency, new_rate):
     >>> cc.update_currency_rate('CNY', 7.18)
     self.rates['CNY'] = 7.18
     """
-    if not isinstance(currency, str) or not currency:
+    if currency and isinstance(new_rate, (int, float)) and new_rate > 0:
+        self.rates[currency] = new_rate
+        return None
+    else:
         return False
-    
-    if not isinstance(new_rate, (int, float)) or new_rate <= 0:
-        return False
-    
-    self.rates[currency] = new_rate
-    return None

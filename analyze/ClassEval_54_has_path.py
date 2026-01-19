@@ -84,26 +84,24 @@ def _has_two_turn_path(self, pos1, pos2):
     
     # Try horizontal then vertical then horizontal
     for x in range(len(self.board[0])):
-        if x == x1 or x == x2:
-            continue
-        mid1 = (x, y1)
-        mid2 = (x, y2)
-        if (self.board[y1][x] is None and self.board[y2][x] is None and
-            self._has_direct_line(pos1, mid1) and
-            self._has_direct_line(mid1, mid2) and
-            self._has_direct_line(mid2, pos2)):
-            return True
+        if self.board[y1][x] is None or (x, y1) == pos1:
+            if self.board[y2][x] is None or (x, y2) == pos2:
+                mid1 = (x, y1)
+                mid2 = (x, y2)
+                if (self._has_direct_line(pos1, mid1) and 
+                    self._has_direct_line(mid1, mid2) and 
+                    self._has_direct_line(mid2, pos2)):
+                    return True
     
     # Try vertical then horizontal then vertical
     for y in range(len(self.board)):
-        if y == y1 or y == y2:
-            continue
-        mid1 = (x1, y)
-        mid2 = (x2, y)
-        if (self.board[y][x1] is None and self.board[y][x2] is None and
-            self._has_direct_line(pos1, mid1) and
-            self._has_direct_line(mid1, mid2) and
-            self._has_direct_line(mid2, pos2)):
-            return True
+        if self.board[y][x1] is None or (x1, y) == pos1:
+            if self.board[y][x2] is None or (x2, y) == pos2:
+                mid1 = (x1, y)
+                mid2 = (x2, y)
+                if (self._has_direct_line(pos1, mid1) and 
+                    self._has_direct_line(mid1, mid2) and 
+                    self._has_direct_line(mid2, pos2)):
+                    return True
     
     return False

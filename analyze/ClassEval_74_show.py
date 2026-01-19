@@ -9,8 +9,8 @@ def show(self, type):
     {"addr":66,"content":"ABC"}
     """
     if type == "send":
-        return self.send_structure
+        return self._send
     elif type == "receive":
-        return self.receive_structure
+        return self._receive
     else:
         return False

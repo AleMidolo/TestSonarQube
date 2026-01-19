@@ -24,9 +24,15 @@ def check_course_conflict(self, new_course):
         existing_start = time_to_minutes(course['start_time'])
         existing_end = time_to_minutes(course['end_time'])
         
-        # Check for overlap (including boundary touching as per the example)
-        # Two courses conflict if they overlap or share boundary times
-        if not (new_end <= existing_start or new_start >= existing_end):
+        # Check for overlap (including boundary touching)
+        # Two intervals overlap if: start1 < end2 AND start2 < end1
+        # But we also need to consider boundary touching as conflict
+        # So we use: start1 <= end2 AND start2 <= end1, but exclude the case where they just touch
+        # Actually, based on the example, touching boundaries IS a conflict
+        if new_start < existing_end and existing_start < new_end:
+            return False
+        # Also check if boundaries are exactly the same (touching)
+        if new_start == existing_end or new_end == existing_start:
             return False
     
     return True

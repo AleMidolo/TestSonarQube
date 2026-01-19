@@ -11,4 +11,4 @@ def mean(data):
     """
     if not data:
         return 0.0
-    return sum(data) / len(data)
+    return float(sum(data)) / len(data)

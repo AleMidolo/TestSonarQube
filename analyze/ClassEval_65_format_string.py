@@ -42,9 +42,9 @@ def format_string(self, x):
         elif n in two_digit_special:
             return two_digit_special[n]
         else:
-            return twenties[n // 10] + (" " + ones[n % 10] if n % 10 != 0 else "")
+            return twenties[n // 10] + (ones[n % 10] if n % 10 != 0 else "")
     
-    def convert_three_digit(n):
+    def convert_hundreds(n):
         if n == 0:
             return ""
         result = []
@@ -68,19 +68,19 @@ def format_string(self, x):
     result = []
     
     # Handle lakhs (100000s)
-    if num >= 100000:
-        lakhs = num // 100000
-        result.append(convert_two_digit(lakhs) + " लाख")
+    lakhs = num // 100000
+    if lakhs > 0:
+        result.append(convert_hundreds(lakhs) + " लाख")
         num %= 100000
     
     # Handle thousands (1000s)
-    if num >= 1000:
-        thousands = num // 1000
-        result.append(convert_three_digit(thousands) + " हजार")
+    thousands = num // 1000
+    if thousands > 0:
+        result.append(convert_hundreds(thousands) + " हजार")
         num %= 1000
     
-    # Handle remaining (0-999)
+    # Handle remaining hundreds
     if num > 0:
-        result.append(convert_three_digit(num))
+        result.append(convert_hundreds(num))
     
     return " ".join(result) + " केवल"

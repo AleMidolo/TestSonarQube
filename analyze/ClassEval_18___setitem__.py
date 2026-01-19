@@ -10,11 +10,9 @@ def __setitem__(self, key, value):
     camelize_map['first_name'] = 'new name'
     """
     # Convert snake_case key to camelCase
-    def snake_to_camel(snake_str):
+    def to_camel_case(snake_str):
         components = snake_str.split('_')
-        # Keep the first component as is, capitalize the rest
         return components[0] + ''.join(x.title() for x in components[1:])
     
-    camel_key = snake_to_camel(key)
-    # Store using the camelCase key in the underlying dictionary
+    camel_key = to_camel_case(key)
     super().__setitem__(camel_key, value)

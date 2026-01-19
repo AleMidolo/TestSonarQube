@@ -34,7 +34,7 @@ def process_csv_data(self, N, save_file_name):
         if N < 0 or N >= len(title):
             return 0
         
-        # Process data: keep only Nth column and capitalize
+        # Process data - keep only Nth column and capitalize
         new_data = []
         for row in data:
             if N < len(row):

@@ -51,5 +51,5 @@ def solve(self):
                 # Add the new state to open_list with updated path
                 open_list.append((new_puzzle, path + [direction]))
     
-    # If open_list is empty and goal not found, return empty list
+    # If open_list is empty and no solution found
     return []

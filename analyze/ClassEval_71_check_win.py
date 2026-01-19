@@ -6,22 +6,19 @@ def check_win(self):
     >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
     >>> game.check_win()
     """
-    # सभी बॉक्स (X) के स्थानों को खोजें
+    # सभी बॉक्स के स्थानों को खोजें
     boxes = set()
+    targets = set()
+    
     for i in range(len(self.grid)):
         for j in range(len(self.grid[i])):
-            if self.grid[i][j] == 'X':
+            if self.grid[i][j] == 'X':  # बॉक्स
                 boxes.add((i, j))
+            if self.grid[i][j] == 'G':  # लक्षित स्थान
+                targets.add((i, j))
     
-    # सभी लक्षित स्थानों (G) को खोजें
-    goals = set()
-    for i in range(len(self.grid)):
-        for j in range(len(self.grid[i])):
-            if self.grid[i][j] == 'G':
-                goals.add((i, j))
-    
-    # जांचें कि सभी बॉक्स लक्षित स्थानों पर हैं या नहीं
-    # खेल जीता जाता है जब सभी लक्षित स्थानों पर बॉक्स हों
-    self.is_game_over = len(goals) > 0 and boxes == goals
+    # जांचें कि सभी लक्षित स्थानों पर बॉक्स हैं या नहीं
+    # खेल जीता जाता है जब सभी बॉक्स लक्षित स्थानों पर हों
+    self.is_game_over = boxes == targets and len(targets) > 0
     
     return self.is_game_over

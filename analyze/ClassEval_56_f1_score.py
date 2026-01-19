@@ -25,7 +25,7 @@ def f1_score(self, predicted_labels, true_labels):
     else:
         recall = true_positives / (true_positives + false_negatives)
     
-    # Calculate F1 Score (harmonic mean of precision and recall)
+    # Calculate F1 Score
     if precision + recall == 0:
         return 0.0
     else:

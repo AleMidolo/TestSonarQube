@@ -8,11 +8,11 @@ def interpret(self, display=False):
     [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
 
     """
-    # Check if the score is empty or only whitespace
+    # Check if the input score is empty or only whitespace
     if not hasattr(self, 'score') or not self.score or not self.score.strip():
         return []
     
-    # Split the score by whitespace
+    # Split the score by whitespace to get individual chord-tune pairs
     tokens = self.score.split()
     
     play_list = []
@@ -21,23 +21,19 @@ def interpret(self, display=False):
         if not token:
             continue
         
-        # Find where the chord ends and tune begins
-        # Chord consists of letters (and possibly sharps/flats), tune consists of digits
-        chord_end = 0
-        for i, char in enumerate(token):
-            if char.isdigit():
-                chord_end = i
-                break
+        # Separate chord (letters) from tune (numbers)
+        chord = ""
+        tune = ""
         
-        # Extract chord and tune
-        if chord_end > 0:
-            chord = token[:chord_end]
-            tune = token[chord_end:]
-            
-            play_list.append({
-                'Chord': chord,
-                'Tune': tune
-            })
+        for char in token:
+            if char.isalpha():
+                chord += char
+            elif char.isdigit():
+                tune += char
+        
+        # Only add if both chord and tune exist
+        if chord and tune:
+            play_list.append({'Chord': chord, 'Tune': tune})
     
     # Display if requested
     if display:

@@ -14,9 +14,9 @@ def calculate_word_frequency(self, words_list):
             word_freq[word] = word_freq.get(word, 0) + 1
     
     # Sort by frequency in descending order, then by word alphabetically
-    sorted_word_freq = dict(sorted(word_freq.items(), key=lambda x: (-x[1], x[0])))
+    sorted_freq = dict(sorted(word_freq.items(), key=lambda x: (-x[1], x[0])))
     
     # Return top 5 items
-    top_5 = dict(list(sorted_word_freq.items())[:5])
+    top_5 = dict(list(sorted_freq.items())[:5])
     
     return top_5

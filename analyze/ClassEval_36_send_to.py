@@ -23,6 +23,6 @@ def send_to(self, recv, content, size):
     }
     
     # Add email to receiver's inbox
-    recv.inbox.append(email)
+    recv.inbox = email
     
     return True

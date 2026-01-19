@@ -25,7 +25,7 @@ def check_winner(self):
         self.board[0][0] is not None):
         return self.board[0][0]
     
-    # Check diagonal (top-right to bottom-left) (दाएं से बाएं तिरछी जांच)
+    # Check anti-diagonal (top-right to bottom-left) (दाएं से बाएं तिरछी जांच)
     if (self.board[0][2] == self.board[1][1] == self.board[2][0] and 
         self.board[0][2] is not None):
         return self.board[0][2]

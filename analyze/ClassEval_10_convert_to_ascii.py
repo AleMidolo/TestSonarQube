@@ -9,14 +9,13 @@ def convert_to_ascii(self):
     binary_string = self.data if hasattr(self, 'data') else self
     result = ""
     
-    # Process the binary string in chunks of 8 bits
+    # Process binary string in chunks of 8 bits
     for i in range(0, len(binary_string), 8):
         # Extract 8-bit chunk
         byte = binary_string[i:i+8]
-        
         # Convert binary to decimal and then to ASCII character
         if len(byte) == 8:
-            decimal_value = int(byte, 2)
-            result += chr(decimal_value)
+            ascii_char = chr(int(byte, 2))
+            result += ascii_char
     
     return result

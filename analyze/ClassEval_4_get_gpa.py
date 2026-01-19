@@ -18,15 +18,18 @@ def get_gpa(self, name):
     # Get the student's course scores
     student = self.students[name]
     
-    # Check if student has a courses attribute and it contains scores
-    if not hasattr(student, 'courses') or not student.courses:
+    # Check if student has a courses/scores attribute and if it has any grades
+    if hasattr(student, 'courses') and student.courses:
+        scores = list(student.courses.values())
+        if scores:
+            return float(sum(scores) / len(scores))
+        else:
+            return None
+    elif hasattr(student, 'scores') and student.scores:
+        scores = list(student.scores.values())
+        if scores:
+            return float(sum(scores) / len(scores))
+        else:
+            return None
+    else:
         return None
-    
-    # Calculate the average of all course scores
-    scores = list(student.courses.values())
-    
-    if len(scores) == 0:
-        return None
-    
-    average = sum(scores) / len(scores)
-    return float(average)

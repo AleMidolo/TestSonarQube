@@ -10,7 +10,7 @@ def caesar_decipher(self, ciphertext, shift):
     >>> d.caesar_decipher('ifmmp', 1)
     'hello'
     """
-    plaintext = ""
+    plaintext = ''
     
     for char in ciphertext:
         if char.isalpha():

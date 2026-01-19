@@ -11,28 +11,31 @@ def get_jwt_user(self, request):
     """
     try:
         # अनुरोध से headers प्राप्त करें
-        headers = request.get('headers', {})
+        headers = request.get('headers')
+        if not headers:
+            return None
         
         # Authorization header प्राप्त करें
-        authorization = headers.get('Authorization', {})
-        
-        # यदि authorization dict नहीं है, तो None लौटाएं
-        if not isinstance(authorization, dict):
+        authorization = headers.get('Authorization')
+        if not authorization:
             return None
         
         # JWT टोकन और उपयोगकर्ता जानकारी प्राप्त करें
-        jwt_token = authorization.get('jwt', '')
-        user_info = authorization.get('user', {})
+        jwt_token = authorization.get('jwt')
+        user_info = authorization.get('user')
         
-        # यदि user_info में name है, तो JWT टोकन को validate करें
-        if user_info and 'name' in user_info:
-            username = user_info['name']
-            expected_token = username + str(datetime.date.today())
+        if not jwt_token or not user_info:
+            return None
+        
+        # JWT टोकन को मान्य करें
+        # उदाहरण के अनुसार, टोकन username + आज की तारीख होना चाहिए
+        username = user_info.get('name')
+        expected_token = username + str(datetime.date.today())
+        
+        if jwt_token == expected_token:
+            return {'user': user_info}
+        else:
+            return None
             
-            # JWT टोकन की जांच करें
-            if jwt_token == expected_token:
-                return {'user': user_info}
-        
-        return None
     except Exception:
         return None

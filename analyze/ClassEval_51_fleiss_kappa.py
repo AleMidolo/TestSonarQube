@@ -51,9 +51,6 @@ def fleiss_kappa(testData, N, k, n):
     P_e_bar = P_j_sum
     
     # Step 5: Calculate Fleiss' kappa
-    if P_e_bar == 1.0:
-        return 1.0
-    
     kappa = (P_bar - P_e_bar) / (1 - P_e_bar)
     
     return kappa

@@ -6,23 +6,17 @@ def get_path(self):
     >>> urlhandler.get_path()
     "/s?wd=aaa&rsv_spt=1#page"
     """
-    if not hasattr(self, 'url') or not self.url:
-        return ""
+    from urllib.parse import urlparse
     
-    # Find the position after the protocol (http:// or https://)
-    protocol_end = self.url.find("://")
-    if protocol_end == -1:
-        return ""
+    parsed_url = urlparse(self.url)
+    path = parsed_url.path
     
-    # Start searching after the protocol
-    start_pos = protocol_end + 3
+    # Add query string if present
+    if parsed_url.query:
+        path += '?' + parsed_url.query
     
-    # Find the first '/' after the domain name
-    path_start = self.url.find("/", start_pos)
+    # Add fragment if present
+    if parsed_url.fragment:
+        path += '#' + parsed_url.fragment
     
-    # If no '/' found, there's no path
-    if path_start == -1:
-        return ""
-    
-    # Return everything from the first '/' onwards (path, query, fragment)
-    return self.url[path_start:]
+    return path if path else "/"

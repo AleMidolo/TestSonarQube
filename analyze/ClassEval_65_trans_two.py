@@ -12,26 +12,18 @@ def trans_two(self, s):
              "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
     tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
-    if not s or len(s) == 0:
+    if len(s) == 0 or int(s) == 0:
         return ""
-    
-    # Pad with zero if single digit
-    if len(s) == 1:
-        s = "0" + s
     
     num = int(s)
-    
-    if num == 0:
-        return ""
     
     if num < 10:
         return ones[num]
     elif num < 20:
         return teens[num - 10]
     else:
-        tens_digit = int(s[0])
-        ones_digit = int(s[1])
-        
+        tens_digit = num // 10
+        ones_digit = num % 10
         if ones_digit == 0:
             return tens[tens_digit]
         else:

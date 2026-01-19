@@ -9,14 +9,14 @@ def add_dish(self, dish):
     >>> order.add_dish({"dish": "dish1", "price": 10, "count": 3})
     True
     """
-    # menu में डिश खोजें
+    # self.menu में डिश खोजें
     for menu_item in self.menu:
         if menu_item["dish"] == dish["dish"]:
             # जांचें कि क्या पर्याप्त संख्या उपलब्ध है
             if menu_item["count"] >= dish["count"]:
-                # selected_dish में जोड़ें
+                # self.selected_dish में जोड़ें
                 self.selected_dish.append(dish)
-                # menu में संख्या घटाएं
+                # self.menu में संख्या घटाएं
                 menu_item["count"] -= dish["count"]
                 return True
             else:

@@ -6,12 +6,11 @@ def match_in_pattern(self, char):
     >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
     >>> boyerMooreSearch.match_in_pattern("A")
     0
-
     """
     # Search for the rightmost occurrence of char in the pattern
     # Iterate from right to left through the pattern
     for i in range(len(self.pattern) - 1, -1, -1):
         if self.pattern[i] == char:
             return i
-    # If character is not found, return -1
+    # If character not found, return -1
     return -1

@@ -9,7 +9,10 @@ def rail_fence_decipher(self, encrypted_text, rails):
     'Hello, World!'
 
     """
-    if rails <= 1 or len(encrypted_text) <= 1:
+    if rails <= 0 or len(encrypted_text) == 0:
+        return encrypted_text
+    
+    if rails == 1:
         return encrypted_text
     
     # Create a matrix to mark positions
@@ -29,7 +32,7 @@ def rail_fence_decipher(self, encrypted_text, rails):
         
         rail += direction
     
-    # Fill the marked positions with characters from encrypted_text
+    # Fill the marked positions with characters from encrypted text
     index = 0
     for row in range(rails):
         for col in range(len(encrypted_text)):

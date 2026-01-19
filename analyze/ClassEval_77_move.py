@@ -30,11 +30,6 @@ def move(self, direction):
         # खुद से टकराया - गेम रीसेट करें
         if hasattr(self, 'reset'):
             self.reset()
-        else:
-            # मैनुअल रीसेट
-            self.length = 1
-            self.positions = [new_head]
-            self.score = 0
     else:
         # सामान्य चाल - पूंछ हटाएं
         self.positions.pop()
