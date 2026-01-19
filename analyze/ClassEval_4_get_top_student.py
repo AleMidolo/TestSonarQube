@@ -10,10 +10,10 @@ def get_top_student(self):
         'student 2'
         """
     top_student = None
-    highest_gpa = -1
+    top_gpa = -1.0
     for name in self.students:
         gpa = self.get_gpa(name)
-        if gpa is not None and gpa > highest_gpa:
-            highest_gpa = gpa
+        if gpa is not None and gpa > top_gpa:
+            top_gpa = gpa
             top_student = name
     return top_student

@@ -5,5 +5,6 @@ def get_primes(self):
         >>> cs = ChandrasekharSieve(20)
         >>> cs.get_primes()
         [2, 3, 5, 7, 11, 13, 17, 19]
+
         """
     return self.primes

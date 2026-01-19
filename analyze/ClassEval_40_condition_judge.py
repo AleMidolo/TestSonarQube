@@ -5,18 +5,20 @@ def condition_judge(self):
         >>> fitnessTracker = FitnessTracker(1.8, 70, 20, "male")
         >>> fitnessTracker.condition_judge()
         -1
+
         """
     bmi = self.get_BMI()
-    if self.sex == 'male':
-        if bmi < self.BMI_std[0]['male'][0]:
-            return -1
-        elif bmi > self.BMI_std[0]['male'][1]:
-            return 1
-        else:
-            return 0
-    elif bmi < self.BMI_std[1]['female'][0]:
+    bmi_range = None
+    for std in self.BMI_std:
+        if self.sex in std:
+            bmi_range = std[self.sex]
+            break
+    if bmi_range is None:
+        raise ValueError(f"Invalid sex: {self.sex}. Must be 'male' or 'female'.")
+    lower, upper = bmi_range
+    if bmi < lower:
         return -1
-    elif bmi > self.BMI_std[1]['female'][1]:
+    elif bmi > upper:
         return 1
     else:
         return 0

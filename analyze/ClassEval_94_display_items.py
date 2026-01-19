@@ -8,10 +8,13 @@ def display_items(self):
         >>> vendingMachine.inventory = {'Coke': {'price': 1.25, 'quantity': 10} }
         >>> vendingMachine.display_items()
         'Coke - $1.25 [10]'
+
         """
     if not self.inventory:
         return False
-    items = []
+    result = []
     for item_name, details in self.inventory.items():
-        items.append(f"{item_name} - ${details['price']} [{details['quantity']}]")
-    return ', '.join(items)
+        price = details['price']
+        quantity = details['quantity']
+        result.append(f'{item_name} - ${price} [{quantity}]')
+    return '\n'.join(result)

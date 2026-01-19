@@ -7,21 +7,37 @@ def prepare(self, expression):
 
         expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
         """
-    output = []
-    operator_stack = deque()
-    for char in expression:
-        if char.isdigit() or char == '~':
-            output.append(char)
-        elif self.is_operator(char):
-            while operator_stack and operator_stack[-1] != '(' and self.compare(char, operator_stack[-1]):
-                output.append(operator_stack.pop())
-            operator_stack.append(char)
-        elif char == '(':
-            operator_stack.append(char)
-        elif char == ')':
-            while operator_stack and operator_stack[-1] != '(':
-                output.append(operator_stack.pop())
-            operator_stack.pop()
-    while operator_stack:
-        output.append(operator_stack.pop())
-    self.postfix_stack = output
+    op_stack = deque()
+    arr = list(expression)
+    i = 0
+    while i < len(arr):
+        if not self.is_operator(arr[i]):
+            if arr[i] == '~':
+                i += 1
+                start = i
+                while i < len(arr) and (not self.is_operator(arr[i])):
+                    i += 1
+                if start < i:
+                    self.postfix_stack.append('~' + ''.join(arr[start:i]))
+                continue
+            else:
+                start = i
+                while i < len(arr) and (not self.is_operator(arr[i])):
+                    i += 1
+                self.postfix_stack.append(''.join(arr[start:i]))
+                continue
+        else:
+            if arr[i] == '(':
+                op_stack.append(arr[i])
+            elif arr[i] == ')':
+                while op_stack and op_stack[-1] != '(':
+                    self.postfix_stack.append(op_stack.pop())
+                if op_stack:
+                    op_stack.pop()
+            else:
+                while op_stack and op_stack[-1] != '(' and self.compare(arr[i], op_stack[-1]):
+                    self.postfix_stack.append(op_stack.pop())
+                op_stack.append(arr[i])
+            i += 1
+    while op_stack:
+        self.postfix_stack.append(op_stack.pop())

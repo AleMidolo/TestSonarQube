@@ -1,15 +1,16 @@
 def check_won(self, map):
     """
-        Checks if the player has won the game, returns True if the player's map contains only mines, otherwise False.
-        :return: True if the player has won the game, otherwise False.
+        जांचता है कि क्या खिलाड़ी ने खेल जीत लिया है, यदि खिलाड़ी के मानचित्र में केवल खदानें हैं, तो True लौटाता है, अन्यथा False लौटाता है।
+        :return: यदि खिलाड़ी ने खेल जीत लिया है तो True, अन्यथा False।
         >>> minesweeper_game = MinesweeperGame(3, 1)
         >>> minesweeper_game.minesweeper_map = [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
         >>> minesweeper_game.player_map = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
         >>> minesweeper_game.check_won(minesweeper_game.player_map)
         False
+
         """
-    for row in range(self.n):
-        for col in range(self.n):
-            if self.player_map[row][col] == '-' and self.minesweeper_map[row][col] != 'X':
+    for i in range(self.n):
+        for j in range(self.n):
+            if map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
                 return False
     return True

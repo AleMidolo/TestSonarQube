@@ -1,11 +1,12 @@
 @staticmethod
 def is_operator(c):
     """
-        Check if a character is an operator {'+', '-', '*', '/', '(', ')', '%'}
-        :param c: string, the character to check
-        :return: bool, True if the character is an operator, False otherwise
+        जांचें कि क्या एक वर्ण {'+', '-', '*', '/', '(', ')', '%'} में एक ऑपरेटर है
+        :param c: स्ट्रिंग, जांचने के लिए वर्ण
+        :return: बूल, यदि वर्ण एक ऑपरेटर है तो True, अन्यथा False
         >>> expression_calculator = ExpressionCalculator()
         >>> expression_calculator.is_operator("+")
         True
+
         """
     return c in {'+', '-', '*', '\\/', '(', ')', '%'}

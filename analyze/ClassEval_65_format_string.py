@@ -7,8 +7,19 @@ def format_string(self, x):
         >>> formatter.format_string("123456")
         "एक सौ और तेईस हजार चार सौ और छप्पन केवल"
         """
-    hindi_number_words = {'1': 'एक', '2': 'दो', '3': 'तीन', '4': 'चार', '5': 'पाँच', '6': 'छह', '7': 'सात', '8': 'आठ', '9': 'नौ', '0': 'शून्य', '10': 'दस', '11': 'ग्यारह', '12': 'बारह', '13': 'तेरह', '14': 'चौदह', '15': 'पंद्रह', '16': 'सोलह', '17': 'सत्रह', '18': 'अठारह', '19': 'उन्नीस', '20': 'बीस', '30': 'तीस', '40': 'चालीस', '50': 'पचास', '60': 'साठ', '70': 'सत्तर', '80': 'अस्सी', '90': 'नब्बे'}
-    words = []
-    for digit in x:
-        words.append(hindi_number_words.get(digit, ''))
-    return ' '.join(words).strip() + ' केवल'
+    if x.startswith('-'):
+        return 'MINUS ' + self.format_string(x[1:])
+    if '.' in x:
+        integer_part, decimal_part = x.split('.')
+        integer_words = self._format_integer_part(integer_part)
+        decimal_words = self._format_decimal_part(decimal_part)
+        if integer_words:
+            return f'{integer_words} AND {decimal_words} ONLY'
+        else:
+            return f'{decimal_words} ONLY'
+    else:
+        integer_words = self._format_integer_part(x)
+        if integer_words:
+            return f'{integer_words} ONLY'
+        else:
+            return 'ZERO ONLY'

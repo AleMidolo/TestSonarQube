@@ -12,4 +12,4 @@ def add_stock(self, stock):
         if pf['name'] == stock['name']:
             pf['quantity'] += stock['quantity']
             return
-    self.portfolio.append(stock)
+    self.portfolio.append(stock.copy())

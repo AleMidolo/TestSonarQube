@@ -7,5 +7,11 @@ def count_all(n: int) -> int:
         >>> CombinationCalculator.count_all(4)
         15
         """
-    total_combinations = (1 << n) - 1
-    return total_combinations if total_combinations <= 2 ** 63 - 1 else float('inf')
+    total = 0
+    max_int = (1 << 63) - 1
+    for m in range(1, n + 1):
+        comb_count = CombinationCalculator.count(n, m)
+        if total > max_int - comb_count:
+            return float('inf')
+        total += comb_count
+    return total

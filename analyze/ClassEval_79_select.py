@@ -1,18 +1,18 @@
 def select(self, fields=None, condition=None):
     """
-        Generates a SELECT SQL statement based on specified fields and conditions.
-        :param fields: list, optional. Default is None. A list of fields to be queried.
-        :param condition: str, optional. Default is None. The condition expression for the query.
-        :return: str. The generated SQL statement.
+        निर्दिष्ट फ़ील्ड और शर्तों के आधार पर एक SELECT SQL कथन उत्पन्न करता है।
+        :param fields: सूची, वैकल्पिक। डिफ़ॉल्ट None है। क्वेरी किए जाने वाले फ़ील्ड की सूची।
+        :param condition: str, वैकल्पिक। डिफ़ॉल्ट None है। क्वेरी के लिए शर्त अभिव्यक्ति।
+        :return: str। उत्पन्न SQL कथन।
         >>> sql = SQLGenerator('table1')
         >>> sql.select(['field1', 'field2'], 'filed3 = value1')
         'SELECT field1, field2 FROM table1 WHERE filed3 = value1;'
         """
-    if fields:
-        fields_clause = ', '.join(fields)
-        sql = f'SELECT {fields_clause} FROM {self.table_name}'
+    if fields is None:
+        fields_str = '*'
     else:
-        sql = f'SELECT * FROM {self.table_name}'
+        fields_str = ', '.join(fields)
+    sql = f'SELECT {fields_str} FROM {self.table_name}'
     if condition:
         sql += f' WHERE {condition}'
     return sql + ';'

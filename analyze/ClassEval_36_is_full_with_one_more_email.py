@@ -7,5 +7,7 @@ def is_full_with_one_more_email(self, size):
         >>> receiver = EmailClient('receiver@example.com', 50)
         >>> receiver.is_full_with_one_more_email(10)
         False
+
         """
-    return self.get_occupied_size() + size > self.capacity
+    current_occupied = self.get_occupied_size()
+    return current_occupied + size > self.capacity

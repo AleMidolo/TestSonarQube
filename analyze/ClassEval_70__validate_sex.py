@@ -1,9 +1,10 @@
 def _validate_sex(self, sex: str) -> str:
     """
-        Validate the sex and return it. If sex is not male, female, or UGM, set to None.
-        :param sex: str, the sex to validate
-        :return: str, the validated sex or None if invalid
+        लिंग को मान्य करें और इसे लौटाएं। यदि लिंग पुरुष, महिला, या UGM नहीं है, तो इसे None पर सेट करें।
+        :param sex: str, मान्य करने के लिए लिंग
+        :return: str, मान्य लिंग या यदि अमान्य है तो None
         """
-    if sex not in ['male', 'female', 'UGM']:
+    valid_sexes = ['पुरुष', 'महिला', 'UGM']
+    if sex not in valid_sexes:
         return None
     return sex
