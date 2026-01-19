@@ -17,18 +17,20 @@ def _calculate(first_value, second_value, current_op):
     num2 = Decimal(second_value)
     
     if current_op == '+':
-        return num1 + num2
+        result = num1 + num2
     elif current_op == '-':
-        return num1 - num2
+        result = num1 - num2
     elif current_op == '*':
-        return num1 * num2
+        result = num1 * num2
     elif current_op == '/':
-        return num1 / num2
+        result = num1 / num2
     elif current_op == '//':
-        return num1 // num2
+        result = num1 // num2
     elif current_op == '%':
-        return num1 % num2
+        result = num1 % num2
     elif current_op == '**':
-        return num1 ** num2
+        result = num1 ** num2
     else:
         raise ValueError(f"Unsupported operator: {current_op}")
+    
+    return float(result)

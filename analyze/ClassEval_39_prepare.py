@@ -23,7 +23,7 @@ def prepare(self, expression):
             i += 1
             continue
         
-        # If character is a digit, extract the full number
+        # If character is a digit or decimal point, extract the full number
         if char.isdigit() or char == '.':
             num = ''
             while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
@@ -32,16 +32,16 @@ def prepare(self, expression):
             self.postfix_stack.append(num)
             continue
         
-        # If character is opening parenthesis
+        # If character is an opening parenthesis
         elif char == '(':
             operator_stack.append(char)
         
-        # If character is closing parenthesis
+        # If character is a closing parenthesis
         elif char == ')':
             while operator_stack and operator_stack[-1] != '(':
                 self.postfix_stack.append(operator_stack.pop())
             if operator_stack:
-                operator_stack.pop()  # Remove '('
+                operator_stack.pop()  # Remove the '('
         
         # If character is an operator
         elif char in precedence:
@@ -54,6 +54,6 @@ def prepare(self, expression):
         
         i += 1
     
-    # Pop remaining operators
+    # Pop all remaining operators from the stack
     while operator_stack:
         self.postfix_stack.append(operator_stack.pop())

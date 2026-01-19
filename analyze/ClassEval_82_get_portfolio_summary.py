@@ -8,14 +8,19 @@ def get_portfolio_summary(self):
     (11500.0, [{'name': 'AAPL', 'value': 1500.0}])
 
     """
-    portfolio_value = 0.0
-    summary_list = []
+    # Calculate the total value of all stocks in the portfolio
+    stocks_value = sum(stock['price'] * stock['quantity'] for stock in self.portfolio)
     
-    for stock in self.portfolio:
-        stock_value = stock['price'] * stock['quantity']
-        portfolio_value += stock_value
-        summary_list.append({'name': stock['name'], 'value': stock_value})
+    # Calculate total portfolio value (cash + stocks)
+    total_value = self.cash + stocks_value
     
-    total_value = self.cash + portfolio_value
+    # Create summary list with name and value for each stock
+    summary_list = [
+        {
+            'name': stock['name'],
+            'value': stock['price'] * stock['quantity']
+        }
+        for stock in self.portfolio
+    ]
     
     return (total_value, summary_list)

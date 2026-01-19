@@ -7,23 +7,30 @@ def process_excel_data(self, N, save_file_name):
     >>> processor = ExcelProcessor()
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
-    import pandas as pd
+    import openpyxl
     import os
     
     # Read the Excel file
-    df = pd.read_excel(save_file_name)
+    workbook = openpyxl.load_workbook(save_file_name)
+    sheet = workbook.active
     
-    # Convert the specified column (N) to uppercase
-    # N is 1-indexed, so we need to convert to 0-indexed
-    if N > 0 and N <= len(df.columns):
-        column_name = df.columns[N - 1]
-        df[column_name] = df[column_name].astype(str).str.upper()
+    # Process the specified column (convert to uppercase)
+    for row in sheet.iter_rows(min_row=1, min_col=N, max_col=N):
+        for cell in row:
+            if cell.value is not None and isinstance(cell.value, str):
+                cell.value = cell.value.upper()
     
     # Generate output filename
     base_name = os.path.splitext(save_file_name)[0]
-    output_file_name = f"{base_name}_processed.xlsx"
+    extension = os.path.splitext(save_file_name)[1]
+    output_file_name = f"{base_name}_processed{extension}"
     
-    # Write the modified data back to Excel
-    result = self.write_excel(df, output_file_name)
-    
-    return (result, output_file_name)
+    # Save the workbook
+    try:
+        workbook.save(output_file_name)
+        workbook.close()
+        result = self.write_excel(output_file_name)
+        return (result, output_file_name)
+    except Exception as e:
+        workbook.close()
+        return (0, output_file_name)

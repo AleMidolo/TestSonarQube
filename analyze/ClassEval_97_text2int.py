@@ -33,7 +33,9 @@ def text2int(self, textnum):
     if textnum in ones:
         return str(ones[textnum])
     
-    words = textnum.replace("-", " ").replace(" and ", " ").split()
+    # Replace hyphens and "and" with spaces
+    textnum = textnum.replace("-", " ").replace(" and ", " ")
+    words = textnum.split()
     
     current = 0
     result = 0
@@ -52,5 +54,4 @@ def text2int(self, textnum):
                 current = 0
     
     result += current
-    
     return str(result)

@@ -7,30 +7,46 @@ def split_sentences(self, sentences_string):
     >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
     ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
     """
-    import re
+    if not sentences_string:
+        return []
     
-    # Pattern to match sentences ending with . or ? followed by space or end of string
-    # Negative lookbehind to avoid splitting on abbreviations like "Mr."
-    pattern = r'(?<!\bMr)(?<!\bMrs)(?<!\bDr)(?<!\bMs)(?<!\bProf)[.?](?=\s|$)'
-    
-    # Split the string using the pattern
-    parts = re.split(pattern, sentences_string)
-    
-    # Reconstruct sentences by adding back the punctuation
     sentences = []
-    current_pos = 0
+    current_sentence = ""
+    i = 0
     
-    for match in re.finditer(pattern, sentences_string):
-        end_pos = match.end() - 1  # Position of . or ?
-        sentence = sentences_string[current_pos:end_pos + 1].strip()
-        if sentence:
-            sentences.append(sentence)
-        current_pos = match.end()
+    while i < len(sentences_string):
+        current_sentence += sentences_string[i]
+        
+        # Check if current character is . or ?
+        if sentences_string[i] in '.?':
+            # Check if this is followed by a space (or end of string)
+            if i + 1 < len(sentences_string) and sentences_string[i + 1] == ' ':
+                # Check if this is not "Mr." pattern
+                # Mr. has pattern: capital letter + lowercase letters + .
+                is_abbreviation = False
+                if sentences_string[i] == '.':
+                    # Look back to check for common abbreviations like Mr., Mrs., Dr., etc.
+                    words = current_sentence.strip().split()
+                    if words:
+                        last_word = words[-1]
+                        # Check if last word is a common abbreviation
+                        if last_word in ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.', 'Sr.', 'Jr.']:
+                            is_abbreviation = True
+                
+                if not is_abbreviation:
+                    sentences.append(current_sentence.strip())
+                    current_sentence = ""
+                    i += 1  # Skip the space after sentence ending
+                    continue
+            elif i + 1 == len(sentences_string):
+                # End of string
+                sentences.append(current_sentence.strip())
+                current_sentence = ""
+        
+        i += 1
     
-    # Add the last sentence if any
-    if current_pos < len(sentences_string):
-        last_sentence = sentences_string[current_pos:].strip()
-        if last_sentence:
-            sentences.append(last_sentence)
+    # Add any remaining content
+    if current_sentence.strip():
+        sentences.append(current_sentence.strip())
     
     return sentences

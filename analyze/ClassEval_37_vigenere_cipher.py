@@ -9,7 +9,7 @@ def vigenere_cipher(self, plaintext):
 
     """
     ciphertext = ""
-    key = self.key
+    key = self.key.lower()
     key_index = 0
     
     for char in plaintext:
@@ -18,11 +18,8 @@ def vigenere_cipher(self, plaintext):
             is_upper = char.isupper()
             char = char.lower()
             
-            # Get the key character (cycling through the key)
-            key_char = key[key_index % len(key)].lower()
-            
-            # Calculate shift amount from key character
-            shift = ord(key_char) - ord('a')
+            # Get the shift value from the key
+            shift = ord(key[key_index % len(key)]) - ord('a')
             
             # Encrypt the character
             encrypted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))

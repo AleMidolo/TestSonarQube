@@ -14,10 +14,12 @@ def kappa(testData, k):
     po = sum(testData[i][i] for i in range(k)) / n
     
     # Calculate expected agreement (Pe)
-    # Sum of row totals * column totals / n^2
+    # Sum of row totals
     row_sums = [sum(testData[i]) for i in range(k)]
+    # Sum of column totals
     col_sums = [sum(testData[i][j] for i in range(k)) for j in range(k)]
     
+    # Calculate expected agreement
     pe = sum(row_sums[i] * col_sums[i] for i in range(k)) / (n * n)
     
     # Calculate Cohen's Kappa
@@ -26,4 +28,4 @@ def kappa(testData, k):
     
     kappa_value = (po - pe) / (1 - pe)
     
-    return round(kappa_value, 2)
+    return kappa_value

@@ -10,7 +10,6 @@ def caesar_cipher(self, plaintext, shift):
 
     """
     ciphertext = ""
-    
     for char in plaintext:
         if char.isalpha():
             # Determine if the character is uppercase or lowercase
@@ -24,5 +23,4 @@ def caesar_cipher(self, plaintext, shift):
         else:
             # Non-alphabetic characters remain unchanged
             ciphertext += char
-    
     return ciphertext

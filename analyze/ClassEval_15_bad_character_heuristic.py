@@ -5,6 +5,7 @@ def bad_character_heuristic(self):
     >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "AB")
     >>> boyerMooreSearch.bad_character_heuristic()
     [0, 3]
+
     """
     text = self.text
     pattern = self.pattern

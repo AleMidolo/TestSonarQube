@@ -11,4 +11,10 @@ def has(states, stat):
     >>> bit_status_util.has(6, 2)
     True
     """
+    if not isinstance(states, int) or not isinstance(stat, int):
+        return False
+    
+    if states < 0 or stat < 0:
+        return False
+    
     return (states & stat) == stat

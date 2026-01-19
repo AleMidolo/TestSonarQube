@@ -10,43 +10,58 @@ def parse_arguments(self, command_string):
     >>> parser.arguments
     {'arg1': 'value1', 'arg2': 'value2', 'option1': True, 'option2': True}
     """
+    # Initialize arguments dictionary
+    self.arguments = {}
+    
     # Split the command string into tokens
     tokens = command_string.split()
     
     # Skip the first two tokens (python script.py)
-    tokens = tokens[2:] if len(tokens) > 2 else []
+    i = 2
     
-    # Initialize arguments dictionary
-    self.arguments = {}
-    
-    i = 0
     while i < len(tokens):
         token = tokens[i]
         
         # Check if token starts with -- or -
         if token.startswith('--'):
             arg_name = token[2:]
+            # Check if it contains '='
+            if '=' in arg_name:
+                parts = arg_name.split('=', 1)
+                arg_name = parts[0]
+                value = parts[1]
+                self.arguments[arg_name] = self._convert_type(arg_name, value)
+                i += 1
+            else:
+                # Check if next token exists and doesn't start with - or --
+                if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
+                    value = tokens[i + 1]
+                    self.arguments[arg_name] = self._convert_type(arg_name, value)
+                    i += 2
+                else:
+                    # It's a flag/option
+                    self.arguments[arg_name] = True
+                    i += 1
         elif token.startswith('-'):
             arg_name = token[1:]
+            # Check if it contains '='
+            if '=' in arg_name:
+                parts = arg_name.split('=', 1)
+                arg_name = parts[0]
+                value = parts[1]
+                self.arguments[arg_name] = self._convert_type(arg_name, value)
+                i += 1
+            else:
+                # Check if next token exists and doesn't start with - or --
+                if i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
+                    value = tokens[i + 1]
+                    self.arguments[arg_name] = self._convert_type(arg_name, value)
+                    i += 2
+                else:
+                    # It's a flag/option
+                    self.arguments[arg_name] = True
+                    i += 1
         else:
-            i += 1
-            continue
-        
-        # Check if argument has value in the same token (--arg=value)
-        if '=' in arg_name:
-            parts = arg_name.split('=', 1)
-            arg_name = parts[0]
-            value = parts[1]
-            self.arguments[arg_name] = self._convert_type(arg_name, value)
-            i += 1
-        # Check if next token is a value (doesn't start with - or --)
-        elif i + 1 < len(tokens) and not tokens[i + 1].startswith('-'):
-            value = tokens[i + 1]
-            self.arguments[arg_name] = self._convert_type(arg_name, value)
-            i += 2
-        # Otherwise, it's a boolean flag
-        else:
-            self.arguments[arg_name] = True
             i += 1
     
     # Check for missing required arguments

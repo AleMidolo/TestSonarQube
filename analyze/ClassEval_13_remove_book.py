@@ -26,7 +26,7 @@ def remove_book(self, title, quantity):
     # Remove the books
     self.inventory[title] -= quantity
     
-    # Remove entry if quantity becomes 0
+    # Remove entry if quantity becomes zero
     if self.inventory[title] == 0:
         del self.inventory[title]
     

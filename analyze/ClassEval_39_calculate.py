@@ -9,9 +9,7 @@ def calculate(self, expression):
     >>> expression_calculator.calculate("2 + 3 * 4")
     14.0
     """
-    # This appears to be an infix expression based on the example, not postfix
     # Convert infix to postfix first, then evaluate
-    
     def precedence(op):
         if op in ['+', '-']:
             return 1
@@ -21,34 +19,35 @@ def calculate(self, expression):
     
     def infix_to_postfix(expr):
         stack = []
-        output = []
+        postfix = []
         tokens = expr.replace('(', ' ( ').replace(')', ' ) ').split()
         
         for token in tokens:
             if token.replace('.', '').replace('-', '').isdigit():
-                output.append(token)
+                postfix.append(float(token))
             elif token == '(':
                 stack.append(token)
             elif token == ')':
                 while stack and stack[-1] != '(':
-                    output.append(stack.pop())
-                if stack:
-                    stack.pop()
+                    postfix.append(stack.pop())
+                stack.pop()  # Remove '('
             elif token in ['+', '-', '*', '/']:
                 while stack and stack[-1] != '(' and precedence(stack[-1]) >= precedence(token):
-                    output.append(stack.pop())
+                    postfix.append(stack.pop())
                 stack.append(token)
         
         while stack:
-            output.append(stack.pop())
+            postfix.append(stack.pop())
         
-        return output
+        return postfix
     
     def evaluate_postfix(postfix):
         stack = []
         
         for token in postfix:
-            if token in ['+', '-', '*', '/']:
+            if isinstance(token, float):
+                stack.append(token)
+            else:
                 b = stack.pop()
                 a = stack.pop()
                 if token == '+':
@@ -59,8 +58,6 @@ def calculate(self, expression):
                     stack.append(a * b)
                 elif token == '/':
                     stack.append(a / b)
-            else:
-                stack.append(float(token))
         
         return stack[0]
     

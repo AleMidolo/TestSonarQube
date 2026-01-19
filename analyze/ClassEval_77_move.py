@@ -19,7 +19,7 @@ def move(self, direction):
     
     # जांचें कि क्या सांप ने भोजन खा लिया
     if hasattr(self, 'food_position') and new_head == self.food_position:
-        # भोजन खा लिया - लंबाई बढ़ाएं और स्कोर बढ़ाएं
+        # भोजन खाया गया - लंबाई बढ़ाएं और स्कोर अपडेट करें
         self.length += 1
         self.score += 10
         # नया भोजन उत्पन्न करें (यदि food generation method है)
@@ -30,6 +30,11 @@ def move(self, direction):
         # खुद से टकराया - गेम रीसेट करें
         if hasattr(self, 'reset'):
             self.reset()
+        else:
+            # मैनुअल रीसेट
+            self.length = 1
+            self.positions = [new_head]
+            self.score = 0
     else:
         # सामान्य चाल - पूंछ हटाएं
         self.positions.pop()

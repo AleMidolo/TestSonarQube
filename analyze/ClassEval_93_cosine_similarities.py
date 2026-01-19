@@ -16,13 +16,13 @@ def cosine_similarities(vector_1, vectors_all):
     if isinstance(vectors_all, list):
         vectors_all = np.array(vectors_all)
     
-    # Calculate dot product between vector_1 and all vectors
+    # Calculate the dot product between vector_1 and all vectors
     dot_products = np.dot(vectors_all, vector_1)
     
-    # Calculate magnitude (norm) of vector_1
+    # Calculate the norm (magnitude) of vector_1
     norm_vector_1 = np.linalg.norm(vector_1)
     
-    # Calculate magnitudes (norms) of all vectors in vectors_all
+    # Calculate the norms of all vectors in vectors_all
     norms_vectors_all = np.linalg.norm(vectors_all, axis=1)
     
     # Calculate cosine similarities

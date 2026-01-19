@@ -7,6 +7,7 @@ def is_valid_ipv4(ip_address):
     True
     >>> IpUtil.is_valid_ipv4('256.0.0.0')
     False
+
     """
     if not isinstance(ip_address, str):
         return False

@@ -20,13 +20,7 @@ def get_page_info(self, page_number):
     
     # Calculate total items and total pages
     total_items = len(self.data)
-    total_pages = math.ceil(total_items / self.per_page)
-    
-    # Validate page number
-    if page_number < 1:
-        page_number = 1
-    elif page_number > total_pages:
-        page_number = total_pages
+    total_pages = math.ceil(total_items / self.per_page) if self.per_page > 0 else 0
     
     # Calculate start and end indices for the current page
     start_index = (page_number - 1) * self.per_page
@@ -39,7 +33,6 @@ def get_page_info(self, page_number):
     has_previous = page_number > 1
     has_next = page_number < total_pages
     
-    # Return page information as a dictionary
     return {
         "current_page": page_number,
         "per_page": self.per_page,

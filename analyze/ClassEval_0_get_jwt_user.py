@@ -21,10 +21,10 @@ def get_jwt_user(self, request):
             return None
         
         # JWT टोकन और उपयोगकर्ता जानकारी प्राप्त करें
-        jwt_token = authorization.get('jwt')
         user_info = authorization.get('user')
+        jwt_token = authorization.get('jwt')
         
-        if not jwt_token or not user_info:
+        if not user_info or not jwt_token:
             return None
         
         # JWT टोकन को मान्य करें

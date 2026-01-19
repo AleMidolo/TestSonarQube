@@ -21,32 +21,23 @@ def subtract(num1, num2):
         # a - (-b) = a + b
         return BigNumCalculator.add(num1, num2[1:])
     
-    # Both positive numbers
+    # Both numbers are positive
     # Determine which is larger
-    if len(num1) > len(num2):
-        is_negative = False
-    elif len(num2) > len(num1):
-        is_negative = True
-    else:
-        if num1 >= num2:
-            is_negative = False
-        else:
-            is_negative = True
-    
-    # If result will be negative, swap and add negative sign
-    if is_negative:
+    is_negative = False
+    if len(num1) < len(num2) or (len(num1) == len(num2) and num1 < num2):
+        # num1 < num2, so result will be negative
         num1, num2 = num2, num1
+        is_negative = True
     
-    # Pad the shorter number with zeros
-    max_len = max(len(num1), len(num2))
-    num1 = num1.zfill(max_len)
-    num2 = num2.zfill(max_len)
-    
-    # Perform subtraction from right to left
+    # Perform subtraction
     result = []
     borrow = 0
     
-    for i in range(max_len - 1, -1, -1):
+    # Pad num2 with leading zeros
+    num2 = num2.zfill(len(num1))
+    
+    # Subtract from right to left
+    for i in range(len(num1) - 1, -1, -1):
         digit1 = int(num1[i])
         digit2 = int(num2[i])
         
@@ -61,14 +52,15 @@ def subtract(num1, num2):
         result.append(str(diff))
     
     # Reverse and remove leading zeros
-    result = ''.join(reversed(result)).lstrip('0')
+    result.reverse()
+    result_str = ''.join(result).lstrip('0')
     
-    # Handle zero case
-    if not result:
-        result = '0'
+    # Handle case where result is 0
+    if not result_str:
+        result_str = '0'
     
     # Add negative sign if needed
-    if is_negative:
-        result = '-' + result
+    if is_negative and result_str != '0':
+        result_str = '-' + result_str
     
-    return result
+    return result_str

@@ -8,16 +8,13 @@ def get(self, index):
     [1, 2]
 
     """
+    # Calculate the base block size and remainder
     total_length = len(self.data)
-    num_partitions = self.num_partitions
+    base_size = total_length // self.num_partitions
+    remainder = total_length % self.num_partitions
     
-    # प्रत्येक ब्लॉक का आधार आकार
-    base_size = total_length // num_partitions
-    # शेषफल - कुछ ब्लॉक में एक अतिरिक्त तत्व होगा
-    remainder = total_length % num_partitions
-    
-    # यदि index < remainder, तो इस ब्लॉक का आकार base_size + 1 है
-    # अन्यथा, आकार base_size है
+    # Calculate start position for the given index
+    # First 'remainder' blocks get one extra element
     if index < remainder:
         start = index * (base_size + 1)
         end = start + base_size + 1

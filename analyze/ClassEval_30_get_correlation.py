@@ -19,8 +19,8 @@ def get_correlation(self):
     # Calculate correlation coefficient
     numerator = sum((indices[i] - mean_x) * (self[i] - mean_y) for i in range(len(self)))
     
-    sum_sq_x = sum((indices[i] - mean_x) ** 2 for i in range(len(indices)))
-    sum_sq_y = sum((self[i] - mean_y) ** 2 for i in range(len(self)))
+    sum_sq_x = sum((x - mean_x) ** 2 for x in indices)
+    sum_sq_y = sum((y - mean_y) ** 2 for y in self)
     
     denominator = (sum_sq_x * sum_sq_y) ** 0.5
     

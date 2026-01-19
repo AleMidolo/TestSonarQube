@@ -24,24 +24,20 @@ def calculate(self, expression):
         for i, char in enumerate(expression):
             if char.isdigit() or char == '.':
                 # Build the number (handle multi-digit and decimal numbers)
-                if char == '.':
-                    # Handle decimal numbers
-                    decimal_part = ''
-                    j = i + 1
-                    while j < len(expression) and expression[j].isdigit():
-                        decimal_part += expression[j]
-                        j += 1
-                    num = float(str(int(num)) + '.' + decimal_part) if decimal_part else float(num)
-                else:
-                    num = num * 10 + int(char)
+                j = i
+                while j < len(expression) and (expression[j].isdigit() or expression[j] == '.'):
+                    j += 1
+                num = float(expression[i:j])
+                # Skip the digits we've processed
+                if j > i + 1:
+                    continue
             
-            # If current char is an operator or last character
+            # Process operation when we hit an operator or reach the end
             if char in '+-*/' or i == len(expression) - 1:
                 if i == len(expression) - 1 and char.isdigit():
-                    # Process the last number
+                    # Last character is a digit, process it
                     pass
                 
-                # Apply previous operation
                 if operation == '+':
                     stack.append(num)
                 elif operation == '-':
@@ -53,8 +49,8 @@ def calculate(self, expression):
                         return None
                     stack.append(stack.pop() / num)
                 
-                # Update operation and reset num
-                if char in '+-*/':
+                # Update operation for next iteration
+                if i < len(expression) - 1:
                     operation = char
                     num = 0
         

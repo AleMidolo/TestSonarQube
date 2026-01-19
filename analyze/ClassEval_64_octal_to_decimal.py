@@ -10,7 +10,7 @@ def octal_to_decimal(octal_num):
     decimal_num = 0
     power = 0
     
-    # Iterate through the octal string from right to left
+    # Iterate through the octal number from right to left
     for i in range(len(octal_num) - 1, -1, -1):
         digit = int(octal_num[i])
         decimal_num += digit * (8 ** power)

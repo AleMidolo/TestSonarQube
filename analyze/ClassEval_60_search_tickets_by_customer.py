@@ -9,7 +9,7 @@ def search_tickets_by_customer(self, customer_name):
     >>> result = ticket_db.search_tickets_by_customer("John Doe")
     len(result) = 1
     """
-    cursor = self.conn.cursor()
+    cursor = self.connection.cursor()
     cursor.execute("SELECT * FROM tickets WHERE customer_name = ?", (customer_name,))
     result = cursor.fetchall()
     return result

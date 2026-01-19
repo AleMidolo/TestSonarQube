@@ -15,10 +15,8 @@ def parse(self, path, charset):
     # Remove leading and trailing slashes
     path = path.strip('/')
     
-    # If path is empty after stripping, set segments to empty list
-    if not path:
-        self.segments = []
-        return
-    
     # Split by '/' and filter out empty strings
-    self.segments = [segment for segment in path.split('/') if segment]
+    if path:
+        self.segments = [segment for segment in path.split('/') if segment]
+    else:
+        self.segments = []

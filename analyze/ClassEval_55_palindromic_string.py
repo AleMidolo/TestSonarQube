@@ -11,7 +11,7 @@ def palindromic_string(self):
         return ""
     
     # Transform string to handle even-length palindromes
-    # Add '#' between characters: "aba" -> "#a#b#a#"
+    # Add '#' between characters: "abc" -> "#a#b#c#"
     transformed = '#'.join('^{}$'.format(self.s))
     n = len(transformed)
     
@@ -31,7 +31,7 @@ def palindromic_string(self):
         if i < right:
             p[i] = min(right - i, p[mirror])
         
-        # Try to expand palindrome centered at i
+        # Attempt to expand palindrome centered at i
         try:
             while transformed[i + p[i] + 1] == transformed[i - p[i] - 1]:
                 p[i] += 1

@@ -11,13 +11,8 @@ def count(n, m=None):
     """
     import math
     
-    # यदि m प्रदान नहीं किया गया है, तो m को n के बराबर सेट करें
-    if m is None:
-        m = n
-    
-    # यदि m, n के बराबर है, तो factorial(n) लौटाएं
-    if m == n:
+    if m is None or m == n:
         return math.factorial(n)
     
-    # परम्यूटेशन फॉर्मूला: P(n, m) = n! / (n - m)!
+    # P(n, m) = n! / (n - m)!
     return math.factorial(n) // math.factorial(n - m)

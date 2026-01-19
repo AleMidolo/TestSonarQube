@@ -15,7 +15,12 @@ def parse_more(self, i):
         3: "BILLION",
         4: "TRILLION",
         5: "QUADRILLION",
-        6: "QUINTILLION"
+        6: "QUINTILLION",
+        7: "SEXTILLION",
+        8: "SEPTILLION",
+        9: "OCTILLION",
+        10: "NONILLION",
+        11: "DECILLION"
     }
     
     return magnitudes.get(i, "")

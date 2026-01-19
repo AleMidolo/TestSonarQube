@@ -13,4 +13,4 @@ def check_sign_in(self, username):
     """
     if username not in self.users:
         return False
-    return self.users[username].get('signed_in', False)
+    return self.users[username]

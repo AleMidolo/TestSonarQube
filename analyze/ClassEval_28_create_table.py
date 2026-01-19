@@ -7,12 +7,13 @@ def create_table(self, table_name, key1, key2):
     :param key2: str, तालिका में दूसरे कॉलम का नाम।
     >>> db.create_table('user', 'name', 'age')
     """
-    query = f"""
+    cursor = self.connection.cursor()
+    create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {table_name} (
         id INTEGER PRIMARY KEY,
         {key1} TEXT,
         {key2} INTEGER
     )
     """
-    self.cursor.execute(query)
-    self.conn.commit()
+    cursor.execute(create_table_query)
+    self.connection.commit()

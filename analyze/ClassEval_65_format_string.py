@@ -13,7 +13,7 @@ def format_string(self, x):
     twenties = ["", "", "बीस", "तीस", "चालीस", "पचास", "साठ", "सत्तर", "अस्सी", "नब्बे"]
     
     # Special two-digit numbers (21-99)
-    two_digit_special = {
+    two_digit = {
         21: "इक्कीस", 22: "बाईस", 23: "तेईस", 24: "चौबीस", 25: "पच्चीस",
         26: "छब्बीस", 27: "सत्ताईस", 28: "अट्ठाईस", 29: "उनतीस",
         31: "इकतीस", 32: "बत्तीस", 33: "तैंतीस", 34: "चौंतीस", 35: "पैंतीस",
@@ -39,26 +39,22 @@ def format_string(self, x):
             return ones[n]
         elif n < 20:
             return teens[n - 10]
-        elif n in two_digit_special:
-            return two_digit_special[n]
+        elif n in two_digit:
+            return two_digit[n]
         else:
-            return twenties[n // 10] + (ones[n % 10] if n % 10 != 0 else "")
+            return twenties[n // 10] + (" " + ones[n % 10] if n % 10 != 0 else "")
     
     def convert_hundreds(n):
         if n == 0:
             return ""
         result = []
-        hundreds = n // 100
-        remainder = n % 100
-        
-        if hundreds > 0:
-            result.append(ones[hundreds] + " सौ")
-        
-        if remainder > 0:
-            if hundreds > 0:
+        if n >= 100:
+            result.append(ones[n // 100] + " सौ")
+            n %= 100
+            if n > 0:
                 result.append("और")
-            result.append(convert_two_digit(remainder))
-        
+        if n > 0:
+            result.append(convert_two_digit(n))
         return " ".join(result)
     
     num = int(x)
@@ -68,14 +64,14 @@ def format_string(self, x):
     result = []
     
     # Handle lakhs (100000s)
-    lakhs = num // 100000
-    if lakhs > 0:
+    if num >= 100000:
+        lakhs = num // 100000
         result.append(convert_hundreds(lakhs) + " लाख")
         num %= 100000
     
-    # Handle thousands (1000s)
-    thousands = num // 1000
-    if thousands > 0:
+    # Handle thousands
+    if num >= 1000:
+        thousands = num // 1000
         result.append(convert_hundreds(thousands) + " हजार")
         num %= 1000
     
