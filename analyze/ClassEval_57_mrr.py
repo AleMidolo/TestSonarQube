@@ -1,4 +1,3 @@
-@staticmethod
 def mrr(data):
     """
         calcula el MRR de los datos de entrada. MRR es un índice de evaluación ampliamente utilizado. Es la media del rango recíproco.
@@ -19,26 +18,19 @@ def mrr(data):
         return (0.0, [0.0])
     if type(data) == tuple:
         sub_list, total_num = data
-        sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
         else:
-            for idx, value in enumerate(sub_list):
-                if value == 1:
-                    return (1.0 / (idx + 1), [1.0 / (idx + 1)])
-            return (0.0, [0.0])
+            rank = next((i + 1 for i, val in enumerate(sub_list) if val == 1), None)
+            mrr_value = 1.0 / rank if rank is not None else 0.0
+            return (mrr_value, [mrr_value])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
-            sub_list = np.array(sub_list)
             if total_num == 0:
-                mrr = 0.0
+                mrr_value = 0.0
             else:
-                for idx, value in enumerate(sub_list):
-                    if value == 1:
-                        mrr = 1.0 / (idx + 1)
-                        break
-                else:
-                    mrr = 0.0
-            separate_result.append(mrr)
+                rank = next((i + 1 for i, val in enumerate(sub_list) if val == 1), None)
+                mrr_value = 1.0 / rank if rank is not None else 0.0
+            separate_result.append(mrr_value)
         return (np.mean(separate_result), separate_result)

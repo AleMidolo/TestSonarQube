@@ -9,5 +9,5 @@ def search_user_by_username(self, username):
         >>> result = user_db.search_user_by_username('user1')
         len(result) = 1
         """
-    self.cursor.execute('\n                SELECT * FROM users WHERE username = ?\n            ', (username,))
+    self.cursor.execute('\n            SELECT * FROM users WHERE username = ?\n        ', (username,))
     return self.cursor.fetchall()

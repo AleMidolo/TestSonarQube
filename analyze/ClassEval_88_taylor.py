@@ -10,6 +10,5 @@ def taylor(self, x, n):
     x = x / 180 * pi
     cos_value = 0
     for i in range(n):
-        term = (-1) ** i * x ** (2 * i) / self.factorial(2 * i)
-        cos_value += term
+        cos_value += (-1) ** i * x ** (2 * i) / self.factorial(2 * i)
     return cos_value

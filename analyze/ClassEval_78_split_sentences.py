@@ -8,4 +8,4 @@ def split_sentences(self, sentences_string):
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
     sentences = re.split('(?<!\\bSr)\\. |\\? ', sentences_string)
-    return sentences
+    return [sentence.strip() for sentence in sentences if sentence.strip()]
