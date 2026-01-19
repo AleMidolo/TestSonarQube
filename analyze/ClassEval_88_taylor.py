@@ -10,6 +10,5 @@ def taylor(self, x, n):
     x = x / 180 * pi
     result = 0
     for i in range(n):
-        term = (-1) ** i * x ** (2 * i) / self.factorial(2 * i)
-        result += term
+        result += (-1) ** i * x ** (2 * i) / self.factorial(2 * i)
     return result

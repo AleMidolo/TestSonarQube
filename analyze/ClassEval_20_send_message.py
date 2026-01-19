@@ -11,7 +11,6 @@ def send_message(self, sender, receiver, message):
         True
         >>> chat.send_message('John', 'Tom', 'Hello')
         False
-
         """
     if sender not in self.users or receiver not in self.users:
         return False

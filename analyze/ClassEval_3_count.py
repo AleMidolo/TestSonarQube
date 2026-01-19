@@ -7,7 +7,9 @@ def count(n, m=None):
     :return: int，排列的数量。
     >>> ArrangementCalculator.count(5, 3)
     60
+
     """
     if m is None or n == m:
         return ArrangementCalculator.factorial(n)
-    return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)
+    else:
+        return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)
