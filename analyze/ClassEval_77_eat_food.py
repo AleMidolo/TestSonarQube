@@ -7,7 +7,7 @@ def eat_food(self):
         >>> snake.move((1,1))
         >>> snake.eat_food()
         self.length = 2
-        self.score = 100
+        self.score = 10
         """
     self.length += 1
     self.score += 100

@@ -11,7 +11,7 @@ def move(self, direction):
     new_head = (self.positions[0][0] + direction[0] * self.BLOCK_SIZE, self.positions[0][1] + direction[1] * self.BLOCK_SIZE)
     if new_head == self.food_position:
         self.eat_food()
-    elif new_head in self.positions or new_head[0] < 0 or new_head[0] >= self.SCREEN_WIDTH or (new_head[1] < 0) or (new_head[1] >= self.SCREEN_HEIGHT):
+    elif new_head in self.positions or not (0 <= new_head[0] < self.SCREEN_WIDTH and 0 <= new_head[1] < self.SCREEN_HEIGHT):
         self.reset()
     else:
         self.positions.insert(0, new_head)

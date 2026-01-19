@@ -31,4 +31,5 @@ def book_room(self, room_type, room_number, name):
             self.booked_rooms[room_type][name] = room_number
         self.available_rooms[room_type] -= room_number
         return 'Success!'
-    return self.available_rooms[room_type]
+    remaining = self.available_rooms[room_type]
+    return remaining if remaining > 0 else False

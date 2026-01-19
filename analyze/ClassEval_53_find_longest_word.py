@@ -10,9 +10,9 @@ def find_longest_word(self, sentence):
         >>> longestWord.find_longest_word('I am a student.')
         'a'
         """
-    words = re.findall('\\b\\w+\\b', sentence)
     if not self.word_list:
         return ''
+    words = re.findall('\\b\\w+\\b', sentence)
     longest = ''
     for word in words:
         if word in self.word_list and len(word) > len(longest):
