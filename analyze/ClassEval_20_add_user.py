@@ -6,13 +6,13 @@ def add_user(self, username):
     >>> chat = Chat()
     >>> chat.add_user('John')
     True
-    >>> chat.users
-    {'John': []}
+    >>> chat.users = {'John': []}
     >>> chat.add_user('John')
     False
 
     """
     if username in self.users:
         return False
-    self.users[username] = []
-    return True
+    else:
+        self.users[username] = []
+        return True

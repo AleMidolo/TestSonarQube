@@ -10,8 +10,10 @@ def _convert_type(self, arg, value):
         """
     if arg in self.types:
         arg_type = self.types[arg]
-        try:
-            return arg_type(value)
-        except ValueError:
-            return value
+        if arg_type == int:
+            return int(value)
+        elif arg_type == float:
+            return float(value)
+        elif arg_type == bool:
+            return value.lower() in ('true', '1', 'yes')
     return value

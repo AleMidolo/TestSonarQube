@@ -13,7 +13,7 @@ def parse_arguments(self, command_string):
     args = command_string.split()
     for arg in args[1:]:
         if '=' in arg:
-            key, value = arg.split('=', 1)
+            key, value = arg.split('=')
             key = key.lstrip('--')
         else:
             key = arg.lstrip('-')
