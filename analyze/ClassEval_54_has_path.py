@@ -1,45 +1,92 @@
 def has_path(self, pos1, pos2):
     """
-        दो आइकनों के बीच एक पथ है या नहीं, यह जांचें
-        :param pos1: पहले आइकन की स्थिति ट्यूपल(x, y)
-        :param pos2: दूसरे आइकन की स्थिति ट्यूपल(x, y)
-        :return: True या False, जो दर्शाता है कि दो आइकनों के बीच एक पथ है या नहीं
-        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
-        mc.board = [['a', 'b', 'c', 'a'],
-                    ['a', 'b', 'c', 'a'],
-                    ['a', 'b', 'c', 'a'],
-                    ['a', 'b', 'c', 'a']]
-        >>> mc.is_valid_move((0, 0), (1, 0))
-        True
-        """
+    दो आइकनों के बीच एक पथ है या नहीं, यह जांचें
+    :param pos1: पहले आइकन की स्थिति ट्यूपल(x, y)
+    :param pos2: दूसरे आइकन की स्थिति ट्यूपल(x, y)
+    :return: True या False, जो दर्शाता है कि दो आइकनों के बीच एक पथ है या नहीं
+    """
+    # Check if positions are the same
+    if pos1 == pos2:
+        return False
+    
+    # Check if the icons at both positions match
     x1, y1 = pos1
     x2, y2 = pos2
-    if abs(x1 - x2) + abs(y1 - y2) == 1:
+    
+    if self.board[y1][x1] != self.board[y2][x2]:
+        return False
+    
+    # Try to find a path with at most 2 turns (standard Mahjong Connect rules)
+    # Check direct line (0 turns)
+    if self._has_direct_line(pos1, pos2):
         return True
-    rows, cols = (self.BOARD_SIZE[0], self.BOARD_SIZE[1])
-    visited = [[False for _ in range(cols)] for _ in range(rows)]
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-    queue = deque()
-    visited[x1][y1] = True
-    for dx, dy in directions:
-        nx, ny = (x1 + dx, y1 + dy)
-        if 0 <= nx < rows and 0 <= ny < cols and (self.board[nx][ny] == ' '):
-            queue.append((nx, ny, (dx, dy), 0))
-            visited[nx][ny] = True
-    while queue:
-        x, y, dir, turns = queue.popleft()
-        if (x, y) == (x2, y2):
+    
+    # Check one turn path (1 turn)
+    if self._has_one_turn_path(pos1, pos2):
+        return True
+    
+    # Check two turn path (2 turns)
+    if self._has_two_turn_path(pos1, pos2):
+        return True
+    
+    return False
+
+def _has_direct_line(self, pos1, pos2):
+    """Check if there's a direct line between two positions"""
+    x1, y1 = pos1
+    x2, y2 = pos2
+    
+    # Horizontal line
+    if y1 == y2:
+        min_x, max_x = min(x1, x2), max(x1, x2)
+        for x in range(min_x + 1, max_x):
+            if self.board[y1][x] is not None:
+                return False
+        return True
+    
+    # Vertical line
+    if x1 == x2:
+        min_y, max_y = min(y1, y2), max(y1, y2)
+        for y in range(min_y + 1, max_y):
+            if self.board[y][x1] is not None:
+                return False
+        return True
+    
+    return False
+
+def _has_one_turn_path(self, pos1, pos2):
+    """Check if there's a path with one turn"""
+    x1, y1 = pos1
+    x2, y2 = pos2
+    
+    # Try corner point (x1, y2)
+    corner1 = (x1, y2)
+    if (corner1 != pos1 and corner1 != pos2 and 
+        (self.board[y2][x1] is None or corner1 == pos1 or corner1 == pos2)):
+        if self._has_direct_line(pos1, corner1) and self._has_direct_line(corner1, pos2):
             return True
-        nx, ny = (x + dir[0], y + dir[1])
-        if 0 <= nx < rows and 0 <= ny < cols and (not visited[nx][ny]) and (self.board[nx][ny] == ' '):
-            queue.append((nx, ny, dir, turns))
-            visited[nx][ny] = True
-        if turns < 2:
-            for dx, dy in directions:
-                if (dx, dy) == dir or (dx, dy) == (-dir[0], -dir[1]):
-                    continue
-                nx, ny = (x + dx, y + dy)
-                if 0 <= nx < rows and 0 <= ny < cols and (not visited[nx][ny]) and (self.board[nx][ny] == ' '):
-                    queue.append((nx, ny, (dx, dy), turns + 1))
-                    visited[nx][ny] = True
+    
+    # Try corner point (x2, y1)
+    corner2 = (x2, y1)
+    if (corner2 != pos1 and corner2 != pos2 and 
+        (self.board[y1][x2] is None or corner2 == pos1 or corner2 == pos2)):
+        if self._has_direct_line(pos1, corner2) and self._has_direct_line(corner2, pos2):
+            return True
+    
+    return False
+
+def _has_two_turn_path(self, pos1, pos2):
+    """Check if there's a path with two turns"""
+    x1, y1 = pos1
+    x2, y2 = pos2
+    
+    # Try all possible intermediate points
+    for y in range(len(self.board)):
+        for x in range(len(self.board[0])):
+            if (x, y) == pos1 or (x, y) == pos2:
+                continue
+            if self.board[y][x] is None:
+                if self._has_one_turn_path(pos1, (x, y)) and self._has_one_turn_path((x, y), pos2):
+                    return True
+    
     return False

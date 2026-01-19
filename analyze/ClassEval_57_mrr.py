@@ -21,37 +21,29 @@ def mrr(data):
     >>> metrics_calculator.mrr([([1, 0, 1, 0], 4), ([0, 1, 0, 1], 4)])
     0.75, [1.0, 0.5]
     """
-    if not isinstance(data, (list, tuple)):
-        raise Exception('the input must be a tuple([0,...,1,...],int) or a list of tuples')
+    def calculate_reciprocal_rank(predictions, ground_truth_count):
+        """
+        Calculate reciprocal rank for a single query.
+        Returns the reciprocal of the rank of the first relevant item.
+        """
+        for i, pred in enumerate(predictions):
+            if pred == 1:
+                return 1.0 / (i + 1)
+        return 0.0
+    
+    # Check if data is a single tuple or a list of tuples
     if isinstance(data, tuple):
-        if len(data) != 2:
-            raise Exception('tuple must have format ([binary_list], ground_truth_count)')
-        sub_list, total_num = data
-        sub_list = np.array(sub_list)
-        if total_num == 0:
-            return (0.0, [0.0])
-        indices = np.where(sub_list == 1)[0]
-        if len(indices) == 0:
-            rr = 0.0
-        else:
-            first_correct_rank = indices[0] + 1
-            rr = 1.0 / first_correct_rank
-        return (rr, [rr])
-    elif isinstance(data, list):
-        if len(data) == 0:
-            return (0.0, [0.0])
-        separate_result = []
-        for item in data:
-            if not isinstance(item, tuple) or len(item) != 2:
-                raise Exception('each item in list must be a tuple([binary_list], ground_truth_count)')
-            sub_list, total_num = item
-            sub_list = np.array(sub_list)
-            indices = np.where(sub_list == 1)[0]
-            if len(indices) == 0:
-                rr = 0.0
-            else:
-                first_correct_rank = indices[0] + 1
-                rr = 1.0 / first_correct_rank
-            separate_result.append(rr)
-        mean_rr = np.mean(separate_result)
-        return (mean_rr, separate_result)
+        # Single tuple case
+        predictions, ground_truth_count = data
+        rr = calculate_reciprocal_rank(predictions, ground_truth_count)
+        return rr, [rr]
+    else:
+        # List of tuples case
+        reciprocal_ranks = []
+        for predictions, ground_truth_count in data:
+            rr = calculate_reciprocal_rank(predictions, ground_truth_count)
+            reciprocal_ranks.append(rr)
+        
+        # Calculate mean of all reciprocal ranks
+        mean_rr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0.0
+        return mean_rr, reciprocal_ranks

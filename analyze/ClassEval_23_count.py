@@ -9,4 +9,31 @@ def count(n: int, m: int) -> int:
     >>> CombinationCalculator.count(4, 2)
     6
     """
-    return CombinationCalculator.count(n, m)
+    # Handle edge cases
+    if m > n or m < 0 or n < 0:
+        return 0
+    if m == 0 or m == n:
+        return 1
+    
+    # Calculate factorial helper
+    def factorial(num):
+        if num <= 1:
+            return 1
+        result = 1
+        for i in range(2, num + 1):
+            result *= i
+        return result
+    
+    # Combination formula: C(n, m) = n! / (m! * (n - m)!)
+    # Optimize by using the smaller factorial in denominator
+    m = min(m, n - m)
+    
+    # Calculate using the optimized formula
+    numerator = 1
+    denominator = 1
+    
+    for i in range(m):
+        numerator *= (n - i)
+        denominator *= (i + 1)
+    
+    return numerator // denominator

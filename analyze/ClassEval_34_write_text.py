@@ -7,14 +7,34 @@ def write_text(self, content, font_size=12, alignment='left'):
     :return: bool, यदि लिखने का कार्य सफल होता है तो True, अन्यथा False।
     """
     try:
-        doc = Document(self.file_path)
-        paragraph = doc.add_paragraph()
-        run = paragraph.add_run(content)
-        font = run.font
-        font.size = Pt(font_size)
-        alignment_value = self._get_alignment_value(alignment)
-        paragraph.alignment = alignment_value
-        doc.save(self.file_path)
+        from docx import Document
+        from docx.shared import Pt
+        from docx.enum.text import WD_ALIGN_PARAGRAPH
+        
+        # Check if document exists, otherwise create new one
+        if not hasattr(self, 'document') or self.document is None:
+            self.document = Document()
+        
+        # Add paragraph with content
+        paragraph = self.document.add_paragraph(content)
+        
+        # Set font size
+        for run in paragraph.runs:
+            run.font.size = Pt(font_size)
+        
+        # Set alignment
+        alignment_map = {
+            'left': WD_ALIGN_PARAGRAPH.LEFT,
+            'center': WD_ALIGN_PARAGRAPH.CENTER,
+            'right': WD_ALIGN_PARAGRAPH.RIGHT
+        }
+        
+        if alignment.lower() in alignment_map:
+            paragraph.alignment = alignment_map[alignment.lower()]
+        else:
+            paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        
         return True
-    except Exception:
+        
+    except Exception as e:
         return False

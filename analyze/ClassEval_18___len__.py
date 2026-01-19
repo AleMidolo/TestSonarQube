@@ -1,12 +1,12 @@
 def __len__(self):
     """
-        अपने डेटा की लंबाई लौटाता है
-        :return:int, डेटा की लंबाई
-        >>> camelize_map = CamelCaseMap()
-        >>> camelize_map['first_name'] = 'John'
-        >>> camelize_map['last_name'] = 'Doe'
-        >>> camelize_map['age'] = 30
-        >>> camelize_map.__len__()
-        3
-        """
-    return len(self._data)
+    अपने डेटा की लंबाई लौटाता है
+    :return:int, डेटा की लंबाई
+    >>> camelize_map = CamelCaseMap()
+    >>> camelize_map['first_name'] = 'John'
+    >>> camelize_map['last_name'] = 'Doe'
+    >>> camelize_map['age'] = 30
+    >>> camelize_map.__len__()
+    3
+    """
+    return len(self.data)

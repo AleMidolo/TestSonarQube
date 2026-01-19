@@ -1,32 +1,45 @@
 def format_line_html_text(self, html_text):
     """
-        कोड के बिना एचटीएमएल टेक्स्ट प्राप्त करें, और जहां कोड है वहां -CODE- टैग जोड़ें
-        :param html_text:string
-        :return:string
-        >>>htmlutil = HtmlUtil()
-        >>>htmlutil.format_line_html_text(<html>
-        >>> <body>
-        >>>    <h1>शीर्षक</h1>
-        >>>    <p>यह एक पैराग्राफ है।</p>
-        >>>    <pre>print('नमस्ते, दुनिया!')</pre>
-        >>>    <p>एक और पैराग्राफ।</p>
-        >>>    <pre><code>for i in range(5):
-        >>>    print(i)</code></pre>
-        >>>    </body>
-        >>>    </html>)
-        शीर्षक
-        यह एक पैराग्राफ है।
-        -CODE-
-        एक और पैराग्राफ।
-        -CODE-
-        """
-    soup = BeautifulSoup(html_text, 'lxml')
-    for script in soup(['script', 'style']):
-        script.decompose()
-    for tag in soup.find_all(['pre', 'blockquote']):
-        tag.replace_with(self.CODE_MARK)
-    text = soup.get_text(separator='\n')
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    text = '\n'.join(lines)
-    text = self.__format_line_feed(text)
-    return text
+    कोड के बिना एचटीएमएल टेक्स्ट प्राप्त करें, और जहां कोड है वहां -CODE- टैग जोड़ें
+    :param html_text:string
+    :return:string
+    """
+    from html.parser import HTMLParser
+    
+    class CodeReplacerParser(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.result = []
+            self.in_code_block = False
+            self.code_tags = {'pre', 'code'}
+            self.tag_stack = []
+        
+        def handle_starttag(self, tag, attrs):
+            self.tag_stack.append(tag)
+            if tag in self.code_tags:
+                self.in_code_block = True
+        
+        def handle_endtag(self, tag):
+            if self.tag_stack and self.tag_stack[-1] == tag:
+                self.tag_stack.pop()
+            
+            if tag in self.code_tags:
+                # Check if we're still in a code block
+                self.in_code_block = any(t in self.code_tags for t in self.tag_stack)
+                
+                # Add -CODE- marker when exiting code block
+                if not self.in_code_block:
+                    self.result.append('-CODE-')
+        
+        def handle_data(self, data):
+            if not self.in_code_block:
+                # Only add non-empty text
+                text = data.strip()
+                if text:
+                    self.result.append(text)
+    
+    parser = CodeReplacerParser()
+    parser.feed(html_text)
+    
+    # Join with newlines and return
+    return '\n'.join(parser.result)

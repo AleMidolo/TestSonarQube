@@ -1,14 +1,23 @@
 def mismatch_in_text(self, currentPos):
     """
-        पैटर्न और टेक्स्ट के बीच पहले असमानता की स्थिति निर्धारित करता है।
-        :param currentPos: टेक्स्ट में वर्तमान स्थिति, int.
-        :return: पैटर्न और टेक्स्ट के बीच पहले असमानता की स्थिति, int, अन्यथा -1।
-        >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "ABC")
-        >>> boyerMooreSearch.mismatch_in_text(0)
-        2
+    पैटर्न और टेक्स्ट के बीच पहले असमानता की स्थिति निर्धारित करता है।
+    :param currentPos: टेक्स्ट में वर्तमान स्थिति, int.
+    :return: पैटर्न और टेक्स्ट के बीच पहले असमानता की स्थिति, int, अन्यथा -1।
+    >>> boyerMooreSearch = BoyerMooreSearch("ABAABA", "ABC")
+    >>> boyerMooreSearch.mismatch_in_text(0)
+    2
 
-        """
-    for i in range(self.patLen - 1, -1, -1):
+    """
+    # Compare pattern with text from right to left
+    # Starting from the end of the pattern
+    for i in range(len(self.pattern) - 1, -1, -1):
+        # Check if we're within text bounds
+        if currentPos + i >= len(self.text):
+            return i
+        
+        # If characters don't match, return the position in pattern
         if self.pattern[i] != self.text[currentPos + i]:
             return i
+    
+    # If all characters match, return -1
     return -1

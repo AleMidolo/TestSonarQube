@@ -1,25 +1,37 @@
 def vigenere_cipher(self, plaintext):
     """
-        प्लेनटेक्स्ट को विजेनेरे सिफर का उपयोग करके एन्क्रिप्ट करता है।
-        :param plaintext: एन्क्रिप्ट करने के लिए प्लेनटेक्स्ट, str.
-        :return: ciphertext, str.
-        >>> e = EncryptionUtils("key")
-        >>> e.vigenere_cipher("abc")
-        'kfa'
+    प्लेनटेक्स्ट को विजेनेरे सिफर का उपयोग करके एन्क्रिप्ट करता है।
+    :param plaintext: एन्क्रिप्ट करने के लिए प्लेनटेक्स्ट, str.
+    :return: ciphertext, str.
+    >>> e = EncryptionUtils("key")
+    >>> e.vigenere_cipher("abc")
+    'kfa'
 
-        """
-    ciphertext = ''
-    key_length = len(self.key)
-    for i, char in enumerate(plaintext):
+    """
+    ciphertext = ""
+    key = self.key.lower()
+    key_index = 0
+    
+    for char in plaintext:
         if char.isalpha():
-            if char.isupper():
-                ascii_offset = 65
-            else:
-                ascii_offset = 97
-            key_char = self.key[i % key_length]
-            key_shift = ord(key_char.lower()) - 97
-            shifted_char = chr((ord(char) - ascii_offset + key_shift) % 26 + ascii_offset)
-            ciphertext += shifted_char
+            # Determine if uppercase or lowercase
+            is_upper = char.isupper()
+            char = char.lower()
+            
+            # Get the shift value from the key
+            shift = ord(key[key_index % len(key)]) - ord('a')
+            
+            # Encrypt the character
+            encrypted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
+            
+            # Restore case if needed
+            if is_upper:
+                encrypted_char = encrypted_char.upper()
+            
+            ciphertext += encrypted_char
+            key_index += 1
         else:
+            # Non-alphabetic characters are not encrypted
             ciphertext += char
+    
     return ciphertext

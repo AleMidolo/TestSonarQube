@@ -1,12 +1,11 @@
 def get_fragment(self):
     """
-        URL में '#' के बाद का फ्रैगमेंट प्राप्त करें
-        :return: स्ट्रिंग, यदि सफल हो, तो URL के '#' के बाद का फ्रैगमेंट लौटाएं
-        >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
-        >>> urlhandler.get_fragment()
-        "page"
-        """
-    fragment_start = self.url.find('#')
-    if fragment_start != -1:
-        return self.url[fragment_start + 1:]
+    URL में '#' के बाद का फ्रैगमेंट प्राप्त करें
+    :return: स्ट्रिंग, यदि सफल हो, तो URL के '#' के बाद का फ्रैगमेंट लौटाएं
+    >>> urlhandler = URLHandler("https://www.baidu.com/s?wd=aaa&rsv_spt=1#page")
+    >>> urlhandler.get_fragment()
+    "page"
+    """
+    if hasattr(self, 'url') and self.url and '#' in self.url:
+        return self.url.split('#', 1)[1]
     return None

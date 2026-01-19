@@ -1,32 +1,45 @@
+from datetime import datetime
+
 def string_to_datetime(self, string):
     """
-        समय स्ट्रिंग को datetime उदाहरण में परिवर्तित करें
-        :param string: स्ट्रिंग, प्रारूप परिवर्तित करने से पहले की स्ट्रिंग
-        :return: datetime उदाहरण
-        >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
-        2001-07-18 01:01:01
-        """
-    formats_to_try = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d %H:%M', '%Y/%m/%d', '%d-%m-%Y %H:%M:%S', '%d-%m-%Y %H:%M', '%d-%m-%Y', '%d/%m/%Y %H:%M:%S', '%d/%m/%Y %H:%M', '%d/%m/%Y', '%Y.%m.%d %H:%M:%S', '%Y.%m.%d %H:%M', '%Y.%m.%d', '%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M', '%d.%m.%Y']
-    for fmt in formats_to_try:
+    समय स्ट्रिंग को datetime उदाहरण में परिवर्तित करें
+    :param string: स्ट्रिंग, प्रारूप परिवर्तित करने से पहले की स्ट्रिंग
+    :return: datetime उदाहरण
+    >>> timeutils.string_to_datetime("2001-7-18 1:1:1")
+    2001-07-18 01:01:01
+    """
+    # Try common datetime formats
+    formats = [
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%Y/%m/%d %H:%M:%S",
+        "%Y-%m-%d",
+        "%Y/%m/%d",
+    ]
+    
+    for fmt in formats:
         try:
-            return datetime.datetime.strptime(string, fmt)
+            return datetime.strptime(string, fmt)
         except ValueError:
             continue
-    normalized_string = string.strip()
+    
+    # If standard formats don't work, try parsing flexible format
+    # Handle cases like "2001-7-18 1:1:1" where single digits aren't zero-padded
     try:
-        from dateutil import parser
-        return parser.parse(normalized_string)
-    except ImportError:
-        parts = normalized_string.replace('-', ' ').replace('/', ' ').replace(':', ' ').replace('.', ' ').split()
-        if len(parts) >= 3:
-            try:
-                year = int(parts[0]) if len(parts[0]) == 4 else int(parts[2])
-                month = int(parts[1])
-                day = int(parts[2]) if len(parts[0]) == 4 else int(parts[0])
-                hour = int(parts[3]) if len(parts) > 3 else 0
-                minute = int(parts[4]) if len(parts) > 4 else 0
-                second = int(parts[5]) if len(parts) > 5 else 0
-                return datetime.datetime(year, month, day, hour, minute, second)
-            except (ValueError, IndexError):
-                pass
-    raise ValueError(f'Unable to parse time string: {string}')
+        parts = string.split()
+        date_part = parts[0]
+        time_part = parts[1] if len(parts) > 1 else "0:0:0"
+        
+        date_components = date_part.replace('/', '-').split('-')
+        year = int(date_components[0])
+        month = int(date_components[1])
+        day = int(date_components[2])
+        
+        time_components = time_part.split(':')
+        hour = int(time_components[0]) if len(time_components) > 0 else 0
+        minute = int(time_components[1]) if len(time_components) > 1 else 0
+        second = int(time_components[2]) if len(time_components) > 2 else 0
+        
+        return datetime(year, month, day, hour, minute, second)
+    except (ValueError, IndexError):
+        raise ValueError(f"Unable to parse datetime string: {string}")
