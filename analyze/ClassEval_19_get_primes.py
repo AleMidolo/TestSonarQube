@@ -17,7 +17,7 @@ def get_primes(self):
     is_prime = [True] * (self.limit + 1)
     is_prime[0] = is_prime[1] = False
     
-    # Sieve of Eratosthenes algorithm
+    # Sieve of Eratosthenes
     p = 2
     while p * p <= self.limit:
         if is_prime[p]:

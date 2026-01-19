@@ -24,9 +24,10 @@ def insert(self, data):
     
     values = ', '.join(formatted_values)
     
-    # Construct the INSERT statement
     # Assuming self has a table_name attribute (e.g., self.table_name = 'table1')
     table_name = getattr(self, 'table_name', 'table1')
+    
+    # Generate INSERT statement
     sql_statement = f"INSERT INTO {table_name} ({columns}) VALUES ({values});"
     
     return sql_statement

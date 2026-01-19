@@ -10,15 +10,12 @@ def read_json(self, file_path):
     >>> json.read_json('test.json')
     {'name': 'test', 'age': 14}
     """
-    # Check if file exists
     if not os.path.exists(file_path):
         return 0
     
     try:
-        # Open and read the JSON file
         with open(file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
-        return data
-    except Exception as e:
-        # Return -1 if any error occurs during reading
+            return data
+    except Exception:
         return -1

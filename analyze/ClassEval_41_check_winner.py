@@ -18,8 +18,8 @@ def check_winner(self):
     ]
     
     # Iterate through each cell on the board
-    for row in range(self.size):
-        for col in range(self.size):
+    for row in range(self.board_size):
+        for col in range(self.board_size):
             # Skip empty cells
             if self.board[row][col] is None:
                 continue
@@ -32,14 +32,18 @@ def check_winner(self):
                 
                 # Check in the positive direction
                 r, c = row + dr, col + dc
-                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
+                while (0 <= r < self.board_size and 
+                       0 <= c < self.board_size and 
+                       self.board[r][c] == player):
                     count += 1
                     r += dr
                     c += dc
                 
                 # Check in the negative direction
                 r, c = row - dr, col - dc
-                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
+                while (0 <= r < self.board_size and 
+                       0 <= c < self.board_size and 
+                       self.board[r][c] == player):
                     count += 1
                     r -= dr
                     c -= dc

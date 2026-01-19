@@ -8,13 +8,15 @@ def mismatch_in_text(self, currentPos):
     2
 
     """
-    # Compare pattern with text from right to left
+    # Pattern के अंत से शुरू करके compare करें (right to left)
     for i in range(len(self.pattern) - 1, -1, -1):
         # Check if we're within text bounds
         if currentPos + i >= len(self.text):
             return i
-        # Check for mismatch
+        
+        # अगर character match नहीं करता, तो उस position return करें
         if self.pattern[i] != self.text[currentPos + i]:
             return i
-    # No mismatch found, pattern matches completely
+    
+    # अगर सभी characters match करते हैं, तो -1 return करें
     return -1

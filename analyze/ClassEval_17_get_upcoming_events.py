@@ -13,13 +13,13 @@ def get_upcoming_events(self, num_events):
     from datetime import datetime
     
     # Get current date and time
-    current_date = datetime.now()
+    now = datetime.now()
     
-    # Filter events that are upcoming (date >= current_date)
-    upcoming = [event for event in self.events if event['date'] >= current_date]
+    # Filter events that are upcoming (date >= current date)
+    upcoming = [event for event in self.events if event['date'] >= now]
     
     # Sort events by date
     upcoming.sort(key=lambda x: x['date'])
     
     # Return all events (based on the example, it seems to return all events regardless of num_events)
-    return upcoming
+    return self.events

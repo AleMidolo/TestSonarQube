@@ -14,26 +14,18 @@ def insert_into_database(self, table_name, data):
     # Get column names from the first dictionary
     columns = list(data[0].keys())
     column_names = ', '.join(columns)
-    
-    # Create placeholders for values
     placeholders = ', '.join(['?' for _ in columns])
     
-    # Prepare the INSERT SQL statement
-    sql = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
+    # Create the INSERT SQL query
+    query = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
     
-    # Extract values from each dictionary in the same order as columns
+    # Prepare the values for each row
     values_list = []
     for row in data:
         values = tuple(row[col] for col in columns)
         values_list.append(values)
     
-    # Execute the insert operation
-    if hasattr(self, 'cursor') and hasattr(self, 'connection'):
-        # For multiple rows
-        self.cursor.executemany(sql, values_list)
-        self.connection.commit()
-    elif hasattr(self, 'conn'):
-        # Alternative connection attribute name
-        cursor = self.conn.cursor()
-        cursor.executemany(sql, values_list)
-        self.conn.commit()
+    # Execute the query for all rows
+    cursor = self.connection.cursor()
+    cursor.executemany(query, values_list)
+    self.connection.commit()

@@ -8,5 +8,4 @@ def calculate_cylinder_area(self, height):
     62.83185307179586
     """
     import math
-    # Cylinder surface area = 2πr² + 2πrh = 2πr(r + h)
-    return 2 * math.pi * self.radius * (self.radius + height)
+    return 2 * math.pi * self.radius * height + 2 * math.pi * self.radius ** 2

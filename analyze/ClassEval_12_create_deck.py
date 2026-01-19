@@ -19,7 +19,7 @@ def create_deck(self):
     ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
     suits = ['S', 'H', 'D', 'C']  # Spades, Hearts, Diamonds, Clubs
     
-    # Create deck with all combinations
+    # Create a deck with all combinations of ranks and suits
     deck = [rank + suit for suit in suits for rank in ranks]
     
     # Shuffle the deck randomly

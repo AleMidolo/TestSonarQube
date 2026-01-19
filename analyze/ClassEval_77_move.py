@@ -8,25 +8,33 @@ def move(self, direction):
     self.positions = [(51, 51), (50, 50)]
     self.score = 10
     """
-    # वर्तमान सिर की स्थिति प्राप्त करें
+    # सांप के सिर की वर्तमान स्थिति प्राप्त करें
     current_head = self.positions[0]
     
-    # नई सिर की स्थिति की गणना करें
+    # नई स्थिति की गणना करें
     new_head = (current_head[0] + direction[0], current_head[1] + direction[1])
     
-    # जांचें कि नया सिर भोजन की स्थिति पर है या नहीं
-    if new_head == self.food_position:
-        # भोजन खाएं
-        self.positions.insert(0, new_head)
+    # नए सिर को positions की शुरुआत में जोड़ें
+    self.positions.insert(0, new_head)
+    
+    # जांचें कि क्या सांप ने भोजन खा लिया
+    if hasattr(self, 'food_position') and new_head == self.food_position:
+        # भोजन खा लिया - लंबाई बढ़ाएं और स्कोर बढ़ाएं
         self.length += 1
         self.score += 10
-        # नया भोजन उत्पन्न करें (यदि food_position को अपडेट करने की आवश्यकता है)
-        # self.generate_food() या इसी तरह का कोड
-    # जांचें कि नया सिर शरीर से टकराता है या नहीं
+        # नया भोजन उत्पन्न करें (यदि food generation method है)
+        if hasattr(self, 'generate_food'):
+            self.generate_food()
+    # जांचें कि क्या सांप ने खुद से टकराया
     elif new_head in self.positions[1:]:
-        # फिर से शुरू करें (रीसेट)
-        self.reset()
+        # खुद से टकराया - गेम रीसेट करें
+        if hasattr(self, 'reset'):
+            self.reset()
+        else:
+            # मैनुअल रीसेट
+            self.length = 1
+            self.positions = [new_head]
+            self.score = 0
     else:
-        # सामान्य गति - सिर जोड़ें और पूंछ हटाएं
-        self.positions.insert(0, new_head)
+        # सामान्य चाल - पूंछ हटाएं
         self.positions.pop()

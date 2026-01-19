@@ -4,14 +4,14 @@ def _validate_phoneNumber(self, phoneNumber: str) -> str:
     :param phoneNumber: str, मान्य करने के लिए फोन नंबर
     :return: str, मान्य फोन नंबर या यदि अमान्य है तो None
     """
-    if not phoneNumber or not phoneNumber.strip():
+    if not phoneNumber or len(phoneNumber.strip()) == 0:
         return None
     
-    # Remove any whitespace
-    cleaned_number = phoneNumber.strip()
+    # Remove any non-digit characters for validation
+    digits_only = ''.join(filter(str.isdigit, phoneNumber))
     
-    # Check if it contains only digits and is exactly 11 digits long
-    if cleaned_number.isdigit() and len(cleaned_number) == 11:
-        return cleaned_number
-    
-    return None
+    # Check if it has exactly 11 digits
+    if len(digits_only) == 11:
+        return phoneNumber
+    else:
+        return None

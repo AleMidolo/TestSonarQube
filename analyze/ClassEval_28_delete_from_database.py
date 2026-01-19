@@ -5,7 +5,6 @@ def delete_from_database(self, table_name, name):
     :param name: str, हटाने के लिए मेल खाने वाला नाम।
     >>> db.delete_from_database('user', 'John')
     """
-    cursor = self.connection.cursor()
     query = f"DELETE FROM {table_name} WHERE name = ?"
-    cursor.execute(query, (name,))
+    self.cursor.execute(query, (name,))
     self.connection.commit()

@@ -1,6 +1,6 @@
 def init_game(self):
     """
-    खेल को प्रारंभ करें खिलाड़ी, लक्ष्यों और बक्सों की स्थिति को मानचित्र के आधार पर सेट करके।
+    खेल को प्रारंभ करें खिलाड़ी, लक्ष्यों और बक्सों की स्थिति को मानचित्र के आधार पर सेट करें।
     >>> game = PushBoxGame(["#####", "#O  #", "# X #", "#  G#", "#####"]) 
     >>> game.targets
     [(3, 3)]
@@ -25,5 +25,5 @@ def init_game(self):
                 self.player_col = col
             elif cell == 'X':  # Box position
                 self.boxes.append((row, col))
-            elif cell == 'G':  # Target/Goal position
+            elif cell == 'G':  # Goal/Target position
                 self.targets.append((row, col))

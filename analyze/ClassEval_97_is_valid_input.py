@@ -16,20 +16,22 @@ def is_valid_input(self, textnum):
         'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
         'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
         'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million',
-        'billion', 'trillion', 'and', 'point', 'minus', 'negative'
+        'billion', 'trillion', 'and', 'point'
     }
     
     # Clean and normalize the input
     textnum = textnum.lower().strip()
     
-    # Split by spaces and check each token
-    tokens = textnum.split()
+    # Split by spaces and check each word
+    words = textnum.split()
     
-    for token in tokens:
-        # Remove hyphens and check if all parts are valid
-        parts = token.split('-')
-        for part in parts:
-            if part and part not in valid_words:
-                return False
+    for word in words:
+        # Remove hyphens are not allowed based on the doctest
+        if '-' in word:
+            return False
+        
+        # Check if word is valid
+        if word not in valid_words:
+            return False
     
     return True

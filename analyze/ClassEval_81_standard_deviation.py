@@ -9,15 +9,10 @@ def standard_deviation(data):
     1.0
 
     """
-    n = len(data)
-    if n == 0:
+    if not data:
         return 0.0
     
-    # Calculate mean
+    n = len(data)
     mean = sum(data) / n
-    
-    # Calculate variance (sum of squared differences from mean)
     variance = sum((x - mean) ** 2 for x in data) / n
-    
-    # Standard deviation is square root of variance
     return variance ** 0.5

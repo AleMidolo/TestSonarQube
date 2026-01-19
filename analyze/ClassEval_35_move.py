@@ -21,7 +21,7 @@ def move(self, state, direction):
             break
     
     # Determine the new position based on direction
-    # Note: moving the empty block 'left' means swapping with the tile on its left
+    # Note: Moving the empty block 'left' means swapping with the tile on its left
     if direction == 'left':
         if empty_col > 0:
             # Swap empty block with the tile on its left

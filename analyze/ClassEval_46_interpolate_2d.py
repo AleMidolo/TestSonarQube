@@ -17,14 +17,14 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
     
     for xi, yi in zip(x_interp, y_interp):
         # Find the four surrounding points for bilinear interpolation
-        # Find x indices
+        # Find indices for x
         x_idx = -1
         for i in range(len(x) - 1):
             if x[i] <= xi <= x[i + 1]:
                 x_idx = i
                 break
         
-        # Find y indices
+        # Find indices for y
         y_idx = -1
         for i in range(len(y) - 1):
             if y[i] <= yi <= y[i + 1]:

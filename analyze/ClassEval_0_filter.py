@@ -18,14 +18,16 @@ def filter(self, request):
     path = request.get('path', '')
     method = request.get('method', '')
     
-    # यदि पथ अनुमत सूची में है या सार्वजनिक है
-    if path in allowed_paths:
+    # यदि पथ अनुमत सूची में है और विधि मान्य है
+    if path in allowed_paths and method in allowed_methods:
         return True
     
-    # यदि विधि अनुमत है
-    if method in allowed_methods:
-        # अतिरिक्त जाँच - यदि पथ /api/ से शुरू होता है
-        if path.startswith('/api/'):
-            return True
+    # सार्वजनिक संसाधनों की जाँच
+    if path.startswith('/public'):
+        return True
+    
+    # स्वास्थ्य जाँच एंडपॉइंट
+    if path == '/health' and method == 'GET':
+        return True
     
     return False

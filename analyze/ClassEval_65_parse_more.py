@@ -10,7 +10,6 @@ def parse_more(self, i):
     "THOUSAND"
     """
     magnitudes = {
-        0: "",
         1: "THOUSAND",
         2: "MILLION",
         3: "BILLION",

@@ -6,31 +6,31 @@ def get_binary(self):
     >>> ipaddress.get_binary()
     "00001010.00001010.00001010.00001010"
     """
-    # Assuming self has an ip_address attribute
-    if not hasattr(self, 'ip_address') or not self.ip_address:
+    # Validate IP address
+    if not hasattr(self, 'ip') or not self.ip:
         return ''
     
     try:
-        # Split the IP address by dots
-        parts = self.ip_address.split('.')
+        # Split IP address into octets
+        octets = self.ip.split('.')
         
-        # Validate IP address format
-        if len(parts) != 4:
+        # Check if there are exactly 4 octets
+        if len(octets) != 4:
             return ''
         
-        binary_parts = []
-        for part in parts:
-            # Convert each part to integer and validate range
-            num = int(part)
+        binary_octets = []
+        for octet in octets:
+            # Convert to integer and validate range
+            num = int(octet)
             if num < 0 or num > 255:
                 return ''
             
             # Convert to binary (remove '0b' prefix) and pad to 8 bits
             binary = bin(num)[2:].zfill(8)
-            binary_parts.append(binary)
+            binary_octets.append(binary)
         
         # Join with dots
-        return '.'.join(binary_parts)
+        return '.'.join(binary_octets)
     
     except (ValueError, AttributeError):
         return ''

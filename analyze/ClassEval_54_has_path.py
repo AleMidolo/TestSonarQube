@@ -62,16 +62,18 @@ def _has_one_turn_path(self, pos1, pos2):
     # Try corner point (x1, y2)
     corner1 = (x1, y2)
     if (corner1 != pos1 and corner1 != pos2 and 
-        (self.board[y2][x1] is None or corner1 == pos1 or corner1 == pos2)):
-        if self._has_direct_line(pos1, corner1) and self._has_direct_line(corner1, pos2):
-            return True
+        self.board[y2][x1] is None and
+        self._has_direct_line(pos1, corner1) and 
+        self._has_direct_line(corner1, pos2)):
+        return True
     
     # Try corner point (x2, y1)
     corner2 = (x2, y1)
-    if (corner2 != pos1 and corner2 != pos2 and 
-        (self.board[y1][x2] is None or corner2 == pos1 or corner2 == pos2)):
-        if self._has_direct_line(pos1, corner2) and self._has_direct_line(corner2, pos2):
-            return True
+    if (corner2 != pos1 and corner2 != pos2 and
+        self.board[y1][x2] is None and
+        self._has_direct_line(pos1, corner2) and 
+        self._has_direct_line(corner2, pos2)):
+        return True
     
     return False
 
@@ -80,13 +82,26 @@ def _has_two_turn_path(self, pos1, pos2):
     x1, y1 = pos1
     x2, y2 = pos2
     
-    # Try all possible intermediate points
+    # Try horizontal then vertical then horizontal
+    for x in range(len(self.board[0])):
+        if self.board[y1][x] is None or (x, y1) == pos1:
+            if self.board[y2][x] is None or (x, y2) == pos2:
+                mid1 = (x, y1)
+                mid2 = (x, y2)
+                if (self._has_direct_line(pos1, mid1) and 
+                    self._has_direct_line(mid1, mid2) and 
+                    self._has_direct_line(mid2, pos2)):
+                    return True
+    
+    # Try vertical then horizontal then vertical
     for y in range(len(self.board)):
-        for x in range(len(self.board[0])):
-            if (x, y) == pos1 or (x, y) == pos2:
-                continue
-            if self.board[y][x] is None:
-                if self._has_one_turn_path(pos1, (x, y)) and self._has_one_turn_path((x, y), pos2):
+        if self.board[y][x1] is None or (x1, y) == pos1:
+            if self.board[y][x2] is None or (x2, y) == pos2:
+                mid1 = (x1, y)
+                mid2 = (x2, y)
+                if (self._has_direct_line(pos1, mid1) and 
+                    self._has_direct_line(mid1, mid2) and 
+                    self._has_direct_line(mid2, pos2)):
                     return True
     
     return False

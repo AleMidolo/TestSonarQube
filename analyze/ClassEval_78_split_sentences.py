@@ -13,10 +13,10 @@ def split_sentences(self, sentences_string):
     # Negative lookbehind to avoid splitting on abbreviations like "Mr."
     pattern = r'(?<!\bMr)(?<!\bMrs)(?<!\bDr)(?<!\bMs)(?<!\bProf)[.?](?=\s|$)'
     
-    # Split by the pattern
+    # Split the string using the pattern
     parts = re.split(pattern, sentences_string)
     
-    # Reconstruct sentences with their punctuation
+    # Reconstruct sentences by adding back the punctuation
     sentences = []
     current_pos = 0
     
@@ -27,10 +27,10 @@ def split_sentences(self, sentences_string):
             sentences.append(sentence)
         current_pos = match.end()
     
-    # Add any remaining text
+    # Add the last sentence if any
     if current_pos < len(sentences_string):
-        remaining = sentences_string[current_pos:].strip()
-        if remaining:
-            sentences.append(remaining)
+        last_sentence = sentences_string[current_pos:].strip()
+        if last_sentence:
+            sentences.append(last_sentence)
     
     return sentences

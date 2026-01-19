@@ -11,12 +11,12 @@ def extract_file(self, file_name, output_path):
     import os
     
     try:
-        # Create output directory if it doesn't exist
+        # Ensure output directory exists
         os.makedirs(output_path, exist_ok=True)
         
         # Open the zip file
         with zipfile.ZipFile(self.zip_file_path, 'r') as zip_ref:
-            # Check if the file exists in the zip
+            # Check if file exists in zip
             if file_name not in zip_ref.namelist():
                 return False
             
@@ -24,5 +24,6 @@ def extract_file(self, file_name, output_path):
             zip_ref.extract(file_name, output_path)
             
         return True
-    except Exception as e:
+        
+    except (zipfile.BadZipFile, FileNotFoundError, PermissionError, Exception):
         return False

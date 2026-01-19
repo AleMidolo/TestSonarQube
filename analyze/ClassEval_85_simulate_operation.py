@@ -16,16 +16,11 @@ def simulate_operation(self):
     while self.current_temp != self.target_temp:
         if self.mode == 'heat':
             # हीटिंग मोड में तापमान बढ़ाएं
-            self.current_temp += 0.5
-            # यदि लक्षित तापमान से अधिक हो जाए तो लक्षित तापमान पर सेट करें
-            if self.current_temp > self.target_temp:
-                self.current_temp = self.target_temp
+            self.current_temp += 1
         elif self.mode == 'cool':
             # कूलिंग मोड में तापमान घटाएं
-            self.current_temp -= 0.5
-            # यदि लक्षित तापमान से कम हो जाए तो लक्षित तापमान पर सेट करें
-            if self.current_temp < self.target_temp:
-                self.current_temp = self.target_temp
+            self.current_temp -= 1
+        # यदि mode 'off' है तो कुछ नहीं होगा
         
         time += 1
     

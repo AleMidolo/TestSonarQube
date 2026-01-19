@@ -9,4 +9,6 @@ def display(self, key, value):
     सामान्य गिटार खेलने का तरीका -- कॉर्ड: C, धुन बजाएं: 53231323
 
     """
-    return f"सामान्य गिटार खेलने का तरीका -- कॉर्ड: {key}, धुन बजाएं: {value}"
+    result = f"सामान्य गिटार खेलने का तरीका -- कॉर्ड: {key}, धुन बजाएं: {value}"
+    print(result)
+    return result

@@ -8,28 +8,27 @@ def apply_operator(self, operand_stack, operator_stack):
     >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
     ([1, -1], ['-'])
     """
-    # Pop the operator from operator_stack
+    if len(operand_stack) < 2 or len(operator_stack) < 1:
+        return operand_stack, operator_stack
+    
+    # Pop the top operator
     operator = operator_stack.pop()
     
-    # Pop two operands from operand_stack (right operand first, then left)
-    right_operand = operand_stack.pop()
-    left_operand = operand_stack.pop()
+    # Pop two operands (top two elements)
+    operand2 = operand_stack.pop()
+    operand1 = operand_stack.pop()
     
     # Apply the operator
     if operator == '+':
-        result = left_operand + right_operand
+        result = operand1 + operand2
     elif operator == '-':
-        result = left_operand - right_operand
+        result = operand1 - operand2
     elif operator == '*':
-        result = left_operand * right_operand
+        result = operand1 * operand2
     elif operator == '/':
-        result = left_operand / right_operand
-    elif operator == '//':
-        result = left_operand // right_operand
-    elif operator == '%':
-        result = left_operand % right_operand
-    elif operator == '**':
-        result = left_operand ** right_operand
+        result = operand1 / operand2
+    else:
+        result = 0
     
     # Push the result back to operand_stack
     operand_stack.append(result)

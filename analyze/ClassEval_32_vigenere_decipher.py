@@ -11,27 +11,27 @@ def vigenere_decipher(self, ciphertext):
     plaintext = []
     key = self.key.lower()
     key_length = len(key)
+    key_index = 0
     
-    for i, char in enumerate(ciphertext):
+    for char in ciphertext:
         if char.isalpha():
             # Determine if uppercase or lowercase
             is_upper = char.isupper()
             char = char.lower()
             
-            # Get the key character for this position
-            key_char = key[i % key_length]
+            # Get the key character
+            key_char = key[key_index % key_length]
             
-            # Decrypt: shift back by the key character's position
-            char_pos = ord(char) - ord('a')
-            key_pos = ord(key_char) - ord('a')
-            decrypted_pos = (char_pos - key_pos) % 26
-            decrypted_char = chr(decrypted_pos + ord('a'))
+            # Decrypt: shift back by key character value
+            shift = ord(key_char) - ord('a')
+            decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
             
             # Restore case
             if is_upper:
                 decrypted_char = decrypted_char.upper()
             
             plaintext.append(decrypted_char)
+            key_index += 1
         else:
             plaintext.append(char)
     
