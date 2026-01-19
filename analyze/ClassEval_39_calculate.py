@@ -12,24 +12,25 @@ def calculate(self, expression):
     self.postfix_stack.clear()
     transformed_expression = self.transform(expression)
     self.prepare(transformed_expression)
-    calc_stack = deque()
-    for item in self.postfix_stack:
-        if self.is_operator(item):
-            if item == '~':
-                if calc_stack:
-                    operand = calc_stack.pop()
-                    calc_stack.append(str(-Decimal(operand)))
+    calc_stack = deque(self.postfix_stack.copy())
+    result_stack = deque()
+    while calc_stack:
+        token = calc_stack.popleft()
+        if self.is_operator(token):
+            if len(result_stack) < 2:
+                raise ValueError('Invalid expression: insufficient operands')
+            second_value = result_stack.pop()
+            first_value = result_stack.pop()
+            if token == '~':
+                result_stack.append(first_value)
+                result_stack.append(str(-Decimal(second_value)))
             else:
-                if len(calc_stack) < 2:
-                    raise ValueError('Invalid expression: insufficient operands')
-                second_value = calc_stack.pop()
-                first_value = calc_stack.pop()
-                result = self._calculate(first_value, second_value, item)
-                calc_stack.append(str(result))
+                result = self._calculate(first_value, second_value, token)
+                result_stack.append(str(result))
+        elif token.startswith('~'):
+            result_stack.append(str(-Decimal(token[1:])))
         else:
-            calc_stack.append(item)
-    if not calc_stack:
-        raise ValueError('Invalid expression: no result')
-    result = float(Decimal(calc_stack.pop()))
-    self.postfix_stack.clear()
-    return result
+            result_stack.append(token)
+    if len(result_stack) != 1:
+        raise ValueError('Invalid expression: too many operands')
+    return float(Decimal(result_stack.pop()))

@@ -9,9 +9,9 @@ def process_xml_data(self, file_name):
         >>> print(success)
         True
         """
+    if self.root is None:
+        return False
     try:
-        if self.root is None:
-            self.read_xml()
         for elem in self.root.iter():
             elem.set('processed', 'true')
         tree = ET.ElementTree(self.root)

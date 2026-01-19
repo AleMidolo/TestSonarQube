@@ -23,15 +23,15 @@ def move(self, direction):
         >>> game.move('d') 
         True
         """
-    direction_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
-    if direction not in direction_map:
+    if self.is_game_over:
+        return True
+    dir_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
+    if direction not in dir_map:
         return False
-    dr, dc = direction_map[direction]
+    dr, dc = dir_map[direction]
     new_row = self.player_row + dr
     new_col = self.player_col + dc
-    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])):
-        return False
-    if self.map[new_row][new_col] == '#':
+    if new_row < 0 or new_row >= len(self.map) or new_col < 0 or (new_col >= len(self.map[0])) or (self.map[new_row][new_col] == '#'):
         return False
     box_index = -1
     for i, box in enumerate(self.boxes):

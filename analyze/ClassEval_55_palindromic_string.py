@@ -9,30 +9,27 @@ def palindromic_string(self):
         """
     if not self.input_string:
         return ''
-    transformed = '|' + '|'.join(self.input_string) + '|'
+    transformed = '|'.join(self.input_string)
+    transformed = '|' + transformed + '|'
     n = len(transformed)
-    p = [0] * n
+    palindrome_lengths = [0] * n
     center = 0
     right = 0
     for i in range(n):
         mirror = 2 * center - i
         if i < right:
-            p[i] = min(right - i, p[mirror])
-        left_idx = i - (1 + p[i])
-        right_idx = i + (1 + p[i])
-        while left_idx >= 0 and right_idx < n and (transformed[left_idx] == transformed[right_idx]):
-            p[i] += 1
-            left_idx -= 1
-            right_idx += 1
-        if i + p[i] > right:
+            palindrome_lengths[i] = min(right - i, palindrome_lengths[mirror])
+        while i - palindrome_lengths[i] - 1 >= 0 and i + palindrome_lengths[i] + 1 < n and (transformed[i - palindrome_lengths[i] - 1] == transformed[i + palindrome_lengths[i] + 1]):
+            palindrome_lengths[i] += 1
+        if i + palindrome_lengths[i] > right:
             center = i
-            right = i + p[i]
+            right = i + palindrome_lengths[i]
     max_len = 0
-    center_idx = 0
+    center_index = 0
     for i in range(n):
-        if p[i] > max_len:
-            max_len = p[i]
-            center_idx = i
-    start = (center_idx - max_len) // 2
+        if palindrome_lengths[i] > max_len:
+            max_len = palindrome_lengths[i]
+            center_index = i
+    start = (center_index - max_len) // 2
     end = start + max_len
     return self.input_string[start:end]

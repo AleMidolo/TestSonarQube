@@ -22,7 +22,7 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     if not isinstance(data, (list, tuple)):
-        raise Exception('Input must be a tuple or a list of tuples')
+        raise Exception('the input must be a tuple([0,...,1,...],int) or a list of tuples')
     if len(data) == 0:
         return (0.0, [0.0])
     if isinstance(data, tuple):

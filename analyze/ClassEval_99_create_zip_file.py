@@ -16,7 +16,8 @@ def create_zip_file(self, files, output_file_name):
                 if os.path.exists(file):
                     zipf.write(file, os.path.basename(file))
                 else:
-                    return False
+                    continue
         return True
     except Exception as e:
+        print(f'Error creating zip file: {e}')
         return False

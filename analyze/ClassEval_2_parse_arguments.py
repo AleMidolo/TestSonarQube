@@ -17,7 +17,7 @@ def parse_arguments(self, command_string):
         part = parts[i]
         if part.startswith('--') and '=' in part:
             arg_name = part[2:].split('=')[0]
-            arg_value = part.split('=')[1]
+            arg_value = part.split('=', 1)[1]
             self.arguments[arg_name] = self._convert_type(arg_name, arg_value)
             i += 1
         elif part.startswith('--'):

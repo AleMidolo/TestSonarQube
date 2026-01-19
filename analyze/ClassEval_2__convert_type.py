@@ -8,24 +8,24 @@ def _convert_type(self, arg, value):
         >>> parser._convert_type('arg1', '21')
         21
         """
-    if arg not in self.types:
-        return value
-    arg_type = self.types[arg]
-    try:
-        if arg_type == int:
-            return int(value)
-        elif arg_type == float:
-            return float(value)
-        elif arg_type == bool:
-            if value.lower() in ('true', '1', 'yes'):
-                return True
-            elif value.lower() in ('false', '0', 'no'):
-                return False
+    if arg in self.types:
+        try:
+            arg_type = self.types[arg]
+            if arg_type == int:
+                return int(value)
+            elif arg_type == float:
+                return float(value)
+            elif arg_type == bool:
+                if value.lower() in ['true', '1', 'yes']:
+                    return True
+                elif value.lower() in ['false', '0', 'no']:
+                    return False
+                else:
+                    return bool(value)
+            elif arg_type == str:
+                return str(value)
             else:
-                return bool(value)
-        elif arg_type == str:
-            return str(value)
-        else:
-            return arg_type(value)
-    except (ValueError, TypeError):
-        return value
+                return arg_type(value)
+        except (ValueError, TypeError):
+            return value
+    return value
