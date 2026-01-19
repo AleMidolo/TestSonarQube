@@ -9,4 +9,12 @@ def pdf(data, mu, sigma):
         >>> DataStatistics4.pdf([1, 2, 3], 1, 1)
         [0.3989422804014327, 0.24197072451914337, 0.05399096651318806]
         """
-    return [1 / (sigma * math.sqrt(2 * math.pi)) * math.exp(-0.5 * ((x - mu) / sigma) ** 2) for x in data]
+    if sigma <= 0:
+        raise ValueError('Sigma must be positive')
+    pdf_values = []
+    constant = 1 / (sigma * math.sqrt(2 * math.pi))
+    for x in data:
+        exponent = -(x - mu) ** 2 / (2 * sigma ** 2)
+        pdf_value = constant * math.exp(exponent)
+        pdf_values.append(pdf_value)
+    return pdf_values

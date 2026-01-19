@@ -10,6 +10,7 @@ def evaluate_expression(self, expression):
         True
         """
     try:
-        return eval(expression) == 24
-    except Exception:
+        result = eval(expression)
+        return abs(result - 24) < 1e-10
+    except:
         return False

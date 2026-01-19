@@ -9,6 +9,7 @@ def post_job(self, job_title, company, requirements):
         >>> jobMarketplace.post_job("软件工程师", "ABC 公司", ['要求1', '要求2'])
         >>> jobMarketplace.job_listings
         [{'job_title': '软件工程师', 'company': 'ABC 公司', 'requirements': ['要求1', '要求2']}]
+
         """
     job = {'job_title': job_title, 'company': company, 'requirements': requirements}
     self.job_listings.append(job)

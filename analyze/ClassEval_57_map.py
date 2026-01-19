@@ -21,10 +21,17 @@ def map(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
+        precision_at_k = []
+        relevant_count = 0
+        for k in range(len(sub_list)):
+            if sub_list[k] == 1:
+                relevant_count += 1
+                precision_at_k.append(relevant_count / (k + 1))
+        if len(precision_at_k) == 0:
+            ap = 0.0
         else:
-            precision = np.cumsum(sub_list) / np.arange(1, len(sub_list) + 1)
-            ap = np.sum(precision * sub_list) / total_num
-            return (ap, [ap])
+            ap = np.mean(precision_at_k)
+        return (ap, [ap])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
@@ -32,7 +39,15 @@ def map(data):
             if total_num == 0:
                 ap = 0.0
             else:
-                precision = np.cumsum(sub_list) / np.arange(1, len(sub_list) + 1)
-                ap = np.sum(precision * sub_list) / total_num
+                precision_at_k = []
+                relevant_count = 0
+                for k in range(len(sub_list)):
+                    if sub_list[k] == 1:
+                        relevant_count += 1
+                        precision_at_k.append(relevant_count / (k + 1))
+                if len(precision_at_k) == 0:
+                    ap = 0.0
+                else:
+                    ap = np.mean(precision_at_k)
             separate_result.append(ap)
         return (np.mean(separate_result), separate_result)

@@ -1,8 +1,8 @@
 def _validate_name(self, name: str) -> str:
     """
-        Validate the name and return it. If name is empty or exceeds 33 characters, set to None.
-        :param name: str, the name to validate
-        :return: str, the validated name or None if invalid
+        验证名称并返回。如果名称为空或超过33个字符，则设置为None。
+        :param name: str，要验证的名称
+        :return: str，验证后的名称，如果无效则返回None
         """
     if not name or len(name) > 33:
         return None

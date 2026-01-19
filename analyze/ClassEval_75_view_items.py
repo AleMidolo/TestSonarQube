@@ -7,4 +7,4 @@ def view_items(self) -> dict:
         >>> shoppingcart.view_items()
         {"apple":{"price":1, "quantity":2}}
         """
-    return self.items
+    return self.items.copy()

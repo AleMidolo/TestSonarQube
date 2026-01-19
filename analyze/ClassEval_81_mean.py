@@ -9,4 +9,6 @@ def mean(data):
         2.0
 
         """
+    if not data:
+        return None
     return sum(data) / len(data)

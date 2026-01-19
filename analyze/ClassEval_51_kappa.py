@@ -8,9 +8,13 @@ def kappa(testData, k):
         >>> KappaCalculator.kappa([[2, 1, 1], [1, 2, 1], [1, 1, 2]], 3)
         0.25
         """
-    n = len(testData)
-    total = sum((sum(row) for row in testData))
-    p0 = sum(((row.count(1) / total) ** 2 for row in testData))
-    pe = sum(((sum((testData[i][j] for i in range(n))) / total) ** 2 for j in range(k)))
-    kappa_value = (p0 - pe) / (1 - pe) if 1 - pe != 0 else 0
-    return kappa_value
+    data = np.array(testData, dtype=float)
+    total = np.sum(data)
+    Po = np.trace(data) / total
+    row_sums = np.sum(data, axis=1)
+    col_sums = np.sum(data, axis=0)
+    Pe = np.sum(row_sums * col_sums) / total ** 2
+    if Pe == 1:
+        return 1.0 if Po == 1 else 0.0
+    kappa_value = (Po - Pe) / (1 - Pe)
+    return float(kappa_value)

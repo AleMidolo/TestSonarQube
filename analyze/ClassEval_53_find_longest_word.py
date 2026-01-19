@@ -12,9 +12,12 @@ def find_longest_word(self, sentence):
         """
     if not self.word_list:
         return ''
-    words = re.findall('\\b\\w+\\b', sentence)
-    longest = ''
+    translator = str.maketrans('', '', string.punctuation)
+    cleaned_sentence = sentence.translate(translator)
+    words = cleaned_sentence.split()
+    longest_word = ''
     for word in words:
-        if word in self.word_list and len(word) > len(longest):
-            longest = word
-    return longest
+        if word in self.word_list:
+            if len(word) > len(longest_word):
+                longest_word = word
+    return longest_word

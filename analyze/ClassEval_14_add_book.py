@@ -8,5 +8,5 @@ def add_book(self, title, author):
         >>> book_db.create_table()
         >>> book_db.add_book('book1', 'author')
         """
-    self.cursor.execute('\n                INSERT INTO books (title, author, available) VALUES (?, ?, 1)\n            ', (title, author))
+    self.cursor.execute('\n            INSERT INTO books (title, author, available) \n            VALUES (?, ?, 1)\n        ', (title, author))
     self.connection.commit()

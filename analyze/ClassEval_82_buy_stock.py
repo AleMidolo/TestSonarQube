@@ -9,10 +9,15 @@ def buy_stock(self, stock):
         True
         >>> tracker.portfolio
         [{'name': 'AAPL', 'price': 150.0, 'quantity': 10}]
+
         """
     total_cost = stock['price'] * stock['quantity']
     if total_cost > self.cash_balance:
         return False
     self.cash_balance -= total_cost
-    self.add_stock(stock)
+    for pf in self.portfolio:
+        if pf['name'] == stock['name']:
+            pf['quantity'] += stock['quantity']
+            return True
+    self.portfolio.append(stock)
     return True

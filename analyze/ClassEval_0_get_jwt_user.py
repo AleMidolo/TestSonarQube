@@ -7,9 +7,13 @@ def get_jwt_user(self, request):
         >>> filter.get_jwt_user({'headers': {'Authorization': {'user': {'name': 'user1'}, 'jwt': 'user1'+str(datetime.date.today())}}})
         {'user': {'name': 'user1'}}
         """
-    auth_header = request.get('headers', {}).get('Authorization', {})
-    jwt = auth_header.get('jwt')
-    if jwt:
+    try:
+        auth_header = request.get('headers', {}).get('Authorization', {})
+        jwt_token = auth_header.get('jwt', '')
         user_info = auth_header.get('user', {})
-        return {'user': user_info}
-    return None
+        if str(datetime.date.today()) in jwt_token:
+            return {'user': user_info}
+        else:
+            return None
+    except:
+        return None
