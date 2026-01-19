@@ -19,7 +19,7 @@ def text2int(self, textnum):
         else:
             for ending, replacement in self.ordinal_endings:
                 if word.endswith(ending):
-                    word = '%s%s' % (word[:-len(ending)], replacement)
+                    word = word[:-len(ending)] + replacement
                     break
             if word not in self.numwords:
                 continue

@@ -7,16 +7,25 @@ def generate_mine_sweeper_map(self):
         [['X', 1, 0], [1, 1, 0], [0, 0, 0]]
 
         """
-    arr = [[0 for row in range(self.n)] for column in range(self.n)]
+    mine_map = [[0 for _ in range(self.n)] for _ in range(self.n)]
     mines_placed = 0
     while mines_placed < self.k:
         x = random.randint(0, self.n - 1)
         y = random.randint(0, self.n - 1)
-        if arr[x][y] != 'X':
-            arr[x][y] = 'X'
+        if mine_map[x][y] != 'X':
+            mine_map[x][y] = 'X'
             mines_placed += 1
-            for i in range(max(0, x - 1), min(self.n, x + 2)):
-                for j in range(max(0, y - 1), min(self.n, y + 2)):
-                    if arr[i][j] != 'X':
-                        arr[i][j] += 1
-    return arr
+    for i in range(self.n):
+        for j in range(self.n):
+            if mine_map[i][j] != 'X':
+                mine_count = 0
+                for dx in [-1, 0, 1]:
+                    for dy in [-1, 0, 1]:
+                        if dx == 0 and dy == 0:
+                            continue
+                        ni, nj = (i + dx, j + dy)
+                        if 0 <= ni < self.n and 0 <= nj < self.n:
+                            if mine_map[ni][nj] == 'X':
+                                mine_count += 1
+                mine_map[i][j] = mine_count
+    return mine_map

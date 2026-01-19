@@ -17,7 +17,7 @@ def calculate(self, expression):
     i = 0
     n = len(expression)
     while i < n:
-        if expression[i].isdigit() or (expression[i] == '.' and i + 1 < n and expression[i + 1].isdigit()):
+        if expression[i].isdigit() or expression[i] == '.':
             j = i
             while j < n and (expression[j].isdigit() or expression[j] == '.'):
                 j += 1
@@ -28,24 +28,26 @@ def calculate(self, expression):
             operand_stack.append(num)
             i = j
         elif expression[i] in self.operators:
-            if expression[i] == '-' and (i == 0 or expression[i - 1] in self.operators or expression[i - 1] == '('):
-                j = i + 1
-                if j < n and expression[j].isdigit():
+            if i == 0 or expression[i - 1] in self.operators or expression[i - 1] == '(':
+                if expression[i] == '-':
+                    j = i + 1
                     while j < n and (expression[j].isdigit() or expression[j] == '.'):
                         j += 1
                     try:
-                        num = -float(expression[i + 1:j])
+                        num = float(expression[i + 1:j])
                     except ValueError:
                         return None
-                    operand_stack.append(num)
+                    operand_stack.append(-num)
                     i = j
                     continue
+                else:
+                    return None
             while operator_stack and operator_stack[-1] != '(' and (self.precedence(operator_stack[-1]) >= self.precedence(expression[i])):
                 operand_stack, operator_stack = self.apply_operator(operand_stack, operator_stack)
             operator_stack.append(expression[i])
             i += 1
         elif expression[i] == '(':
-            operator_stack.append(expression[i])
+            operator_stack.append('(')
             i += 1
         elif expression[i] == ')':
             while operator_stack and operator_stack[-1] != '(':

@@ -10,9 +10,6 @@ def clear_inbox(self, size):
         [{'size': 15}]
 
         """
-    if not self.inbox:
-        return
-    current_size = self.get_occupied_size()
-    while self.inbox and current_size + size > self.capacity:
-        removed_email = self.inbox.pop(0)
-        current_size -= removed_email['size']
+    self.inbox.sort(key=lambda x: x.get('time', ''))
+    while self.is_full_with_one_more_email(size) and len(self.inbox) > 0:
+        self.inbox.pop(0)

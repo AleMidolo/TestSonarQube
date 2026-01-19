@@ -19,15 +19,17 @@ def process_csv_data(self, N, save_file_name):
         title, data = self.read_csv(save_file_name)
         if N < 0 or N >= len(title):
             return 0
-        new_title = [title[N]]
         new_data = []
         for row in data:
             if N < len(row):
                 new_data.append([row[N].upper()])
             else:
                 new_data.append([''])
-        output_file_name = save_file_name.replace('.csv', '_process.csv')
+        base_name = save_file_name.rsplit('.', 1)[0]
+        extension = save_file_name.rsplit('.', 1)[1] if '.' in save_file_name else 'csv'
+        output_file_name = f'{base_name}_process.{extension}'
+        new_title = [title[N]]
         output_data = [new_title] + new_data
         return self.write_csv(output_data, output_file_name)
-    except:
+    except Exception as e:
         return 0

@@ -24,7 +24,8 @@ def format_line_html_text(self, html_text):
     code_elements = soup.find_all(['pre', 'blockquote'])
     for element in code_elements:
         element.replace_with(self.CODE_MARK)
-    text = soup.get_text(separator='\n', strip=False)
-    text = re.sub('\\n\\s*\\n', '\n', text)
-    text = text.strip()
+    text = soup.get_text()
+    text = re.sub('\\s+', ' ', text).strip()
+    text = re.sub('(-CODE-\\s*)+', self.CODE_MARK + '\n', text)
+    text = self.__format_line_feed(text)
     return text
