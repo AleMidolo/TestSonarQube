@@ -19,5 +19,5 @@ def search(self, keyword):
             results.append(item)
     total_results = len(results)
     total_pages = (total_results + self.page_size - 1) // self.page_size if total_results > 0 else 0
-    search_info = {'keyword': keyword, 'total_results': total_results, 'total_pages': total_pages, 'results': results}
+    search_info = {'keyword': keyword_str, 'total_results': total_results, 'total_pages': total_pages, 'results': results}
     return search_info

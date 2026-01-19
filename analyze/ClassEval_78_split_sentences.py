@@ -7,23 +7,15 @@ def split_sentences(self, sentences_string):
         >>> ss.split_sentences("aaa aaaa. bb bbbb bbb? cccc cccc. dd ddd?")
         ['aaa aaaa.', 'bb bbbb bbb?', 'cccc cccc.', 'dd ddd?']
         """
-    if not sentences_string:
-        return []
-    pattern = '(?<!\\bMr)(?<!\\bMrs)(?<!\\bDr)(?<!\\bMs)(?<!\\bProf)(?<!\\bRev)(?<!\\bSt)\\.|\\?'
-    sentences = []
-    current_sentence = ''
-    i = 0
-    while i < len(sentences_string):
-        char = sentences_string[i]
-        current_sentence += char
-        if char in ['.', '?']:
-            if i == len(sentences_string) - 1 or sentences_string[i + 1] == ' ':
-                if not self._is_abbreviation(current_sentence):
-                    sentences.append(current_sentence.strip())
-                    current_sentence = ''
-                    if i + 1 < len(sentences_string) and sentences_string[i + 1] == ' ':
-                        i += 1
-        i += 1
-    if current_sentence.strip():
-        sentences.append(current_sentence.strip())
-    return sentences
+    pattern = '(?<!Mr)(?<!Mrs)(?<!Ms)(?<!Dr)\\.\\s+|\\?\\s+'
+    sentences = re.split(pattern, sentences_string)
+    result = []
+    matches = list(re.finditer(pattern, sentences_string))
+    for i, sentence in enumerate(sentences):
+        if i < len(matches):
+            punct = matches[i].group().strip()
+            result.append(sentence + punct)
+        elif sentence.strip():
+            result.append(sentence.strip())
+    result = [s.strip() for s in result if s.strip()]
+    return result

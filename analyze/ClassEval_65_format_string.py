@@ -17,37 +17,34 @@ def format_string(self, x):
     integer_part = integer_part.lstrip('0')
     if integer_part == '':
         integer_part = '0'
-    result_parts = []
+    integer_words = []
     if integer_part == '0':
-        result_parts.append('ZERO')
+        integer_words.append('ZERO')
     else:
         groups = []
         temp = integer_part
         while len(temp) > 3:
             groups.insert(0, temp[-3:])
             temp = temp[:-3]
-        if temp:
-            groups.insert(0, temp)
+        groups.insert(0, temp)
         for i, group in enumerate(groups):
             group_words = self.trans_three(group.zfill(3))
-            if group_words:
+            if group_words.strip():
                 magnitude = len(groups) - i - 1
-                if magnitude > 0 and group_words != '':
-                    group_words += ' ' + self.parse_more(magnitude)
-                result_parts.append(group_words)
-    result = ' '.join(result_parts)
-    if decimal_part:
-        decimal_part = decimal_part.rstrip('0')
-        if decimal_part:
-            decimal_words = []
-            for digit in decimal_part:
-                if digit != '0':
-                    decimal_words.append(self.NUMBER[int(digit)])
+                if magnitude > 0 and self.parse_more(magnitude):
+                    integer_words.append(group_words + ' ' + self.parse_more(magnitude))
                 else:
-                    decimal_words.append('ZERO')
-            result += ' AND ' + ' '.join(decimal_words) + ' CENTS'
+                    integer_words.append(group_words)
+    decimal_words = []
+    if decimal_part:
+        decimal_part = decimal_part[:2]
+        if decimal_part:
+            decimal_words.append('AND CENTS ' + self.trans_two(decimal_part.zfill(2)))
+    result_parts = []
     if is_negative:
-        result = 'MINUS ' + result
-    if result:
-        result += ' ONLY'
-    return result
+        result_parts.append('MINUS')
+    result_parts.extend(integer_words)
+    result_parts.extend(decimal_words)
+    if not decimal_part:
+        result_parts.append('ONLY')
+    return ' '.join(filter(None, result_parts))

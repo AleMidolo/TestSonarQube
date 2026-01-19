@@ -17,35 +17,28 @@ def has_path(self, pos1, pos2):
     visited = set()
     start_x, start_y = pos1
     end_x, end_y = pos2
-    for dx, dy in directions:
-        nx, ny = (start_x + dx, start_y + dy)
-        if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-            if (nx, ny) == (end_x, end_y):
-                return True
-            if self.board[nx][ny] == ' ':
-                queue.append((nx, ny, 0, (dx, dy)))
-                visited.add((nx, ny, 0, (dx, dy)))
+    for i, (dx, dy) in enumerate(directions):
+        queue.append((start_x, start_y, 0, i))
+        visited.add((start_x, start_y, 0, i))
+    queue.append((start_x, start_y, 0, -1))
+    visited.add((start_x, start_y, 0, -1))
     while queue:
         x, y, turns, direction = queue.popleft()
         if (x, y) == (end_x, end_y):
             return True
-        dx, dy = direction
-        nx, ny = (x + dx, y + dy)
-        if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-            if (nx, ny) == (end_x, end_y):
-                return True
-            if self.board[nx][ny] == ' ' and (nx, ny, turns, direction) not in visited:
-                queue.append((nx, ny, turns, direction))
-                visited.add((nx, ny, turns, direction))
-        if turns < 2:
-            for new_dx, new_dy in directions:
-                if (new_dx, new_dy) == direction or (new_dx, new_dy) == (-dx, -dy):
-                    continue
-                nx, ny = (x + new_dx, y + new_dy)
-                if 0 <= nx < self.BOARD_SIZE[0] and 0 <= ny < self.BOARD_SIZE[1]:
-                    if (nx, ny) == (end_x, end_y):
-                        return True
-                    if self.board[nx][ny] == ' ' and (nx, ny, turns + 1, (new_dx, new_dy)) not in visited:
-                        queue.append((nx, ny, turns + 1, (new_dx, new_dy)))
-                        visited.add((nx, ny, turns + 1, (new_dx, new_dy)))
+        for i, (dx, dy) in enumerate(directions):
+            new_x, new_y = (x + dx, y + dy)
+            if not (0 <= new_x < self.BOARD_SIZE[0] and 0 <= new_y < self.BOARD_SIZE[1]):
+                continue
+            if (new_x, new_y) != (end_x, end_y) and self.board[new_x][new_y] != ' ':
+                continue
+            new_turns = turns
+            if direction != -1 and i != direction:
+                new_turns += 1
+            if new_turns > 2:
+                continue
+            state = (new_x, new_y, new_turns, i)
+            if state not in visited:
+                visited.add(state)
+                queue.append(state)
     return False

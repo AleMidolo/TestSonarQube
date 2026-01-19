@@ -15,5 +15,5 @@ def display_items(self):
     for item_name, details in self.inventory.items():
         price = details['price']
         quantity = details['quantity']
-        items_display.append(f'{item_name} - ${price:.2f} [{quantity}]')
+        items_display.append(f'{item_name} - ${price} [{quantity}]')
     return '\n'.join(items_display)

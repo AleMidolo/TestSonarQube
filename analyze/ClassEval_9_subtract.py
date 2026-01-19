@@ -15,10 +15,10 @@ def subtract(num1, num2):
         negative = True
     elif len(num1) == len(num2):
         for i in range(len(num1)):
-            if num1[i] < num2[i]:
+            if int(num1[i]) < int(num2[i]):
                 negative = True
                 break
-            elif num1[i] > num2[i]:
+            elif int(num1[i]) > int(num2[i]):
                 break
     if negative:
         num1, num2 = (num2, num1)
