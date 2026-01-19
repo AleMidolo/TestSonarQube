@@ -1,37 +1,16 @@
 def apply_operator(self, operand_stack, operator_stack):
     """
-    使用操作符栈顶部的操作符对操作数栈顶部的两个数字执行操作，并将结果存储在操作数栈顶部
-    :param operand_stack:list
-    :param operator_stack:list
-    :return: 更新后的 operand_stack 和 operator_stack
-    >>> calculator = Calculator()
-    >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
-    ([1, -1], ['-'])
-    """
-    if len(operand_stack) < 2 or len(operator_stack) == 0:
-        return operand_stack, operator_stack
-    
-    # 从操作符栈弹出顶部操作符
+        Use the operator at the top of the operator stack to perform the operation on the two numbers at the top of the operator stack, and store the results at the top of the operator stack
+        :param operand_stack:list
+        :param operator_stack:list
+        :return: the updated operand_stack and operator_stack
+        >>> calculator = Calculator()
+        >>> calculator.apply_operator([1, 2, 3], ['+', '-'])
+        ([1, -1], ['-'])
+        """
     operator = operator_stack.pop()
-    
-    # 从操作数栈弹出两个操作数（注意顺序：后弹出的是左操作数）
     right_operand = operand_stack.pop()
     left_operand = operand_stack.pop()
-    
-    # 根据操作符执行相应的运算
-    if operator == '+':
-        result = left_operand + right_operand
-    elif operator == '-':
-        result = left_operand - right_operand
-    elif operator == '*':
-        result = left_operand * right_operand
-    elif operator == '/':
-        result = left_operand / right_operand
-    else:
-        # 如果遇到未知操作符，可以选择抛出异常或返回原栈
-        result = 0
-    
-    # 将结果压入操作数栈
+    result = self.operators[operator](left_operand, right_operand)
     operand_stack.append(result)
-    
-    return operand_stack, operator_stack
+    return (operand_stack, operator_stack)

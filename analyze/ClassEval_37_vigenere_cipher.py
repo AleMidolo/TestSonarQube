@@ -1,46 +1,24 @@
 def vigenere_cipher(self, plaintext):
     """
-    使用维吉尼亚密码加密明文。
-    :param plaintext: 要加密的明文，str。
-    :return: 密文，str。
-    >>> e = EncryptionUtils("key")
-    >>> e.vigenere_cipher("abc")
-    'kfa'
-
-    """
-    if not plaintext:
-        return ""
-    
-    key = self.key if hasattr(self, 'key') else ""
-    if not key:
-        return plaintext
-    
-    ciphertext = []
-    key_index = 0
-    
-    for char in plaintext:
+        Encrypts the plaintext using the Vigenere cipher.
+        :param plaintext: The plaintext to encrypt, str.
+        :return: The ciphertext, str.
+        >>> e = EncryptionUtils("key")
+        >>> e.vigenere_cipher("abc")
+        'kfa'
+        """
+    ciphertext = ''
+    key_length = len(self.key)
+    for i, char in enumerate(plaintext):
         if char.isalpha():
-            # Determine if uppercase or lowercase
-            is_upper = char.isupper()
-            char = char.lower()
-            
-            # Get the key character (循环使用key)
-            key_char = key[key_index % len(key)].lower()
-            
-            # Calculate shift amount (a=0, b=1, ..., z=25)
-            shift = ord(key_char) - ord('a')
-            
-            # Encrypt the character
-            encrypted_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))
-            
-            # Restore case
-            if is_upper:
-                encrypted_char = encrypted_char.upper()
-            
-            ciphertext.append(encrypted_char)
-            key_index += 1
+            key_char = self.key[i % key_length]
+            shift = ord(key_char.lower()) - ord('a')
+            if char.isupper():
+                ascii_offset = 65
+            else:
+                ascii_offset = 97
+            shifted_char = chr((ord(char) - ascii_offset + shift) % 26 + ascii_offset)
+            ciphertext += shifted_char
         else:
-            # Non-alphabetic characters are not encrypted
-            ciphertext.append(char)
-    
-    return ''.join(ciphertext)
+            ciphertext += char
+    return ciphertext

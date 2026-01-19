@@ -1,134 +1,25 @@
 def is_valid_move(self, pos1, pos2):
     """
-    检查两个图标的移动是否有效（即位置在游戏棋盘范围内，两个位置不相同，两个位置有相同的图标，并且两个位置之间有有效路径）
-    :param pos1: 第一个图标的位置元组(x, y)
-    :param pos2: 第二个图标的位置元组(x, y)
-    :return: True 或 False，表示两个图标的移动是否有效
-    """
-    # 检查位置是否在棋盘范围内
-    if not self._is_in_bounds(pos1) or not self._is_in_bounds(pos2):
-        return False
-    
-    # 检查两个位置是否相同
+        check if the move of two icons is valid (i.e. positions are within the game board range, the two positions are not the same, the two positions have the same icon, and there is a valid path between the two positions)
+        :param pos1: position tuple(x, y) of the first icon
+        :param pos2: position tuple(x, y) of the second icon
+        :return:True or False ,representing whether the move of two icons is valid
+        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
+        mc.board = [['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a']]
+        >>> mc.is_valid_move((0, 0), (1, 0))
+        True
+        """
     if pos1 == pos2:
         return False
-    
-    # 检查两个位置的图标是否相同
     x1, y1 = pos1
     x2, y2 = pos2
-    if self.board[y1][x1] != self.board[y2][x2]:
+    if not (0 <= x1 < self.BOARD_SIZE[0] and 0 <= y1 < self.BOARD_SIZE[1]):
         return False
-    
-    # 检查两个位置的图标是否都不为空
-    if self.board[y1][x1] is None or self.board[y2][x2] is None:
+    if not (0 <= x2 < self.BOARD_SIZE[0] and 0 <= y2 < self.BOARD_SIZE[1]):
         return False
-    
-    # 检查是否存在有效路径
-    return self._has_valid_path(pos1, pos2)
-
-def _is_in_bounds(self, pos):
-    """检查位置是否在棋盘范围内"""
-    x, y = pos
-    return 0 <= y < len(self.board) and 0 <= x < len(self.board[0])
-
-def _has_valid_path(self, pos1, pos2):
-    """检查两个位置之间是否有有效路径（最多转折2次）"""
-    # 尝试0次转折（直线连接）
-    if self._can_connect_straight(pos1, pos2):
-        return True
-    
-    # 尝试1次转折
-    if self._can_connect_one_turn(pos1, pos2):
-        return True
-    
-    # 尝试2次转折
-    if self._can_connect_two_turns(pos1, pos2):
-        return True
-    
-    return False
-
-def _can_connect_straight(self, pos1, pos2):
-    """检查是否可以直线连接"""
-    x1, y1 = pos1
-    x2, y2 = pos2
-    
-    # 水平直线
-    if y1 == y2:
-        min_x, max_x = min(x1, x2), max(x1, x2)
-        for x in range(min_x + 1, max_x):
-            if self.board[y1][x] is not None:
-                return False
-        return True
-    
-    # 垂直直线
-    if x1 == x2:
-        min_y, max_y = min(y1, y2), max(y1, y2)
-        for y in range(min_y + 1, max_y):
-            if self.board[y][x1] is not None:
-                return False
-        return True
-    
-    return False
-
-def _can_connect_one_turn(self, pos1, pos2):
-    """检查是否可以通过一次转折连接"""
-    x1, y1 = pos1
-    x2, y2 = pos2
-    
-    # 尝试转折点 (x1, y2)
-    corner1 = (x1, y2)
-    if (corner1 != pos1 and corner1 != pos2 and 
-        (self.board[y2][x1] is None or corner1 == pos2) and
-        self._can_connect_straight(pos1, corner1) and 
-        self._can_connect_straight(corner1, pos2)):
-        return True
-    
-    # 尝试转折点 (x2, y1)
-    corner2 = (x2, y1)
-    if (corner2 != pos1 and corner2 != pos2 and
-        (self.board[y1][x2] is None or corner2 == pos2) and
-        self._can_connect_straight(pos1, corner2) and 
-        self._can_connect_straight(corner2, pos2)):
-        return True
-    
-    return False
-
-def _can_connect_two_turns(self, pos1, pos2):
-    """检查是否可以通过两次转折连接"""
-    x1, y1 = pos1
-    x2, y2 = pos2
-    
-    # 尝试水平方向延伸
-    for x in range(len(self.board[0])):
-        if x == x1:
-            continue
-        mid1 = (x, y1)
-        mid2 = (x, y2)
-        if (self._is_valid_intermediate(mid1, pos1, pos2) and
-            self._is_valid_intermediate(mid2, pos1, pos2) and
-            self._can_connect_straight(pos1, mid1) and
-            self._can_connect_straight(mid1, mid2) and
-            self._can_connect_straight(mid2, pos2)):
-            return True
-    
-    # 尝试垂直方向延伸
-    for y in range(len(self.board)):
-        if y == y1:
-            continue
-        mid1 = (x1, y)
-        mid2 = (x2, y)
-        if (self._is_valid_intermediate(mid1, pos1, pos2) and
-            self._is_valid_intermediate(mid2, pos1, pos2) and
-            self._can_connect_straight(pos1, mid1) and
-            self._can_connect_straight(mid1, mid2) and
-            self._can_connect_straight(mid2, pos2)):
-            return True
-    
-    return False
-
-def _is_valid_intermediate(self, pos, pos1, pos2):
-    """检查中间点是否有效"""
-    if pos == pos1 or pos == pos2:
-        return True
-    x, y = pos
-    return self._is_in_bounds(pos) and self.board[y][x] is None
+    if self.board[x1][y1] != self.board[x2][y2]:
+        return False
+    return self.has_path(pos1, pos2)

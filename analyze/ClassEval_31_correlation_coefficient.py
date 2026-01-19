@@ -1,27 +1,22 @@
 def correlation_coefficient(data1, data2):
     """
-    计算两组数据的相关系数。
-    :param data1: 第一组数据，列表。
-    :param data2: 第二组数据，列表。
-    :return: 相关系数，浮点数。
-    >>> DataStatistics4.correlation_coefficient([1, 2, 3], [4, 5, 6])
-    0.9999999999999998
+        Calculate the correlation coefficient of two sets of data.
+        :param data1: The first set of data,list.
+        :param data2: The second set of data,list.
+        :return: The correlation coefficient, float.
+        >>> correlation_coefficient([1, 2, 3], [4, 5, 6])
+        0.9999999999999998
 
-    """
+        """
+    if len(data1) != len(data2):
+        raise ValueError('The lengths of data1 and data2 must be the same.')
     n = len(data1)
-    
-    # 计算均值
     mean1 = sum(data1) / n
     mean2 = sum(data2) / n
-    
-    # 计算协方差的分子部分
-    numerator = sum((data1[i] - mean1) * (data2[i] - mean2) for i in range(n))
-    
-    # 计算标准差的分母部分
-    std1 = sum((x - mean1) ** 2 for x in data1) ** 0.5
-    std2 = sum((x - mean2) ** 2 for x in data2) ** 0.5
-    
-    # 计算相关系数
-    correlation = numerator / (std1 * std2)
-    
+    numerator = sum(((data1[i] - mean1) * (data2[i] - mean2) for i in range(n)))
+    denominator1 = math.sqrt(sum(((data1[i] - mean1) ** 2 for i in range(n))))
+    denominator2 = math.sqrt(sum(((data2[i] - mean2) ** 2 for i in range(n))))
+    if denominator1 == 0 or denominator2 == 0:
+        return 0.0
+    correlation = numerator / (denominator1 * denominator2)
     return correlation

@@ -1,26 +1,17 @@
 @staticmethod
 def mode(data):
     """
-    计算给定列表的众数。
-    :param data: 给定的列表，list。
-    :return: 给定列表的众数，list。
-    >>> statistics3 = Statistics3()
-    >>> statistics3.mode([1, 2, 3, 3])
-    [3]
+        calculates the mode of the given list.
+        :param data: the given list, list.
+        :return: the mode of the given list, list.
+        >>> statistics3 = Statistics3()
+        >>> statistics3.mode([1, 2, 3, 3])
+        [3]
 
-    """
+        """
+    from collections import Counter
     if not data:
-        return []
-    
-    # Count frequency of each element
-    frequency = {}
-    for item in data:
-        frequency[item] = frequency.get(item, 0) + 1
-    
-    # Find the maximum frequency
-    max_freq = max(frequency.values())
-    
-    # Find all elements with maximum frequency
-    modes = [key for key, value in frequency.items() if value == max_freq]
-    
-    return modes
+        return None
+    count = Counter(data)
+    max_count = max(count.values())
+    return [x for x, freq in count.items() if freq == max_count]

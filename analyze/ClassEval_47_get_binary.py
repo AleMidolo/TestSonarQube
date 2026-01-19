@@ -1,39 +1,12 @@
 def get_binary(self):
     """
-    如果IP地址有效，返回IP地址的二进制形式；否则，返回''
-    :return: 字符串
-    >>> ipaddress = IPAddress("10.10.10.10")
-    >>> ipaddress.get_binary()
-    "00001010.00001010.00001010.00001010"
-    """
-    # Assuming self has an ip_address attribute that stores the IP string
-    # and a method to validate the IP address
-    
-    # Check if IP address is valid
-    if not hasattr(self, 'ip_address') or not self.ip_address:
-        return ''
-    
-    try:
-        # Split the IP address into octets
-        octets = self.ip_address.split('.')
-        
-        # Validate IP address format
-        if len(octets) != 4:
-            return ''
-        
-        binary_octets = []
-        for octet in octets:
-            # Convert to integer and validate range
-            num = int(octet)
-            if num < 0 or num > 255:
-                return ''
-            
-            # Convert to 8-bit binary (without '0b' prefix)
-            binary = format(num, '08b')
-            binary_octets.append(binary)
-        
-        # Join with dots
-        return '.'.join(binary_octets)
-    
-    except (ValueError, AttributeError):
+        If the IP address is valid, return the binary form of the IP address; otherwise, return ''
+        :return: string
+        >>> ipaddress = IPAddress("10.10.10.10")
+        >>> ipaddress.get_binary()
+        "00001010.00001010.00001010.00001010"
+        """
+    if self.is_valid():
+        return '.'.join((format(int(octet), '08b') for octet in self.get_octets()))
+    else:
         return ''

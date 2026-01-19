@@ -1,43 +1,23 @@
+@staticmethod
 def add(num1, num2):
     """
-    把两个大数字相加。
-    :param num1: 要相加的第一个数字，字符串。
-    :param num2: 要相加的第二个数字，字符串。
-    :return: 两个数字的和，字符串。
-    >>> bigNum = BigNumCalculator()
-    >>> bigNum.add("12345678901234567890", "98765432109876543210")
-    '111111111011111111100'
-
-    """
-    # 处理空字符串和负号
-    if not num1:
-        return num2
-    if not num2:
-        return num1
-    
-    # 反转字符串，从低位开始相加
-    num1 = num1[::-1]
-    num2 = num2[::-1]
-    
-    # 确保num1是较长的数
-    if len(num1) < len(num2):
-        num1, num2 = num2, num1
-    
-    result = []
+        Adds two big numbers.
+        :param num1: The first number to add,str.
+        :param num2: The second number to add,str.
+        :return: The sum of the two numbers,str.
+        >>> bigNum = BigNumCalculator()
+        >>> bigNum.add("12345678901234567890", "98765432109876543210")
+        '111111111011111111100'
+        """
+    max_length = max(len(num1), len(num2))
+    num1 = num1.zfill(max_length)
+    num2 = num2.zfill(max_length)
     carry = 0
-    
-    # 逐位相加
-    for i in range(len(num1)):
-        digit1 = int(num1[i])
-        digit2 = int(num2[i]) if i < len(num2) else 0
-        
-        total = digit1 + digit2 + carry
-        result.append(str(total % 10))
-        carry = total // 10
-    
-    # 处理最后的进位
+    result = []
+    for i in range(max_length - 1, -1, -1):
+        digit_sum = int(num1[i]) + int(num2[i]) + carry
+        carry = digit_sum // 10
+        result.insert(0, str(digit_sum % 10))
     if carry:
-        result.append(str(carry))
-    
-    # 反转结果并返回
-    return ''.join(result[::-1])
+        result.insert(0, str(carry))
+    return ''.join(result)

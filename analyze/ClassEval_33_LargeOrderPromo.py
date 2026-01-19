@@ -1,22 +1,14 @@
 @staticmethod
 def LargeOrderPromo(order):
     """
-    根据订单中不同产品的数量计算折扣。如果订单中不同产品的数量达到10个或更多，则整个订单享受7%的折扣。
-    :param order: object, 要应用折扣的订单
-    :return: float, 折扣金额
-    >>> customer = {'name': 'John Doe', 'fidelity': 1200}
-    >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
-    >>> order = DiscountStrategy(customer, cart, DiscountStrategy.LargeOrderPromo)
-    >>> DiscountStrategy.LargeOrderPromo(order)
-    0.0
+        Calculate the discount based on the number of different products in the order.If the quantity of different products in the order reaches 10 or more, the entire order will enjoy a 7% discount.
+        :param order: object, the order to apply the discount to
+        :return: float, discount amount
+        >>> customer = {'name': 'John Doe', 'fidelity': 1200}
+        >>> cart = [{'product': 'product', 'quantity': 14, 'price': 23.5}]
+        >>> order = DiscountStrategy(customer, cart, DiscountStrategy.LargeOrderPromo)
+        >>> DiscountStrategy.LargeOrderPromo(order)
+        0.0
 
-    """
-    # 计算订单中不同产品的数量（种类数）
-    distinct_items = len(order.cart)
-    
-    # 如果不同产品的数量达到10个或更多，返回7%的折扣
-    if distinct_items >= 10:
-        return order.total() * 0.07
-    
-    # 否则不享受折扣
-    return 0.0
+        """
+    return order.total() * 0.07 if len(order.cart) >= 10 else 0

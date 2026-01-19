@@ -1,30 +1,20 @@
 @staticmethod
 def correlation(x, y):
     """
-    计算给定列表的相关性。
-    :param x: 给定列表，list。
-    :param y: 给定列表，list。
-    :return: 给定列表的相关性，float。
-    >>> statistics3 = Statistics3()
-    >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
-    1.0
-
-    """
+        calculates the correlation of the given list.
+        :param x: the given list, list.
+        :param y: the given list, list.
+        :return: the correlation of the given list, float.
+        >>> statistics3 = Statistics3()
+        >>> statistics3.correlation([1, 2, 3], [4, 5, 6])
+        1.0
+        """
     n = len(x)
-    
-    # Calculate means
-    mean_x = sum(x) / n
-    mean_y = sum(y) / n
-    
-    # Calculate numerator (covariance)
-    numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
-    
-    # Calculate denominator (product of standard deviations)
-    sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
-    sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
-    denominator = (sum_sq_x * sum_sq_y) ** 0.5
-    
-    # Return Pearson correlation coefficient
-    if denominator == 0:
-        return 0.0
-    return numerator / denominator
+    if n != len(y):
+        raise ValueError('Lists must be of the same length.')
+    mean_x = Statistics3.mean(x)
+    mean_y = Statistics3.mean(y)
+    covariance = sum(((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))) / (n - 1)
+    std_x = Statistics3.standard_deviation(x)
+    std_y = Statistics3.standard_deviation(y)
+    return covariance / (std_x * std_y) if std_x and std_y else None

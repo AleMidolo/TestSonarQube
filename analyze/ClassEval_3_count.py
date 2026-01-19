@@ -1,21 +1,15 @@
 def count(n, m=None):
     """
-    通过从 n 个元素中选择 m 个元素来计算排列的数量（排列）。
-    如果未提供 m 或 n 等于 m，则返回 factorial(n)。
-    :param n: int，总元素数。
-    :param m: int，要选择的元素数（默认=None）。
-    :return: int，排列的数量。
+    Counts the number of arrangements by choosing m items from n items (permutations).
+    If m is not provided or n equals m, returns factorial(n).
+    :param n: int, the total number of items.
+    :param m: int, the number of items to be chosen (default=None).
+    :return: int, the count of arrangements.
     >>> ArrangementCalculator.count(5, 3)
     60
 
     """
-    import math
-    
     if m is None or n == m:
-        return math.factorial(n)
-    
-    if m > n or m < 0 or n < 0:
-        return 0
-    
-    # 排列公式: P(n, m) = n! / (n - m)!
-    return math.factorial(n) // math.factorial(n - m)
+        return ArrangementCalculator.factorial(n)
+    else:
+        return ArrangementCalculator.factorial(n) // ArrangementCalculator.factorial(n - m)

@@ -1,10 +1,10 @@
 def add_product(self, product_id, name, quantity):
     """
-    将产品添加到库存，如果它已经存在于库存中，则增加数量。
-    否则，直接将新产品添加到字典中。
+    Add product to inventory and plus the quantity if it has existed in inventory.
+    Or just add new product to dict otherwise.
     :param product_id: int
-    :param name: str, 产品名称
-    :param quantity: int, 产品数量
+    :param name: str, product name
+    :param quantity: int, product quantity
     >>> warehouse.add_product(1, "product1", 3)
     >>> warehouse.inventory
     {1: {'name': 'product1', 'quantity': 3}}

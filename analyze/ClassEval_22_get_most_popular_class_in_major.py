@@ -1,29 +1,26 @@
 def get_most_popular_class_in_major(self, major):
     """
-    获取该专业中注册人数最多的课程。
-    :return  一个字符串,表示该专业中最受欢迎课程
-    >>> registration_system = ClassRegistrationSystem()
-    >>> registration_system.students = [{"name": "John", "major": "计算机科学"},
-                                         {"name": "Bob", "major": "计算机科学"},
-                                         {"name": "Alice", "major": "计算机科学"}]
-    >>> registration_system.students_registration_classes = {"John": ["算法", "数据结构"],
-                                        "Bob": ["操作系统", "数据结构", "算法"]}
-    >>> registration_system.get_most_popular_class_in_major("计算机科学")
-    "数据结构"
-    """
-    from collections import Counter
-    
-    # Get all students in the specified major
-    students_in_major = [student["name"] for student in self.students if student["major"] == major]
-    
-    # Count all classes registered by students in this major
-    class_counts = Counter()
-    for student_name in students_in_major:
-        if student_name in self.students_registration_classes:
-            classes = self.students_registration_classes[student_name]
-            class_counts.update(classes)
-    
-    # Return the most common class
-    if class_counts:
-        return class_counts.most_common(1)[0][0]
-    return None
+        get the class with the highest enrollment in the major.
+        :return  a string of the most popular class in this major
+        >>> registration_system = ClassRegistrationSystem()
+        >>> registration_system.students = [{"name": "John", "major": "Computer Science"},
+                                             {"name": "Bob", "major": "Computer Science"},
+                                             {"name": "Alice", "major": "Computer Science"}]
+        >>> registration_system.students_registration_classes = {"John": ["Algorithms", "Data Structures"],
+                                            "Bob": ["Operating Systems", "Data Structures", "Algorithms"]}
+        >>> registration_system.get_most_popular_class_in_major("Computer Science")
+        "Data Structures"
+        """
+    class_enrollment = {}
+    for student in self.students:
+        if student['major'] == major:
+            student_classes = self.students_registration_classes.get(student['name'], [])
+            for class_name in student_classes:
+                if class_name in class_enrollment:
+                    class_enrollment[class_name] += 1
+                else:
+                    class_enrollment[class_name] = 1
+    if not class_enrollment:
+        return None
+    most_popular_class = max(class_enrollment, key=class_enrollment.get)
+    return most_popular_class

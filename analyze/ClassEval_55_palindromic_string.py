@@ -1,51 +1,29 @@
 def palindromic_string(self):
     """
-    在给定的字符串中找到最长的回文子串。
-    :return: 最长的回文子串，str。
-    >>> manacher = Manacher('ababaxse')
-    >>> manacher.palindromic_string()
-    'ababa'
+        Finds the longest palindromic substring in the given string.
+        :return: The longest palindromic substring, str.
+        >>> manacher = Manacher('ababaxse')
+        >>> manacher.palindromic_string()
+        'ababa'
 
-    """
-    if not self.s:
-        return ""
-    
-    # Transform string to avoid even/odd length issues
-    # Insert '#' between characters
-    t = '#'.join('^{}$'.format(self.s))
-    n = len(t)
-    p = [0] * n  # Array to store radius of palindrome at each position
-    center = 0  # Center of the rightmost palindrome
-    right = 0   # Right boundary of the rightmost palindrome
-    
+        """
+    transformed_string = '|'.join(f'^{self.input_string}$')
+    n = len(transformed_string)
     max_len = 0
-    center_index = 0
-    
+    center = 0
+    right = 0
+    p = [0] * n
     for i in range(1, n - 1):
-        # Mirror of i with respect to center
         mirror = 2 * center - i
-        
-        # If i is within right boundary, we can use previously computed values
         if i < right:
             p[i] = min(right - i, p[mirror])
-        
-        # Attempt to expand palindrome centered at i
-        try:
-            while t[i + 1 + p[i]] == t[i - 1 - p[i]]:
-                p[i] += 1
-        except IndexError:
-            pass
-        
-        # If palindrome centered at i extends past right, adjust center and right
+        a, b = (i + (1 + p[i]), i - (1 + p[i]))
+        while a < n - 1 and b > 0 and (transformed_string[a] == transformed_string[b]):
+            p[i] += 1
+            a += 1
+            b -= 1
         if i + p[i] > right:
-            center = i
-            right = i + p[i]
-        
-        # Track the longest palindrome
-        if p[i] > max_len:
-            max_len = p[i]
-            center_index = i
-    
-    # Extract the longest palindrome from original string
-    start = (center_index - max_len) // 2
-    return self.s[start:start + max_len]
+            center, right = (i, i + p[i])
+        max_len = max(max_len, p[i])
+    start = max_len * 2 // 2
+    return self.input_string[start - max_len:start + max_len].replace('|', '')

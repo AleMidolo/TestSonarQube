@@ -1,25 +1,20 @@
 def calculate_total(self):
     """
-    计算已点菜品的总价格。将数量、价格和销售额相乘。
-    :return total: float, 最终总价格。
-    >>> order = Order()
-    >>> order.menu.append({"dish": "dish1", "price": 10, "count": 5})
-    >>> order.sales = {"dish1": 0.8}
-    >>> order.add_dish({"dish": "dish1", "price": 10, "count": 4})
-    True
-    >>> order.calculate_total()
-    32.0
-    """
+        Calculate the total price of dishes that have been ordered. Multiply the count, price and sales.
+        :return total: float, the final total price.
+        >>> order = Order()
+        >>> order.menu.append({"dish": "dish1", "price": 10, "count": 5})
+        >>> order.sales = {"dish1": 0.8}
+        >>> order.add_dish({"dish": "dish1", "price": 10, "count": 4})
+        True
+        >>> order.calculate_total()
+        32.0
+        """
     total = 0.0
-    for item in self.menu:
-        dish_name = item["dish"]
-        price = item["price"]
-        count = item["count"]
-        
-        # 获取该菜品的折扣，如果没有折扣则默认为1.0（无折扣）
-        discount = self.sales.get(dish_name, 1.0)
-        
-        # 计算该菜品的总价：数量 * 价格 * 折扣
-        total += count * price * discount
-    
+    for selected in self.selected_dishes:
+        dish_name = selected['dish']
+        count = selected['count']
+        price = selected['price']
+        sales = self.sales.get(dish_name, 1)
+        total += count * price * sales
     return total

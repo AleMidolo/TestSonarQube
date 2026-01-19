@@ -1,76 +1,35 @@
 def format_string(self, x):
     """
-    将数字的字符串表示转换为单词格式
-    :param x: str，数字的字符串表示
-    :return: str，数字的单词格式
-    >>> formatter = NumberWordFormatter()
-    >>> formatter.format_string("123456")
-    "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
-    """
-    ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
-    teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
-             "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
-    tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
-    
-    def convert_hundreds(num):
-        """Convert a number less than 1000 to words"""
-        result = []
-        
-        # Hundreds place
-        hundred = num // 100
-        if hundred > 0:
-            result.append(ones[hundred])
-            result.append("HUNDRED")
-        
-        # Tens and ones place
-        remainder = num % 100
-        if remainder > 0:
-            if result:  # If we had hundreds, add "AND"
-                result.append("AND")
-            
-            if 10 <= remainder < 20:
-                result.append(teens[remainder - 10])
-            else:
-                ten = remainder // 10
-                one = remainder % 10
-                if ten > 0:
-                    result.append(tens[ten])
-                if one > 0:
-                    result.append(ones[one])
-        
-        return " ".join(result)
-    
-    # Convert string to integer
-    num = int(x)
-    
-    if num == 0:
-        return "ZERO ONLY"
-    
-    result = []
-    
-    # Billions
-    if num >= 1000000000:
-        billions = num // 1000000000
-        result.append(convert_hundreds(billions))
-        result.append("BILLION")
-        num %= 1000000000
-    
-    # Millions
-    if num >= 1000000:
-        millions = num // 1000000
-        result.append(convert_hundreds(millions))
-        result.append("MILLION")
-        num %= 1000000
-    
-    # Thousands
-    if num >= 1000:
-        thousands = num // 1000
-        result.append(convert_hundreds(thousands))
-        result.append("THOUSAND")
-        num %= 1000
-    
-    # Remaining hundreds, tens, ones
-    if num > 0:
-        result.append(convert_hundreds(num))
-    
-    return " ".join(result) + " ONLY"
+        Converts a string representation of a number into words format
+        :param x: str, the string representation of a number
+        :return: str, the number in words format
+        >>> formatter = NumberWordFormatter()
+        >>> formatter.format_string("123456")
+        "ONE HUNDRED AND TWENTY THREE THOUSAND FOUR HUNDRED AND FIFTY SIX ONLY"
+        """
+    if not x.isdigit():
+        return ''
+    x = x.split('.')
+    whole_part = x[0]
+    decimal_part = x[1] if len(x) > 1 else ''
+    words = []
+    length = len(whole_part)
+    for i in range(length):
+        if length - i > 3:
+            part = whole_part[max(0, length - i - 3):length - i]
+            if part != '000':
+                words.append(self.trans_three(part) + ' ' + self.parse_more((length - i - 1) // 3))
+        elif length - i == 3:
+            part = whole_part[length - i - 3:length - i]
+            words.append(self.trans_three(part))
+        elif length - i == 2:
+            part = whole_part[length - i - 2:length - i]
+            words.append(self.trans_two(part))
+        elif length - i == 1:
+            part = whole_part[length - i - 1:length - i]
+            words.append(self.NUMBER[int(part)])
+    result = ' AND '.join(words).strip()
+    result += ' ONLY'
+    if decimal_part:
+        result += ' ' + ' '.join((self.NUMBER[int(digit)] for digit in decimal_part if digit.isdigit()))
+    return result.strip()

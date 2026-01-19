@@ -1,15 +1,15 @@
 def remove_item(self, item, quantity=1):
     """
-    从购物清单中减去指定数量的物品
-    :param item:string, 要减去数量的物品
-    :param quantity:int, 要减去的数量
-    :return:None
-    >>> shoppingcart.add_item("apple", 1, 5)
-    >>> shoppingcart.remove_item("apple", 3)
-    self.items = {"apple":{"price":1, "quantity":2}}
-    """
+        Subtract the specified quantity of item from the shopping list items
+        :param item:string, Item to be subtracted in quantity
+        :param quantity:int, Quantity to be subtracted
+        :return:None
+        >>> shoppingcart.add_item("apple", 1, 5)
+        >>> shoppingcart.remove_item("apple", 3)
+        self.items = {"apple":{"price":1, "quantity":2}}
+        """
     if item in self.items:
-        self.items[item]["quantity"] -= quantity
-        # 如果数量减到0或以下，从字典中移除该物品
-        if self.items[item]["quantity"] <= 0:
+        if self.items[item]['quantity'] > quantity:
+            self.items[item]['quantity'] -= quantity
+        else:
             del self.items[item]

@@ -1,15 +1,11 @@
-import math
-
 def calculate_annulus_area(self, inner_radius, outer_radius):
     """
-    计算环形区域的面积,基于内半径和外半径
-    :param inner_radius: 扇形的内半径,浮点数
-    :param outer_radius: 扇形的外半径,浮点数
-    :return: 环形区域的面积,浮点数
+    calculate the area of annulus based on inner_radius and out_radius
+    :param inner_radius: inner radius of sector, float
+    :param outer_radius: outer radius of sector, float
+    :return: area of annulus, float
+    >>> areaCalculator = AreaCalculator(0)  # radius is not used in this method
     >>> areaCalculator.calculate_annulus_area(2, 3)
     15.707963267948966
     """
-    outer_area = math.pi * outer_radius ** 2
-    inner_area = math.pi * inner_radius ** 2
-    annulus_area = outer_area - inner_area
-    return annulus_area
+    return math.pi * (outer_radius ** 2 - inner_radius ** 2)

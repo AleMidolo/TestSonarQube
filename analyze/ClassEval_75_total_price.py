@@ -1,14 +1,14 @@
 def total_price(self) -> float:
     """
-    计算购物清单中所有商品的总价格，即每种商品的数量乘以价格
-    :return: float，购物清单中所有商品的总价格
-    >>> shoppingcart = ShoppingCart()
-    >>> shoppingcart.add_item("apple", 1, 5)
-    >>> shoppingcart.add_item("banana", 2, 3)
-    >>> shoppingcart.total_price()
-    11.0
-    """
+        Calculate the total price of all items in the shopping list, which is the quantity of each item multiplied by the price
+        :return:float, the total price of all items in the shopping list
+        >>> shoppingcart = ShoppingCart()
+        >>> shoppingcart.add_item("apple", 1, 5)
+        >>> shoppingcart.add_item("banana", 2, 3)
+        >>> shoppingcart.total_price()
+        11.0
+        """
     total = 0.0
-    for item in self.items:
-        total += item['quantity'] * item['price']
+    for item, details in self.items.items():
+        total += details['price'] * details['quantity']
     return total

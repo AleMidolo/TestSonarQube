@@ -1,12 +1,11 @@
 @staticmethod
 def transform(expression):
     """
-    将中缀表达式转换为适合转换的格式
-    :param expression: 字符串，要转换的中缀表达式
-    :return: 字符串，转换后的表达式
-    >>> expression_calculator = ExpressionCalculator()
-    >>> expression_calculator.transform("2 + 3 * 4")
-    "2+3*4"
-
-    """
-    return expression.replace(" ", "")
+        Transform the infix expression to a format suitable for conversion
+        :param expression: string, the infix expression to be transformed
+        :return: string, the transformed expression
+        >>> expression_calculator = ExpressionCalculator()
+        >>> expression_calculator.transform("2 + 3 * 4")
+        "2+3*4"
+        """
+    return re.sub('\\s+', '', expression)

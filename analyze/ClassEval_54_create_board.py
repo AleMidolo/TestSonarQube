@@ -1,41 +1,17 @@
 def create_board(self):
     """
-    创建具有给定大小和图标的游戏棋盘
-    :return: 二维列表，游戏棋盘
-    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
-    >>> mc.create_board()
-    mc.board = [['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a']]
-    """
-    rows, cols = self.size[0], self.size[1]
-    total_cells = rows * cols
-    
-    # 计算每个图标需要出现的次数（必须是偶数才能配对）
-    num_icons = len(self.icons)
-    pairs_needed = total_cells // 2
-    
-    # 创建图标列表，确保每个图标出现偶数次
-    tiles = []
-    for i in range(pairs_needed):
-        icon = self.icons[i % num_icons]
-        tiles.append(icon)
-        tiles.append(icon)
-    
-    # 如果总格子数是奇数，添加一个额外的图标
-    if total_cells % 2 == 1:
-        tiles.append(self.icons[0])
-    
-    # 创建棋盘并填充
-    board = []
-    tile_index = 0
-    for i in range(rows):
-        row = []
-        for j in range(cols):
-            row.append(tiles[tile_index])
-            tile_index += 1
-        board.append(row)
-    
-    self.board = board
+        create the game board with the given board size and icons
+        :return: 2-dimensional list, the game board
+        >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
+        >>> mc.create_board()
+        mc.board = [['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a'],
+                    ['a', 'b', 'c', 'a']]
+        """
+    num_icons = len(self.ICONS)
+    total_cells = self.BOARD_SIZE[0] * self.BOARD_SIZE[1]
+    icons_to_place = (self.ICONS * (total_cells // num_icons + 1))[:total_cells]
+    random.shuffle(icons_to_place)
+    board = [icons_to_place[i:i + self.BOARD_SIZE[1]] for i in range(0, total_cells, self.BOARD_SIZE[1])]
     return board

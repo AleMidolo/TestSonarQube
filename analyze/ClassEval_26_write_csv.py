@@ -1,17 +1,16 @@
 def write_csv(self, data, file_name):
     """
-    将数据写入csv文件。
-    :param file_name: str, csv文件的名称
-    :return:int, 如果成功返回1,否则返回0
-    >>> csvProcessor = CSVProcessor()
-    >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')
-    1
-    """
+        Write data into a csv file.
+        :param file_name: str, name of the csv file
+        :return:int, if success return 1, or 0 otherwise
+        >>> csvProcessor = CSVProcessor()
+        >>> csvProcessor.write_csv([['a', 'b', 'c', 'd'], ['1', '2', '3', '4']], 'write_test.csv')
+        1
+        """
     try:
-        import csv
-        with open(file_name, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.writer(f)
+        with open(file_name, 'w', newline='') as file:
+            writer = csv.writer(file)
             writer.writerows(data)
         return 1
-    except:
+    except Exception as e:
         return 0

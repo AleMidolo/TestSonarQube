@@ -1,6 +1,6 @@
 def add_word(self, word):
     """
-    将输入的单词添加到 self.word_list 中
-    :param word: str，输入的单词
-    """
+        append the input word into self.word_list
+        :param word: str, input word
+        """
     self.word_list.append(word)

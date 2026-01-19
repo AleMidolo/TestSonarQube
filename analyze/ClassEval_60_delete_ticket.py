@@ -1,9 +1,8 @@
 def delete_ticket(self, ticket_id):
     """
-    根据票据 ID 从 "tickets" 表中删除票据。
-    :param ticket_id: int, 要删除的票据的 ID。
+    Deletes a ticket from the "tickets" table by ticket ID.
+    :param ticket_id: int, the ID of the ticket to delete.
     :return: None
     """
-    cursor = self.conn.cursor()
-    cursor.execute("DELETE FROM tickets WHERE id = ?", (ticket_id,))
-    self.conn.commit()
+    self.cursor.execute('\n            DELETE FROM tickets WHERE id = ?\n        ', (ticket_id,))
+    self.connection.commit()
