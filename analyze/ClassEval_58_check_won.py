@@ -9,8 +9,10 @@ def check_won(self, map):
     False
 
     """
-    for row in map:
-        for cell in row:
-            if cell == '-':
-                return False
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if map[i][j] == '-':
+                # Controlla se la cella non rivelata corrisponde a una mina
+                if self.minesweeper_map[i][j] != 'X':
+                    return False
     return True

@@ -9,24 +9,24 @@ def check_winner(self):
     >>> gomokuGame.check_winner()
     'X'
     """
-    # Direzioni da controllare: orizzontale, verticale, diagonale (\), diagonale (/)
+    # Definisce le quattro direzioni da controllare: orizzontale, verticale, e due diagonali
     directions = [
         (0, 1),   # orizzontale
         (1, 0),   # verticale
-        (1, 1),   # diagonale \
-        (1, -1)   # diagonale /
+        (1, 1),   # diagonale (in basso a destra)
+        (1, -1)   # diagonale (in basso a sinistra)
     ]
     
-    # Itera su tutte le celle della board
+    # Itera su ogni cella della griglia
     for row in range(self.size):
         for col in range(self.size):
-            # Salta celle vuote
+            # Salta le celle vuote
             if self.board[row][col] is None:
                 continue
             
             player = self.board[row][col]
             
-            # Controlla in tutte le direzioni
+            # Controlla in tutte e quattro le direzioni
             for dr, dc in directions:
                 count = 1  # Conta la cella corrente
                 
@@ -37,14 +37,7 @@ def check_winner(self):
                     r += dr
                     c += dc
                 
-                # Controlla all'indietro nella direzione opposta
-                r, c = row - dr, col - dc
-                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
-                    count += 1
-                    r -= dr
-                    c -= dc
-                
-                # Se ci sono 5 o più in fila, abbiamo un vincitore
+                # Se abbiamo trovato 5 o più in fila, abbiamo un vincitore
                 if count >= 5:
                     return player
     

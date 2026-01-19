@@ -9,14 +9,11 @@ def insert(self, data):
     if not data:
         return ""
     
-    # Estrai le chiavi (nomi dei campi) e i valori
+    # Extract column names and values
     columns = ', '.join(data.keys())
+    values = ', '.join(f"'{value}'" for value in data.values())
     
-    # Formatta i valori: aggiungi apici singoli per le stringhe
-    values = ', '.join(f"'{value}'" if isinstance(value, str) else str(value) for value in data.values())
-    
-    # Costruisci l'istruzione SQL INSERT
-    # Assumendo che self abbia un attributo table_name (es. 'table1' dall'esempio)
-    table_name = getattr(self, 'table_name', 'table1')
+    # Assuming self has a table_name attribute based on the example
+    table_name = self.table_name if hasattr(self, 'table_name') else 'table1'
     
     return f"INSERT INTO {table_name} ({columns}) VALUES ({values});"

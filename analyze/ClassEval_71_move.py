@@ -43,32 +43,33 @@ def move(self, direction):
     if target_cell == '#':
         return False
     
-    # Se c'è una scatola
+    # Se c'è una cassa
     if target_cell == 'X':
-        # Calcola la posizione dietro la scatola
+        # Calcola la posizione dietro la cassa
         box_new_y = new_y + dy
         box_new_x = new_x + dx
         
-        # Controlla se la scatola può essere spinta
+        # Controlla se la cassa può essere spinta
         if box_new_y < 0 or box_new_y >= len(self.map) or box_new_x < 0 or box_new_x >= len(self.map[0]):
             return False
         
         box_target = self.map[box_new_y][box_new_x]
         
-        # La scatola può essere spinta solo in uno spazio vuoto o sul goal
+        # La cassa può essere spinta solo in uno spazio vuoto o sul goal
         if box_target != ' ' and box_target != 'G':
             return False
         
-        # Sposta la scatola
+        # Sposta la cassa
         self.map[box_new_y] = self.map[box_new_y][:box_new_x] + 'X' + self.map[box_new_y][box_new_x + 1:]
     
     # Muovi il giocatore
     self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
     self.map[new_y] = self.map[new_y][:new_x] + 'O' + self.map[new_y][new_x + 1:]
     
-    # Controlla se il gioco è vinto (la scatola è sul goal)
+    # Controlla se il gioco è vinto (la cassa è sul goal)
     for i in range(len(self.map)):
         if 'G' in self.map[i]:
+            # Se c'è ancora un goal visibile, il gioco non è vinto
             return False
     
     return True

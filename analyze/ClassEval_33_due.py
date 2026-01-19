@@ -9,6 +9,11 @@ def due(self):
     312.55
 
     """
+    # Calculate total before discount
     total = sum(item['quantity'] * item['price'] for item in self.cart)
-    discount = self.promotion(self) if self.promotion else 0
+    
+    # Apply discount using the promotion strategy
+    discount = self.promotion(self)
+    
+    # Return final amount
     return round(total - discount, 2)

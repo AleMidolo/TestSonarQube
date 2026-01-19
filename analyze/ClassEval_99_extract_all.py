@@ -13,7 +13,7 @@ def extract_all(self, output_path):
         # Crea la directory di output se non esiste
         os.makedirs(output_path, exist_ok=True)
         
-        # Apri il file zip e estrai tutti i contenuti
+        # Apre il file zip e estrae tutti i contenuti
         with zipfile.ZipFile(self.zip_file_path, 'r') as zip_ref:
             zip_ref.extractall(output_path)
         

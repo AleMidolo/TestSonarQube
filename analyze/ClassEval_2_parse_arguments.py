@@ -28,7 +28,7 @@ def parse_arguments(self, command_string):
             # Remove leading dashes
             arg_name = token.lstrip('-')
             
-            # Check if argument has = format (--arg=value)
+            # Check if it's in format --arg=value
             if '=' in arg_name:
                 parts = arg_name.split('=', 1)
                 arg_name = parts[0]

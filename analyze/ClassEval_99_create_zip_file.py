@@ -23,9 +23,8 @@ def create_zip_file(self, files, output_file_name):
         # Create zip file
         with zipfile.ZipFile(output_file_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for file in files:
-                # Check if file exists
                 if os.path.exists(file):
-                    # Add file to zip, using just the filename (not full path) as arcname
+                    # Add file to zip, using just the filename as the archive name
                     zipf.write(file, os.path.basename(file))
                 else:
                     # If any file doesn't exist, return False

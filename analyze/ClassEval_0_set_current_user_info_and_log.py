@@ -9,7 +9,4 @@ def set_current_user_info_and_log(self, user):
 
     """
     self.current_user_info = user
-    self.log.append({
-        'user': user.get('name'),
-        'address': user.get('address')
-    })
+    self.log_access(user)

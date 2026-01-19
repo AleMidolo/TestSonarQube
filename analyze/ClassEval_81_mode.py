@@ -12,15 +12,15 @@ def mode(data):
     if not data:
         return []
     
-    # Count occurrences of each element
+    # Count frequency of each element
     frequency = {}
-    for value in data:
-        frequency[value] = frequency.get(value, 0) + 1
+    for item in data:
+        frequency[item] = frequency.get(item, 0) + 1
     
-    # Find the maximum frequency
-    max_frequency = max(frequency.values())
+    # Find maximum frequency
+    max_freq = max(frequency.values())
     
-    # Find all values with the maximum frequency
-    modes = [key for key, freq in frequency.items() if freq == max_frequency]
+    # Find all elements with maximum frequency
+    modes = [key for key, value in frequency.items() if value == max_freq]
     
     return modes

@@ -10,7 +10,11 @@ def return_book(self, book_id):
     conn = sqlite3.connect(self.db_name)
     cursor = conn.cursor()
     
-    cursor.execute("UPDATE books SET borrowed = 0 WHERE id = ?", (book_id,))
+    cursor.execute("""
+        UPDATE books 
+        SET borrowed = 0 
+        WHERE id = ?
+    """, (book_id,))
     
     conn.commit()
     conn.close()

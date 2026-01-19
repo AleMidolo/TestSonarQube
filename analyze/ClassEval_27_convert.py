@@ -9,20 +9,20 @@ def convert(self, amount, from_currency, to_currency):
     >>> cc.convert(64, 'CNY','USD')
     10.0
     """
-    # Assuming exchange rates are stored in self.rates dictionary
-    # with USD as the base currency
-    if not hasattr(self, 'rates'):
-        # Default exchange rates (example rates relative to USD)
-        self.rates = {
-            'USD': 1.0,
-            'CNY': 6.4,
-            'EUR': 0.85,
-            'GBP': 0.73,
-            'JPY': 110.0
-        }
+    # Based on the example: 64 CNY = 10 USD
+    # This means 1 USD = 6.4 CNY
+    
+    # Define exchange rates relative to USD
+    exchange_rates = {
+        'USD': 1.0,
+        'CNY': 6.4,
+        'EUR': 0.85,
+        'GBP': 0.73,
+        'JPY': 110.0,
+    }
     
     # Convert from_currency to USD, then USD to to_currency
-    amount_in_usd = amount / self.rates[from_currency]
-    converted_amount = amount_in_usd * self.rates[to_currency]
+    amount_in_usd = amount / exchange_rates[from_currency]
+    converted_amount = amount_in_usd * exchange_rates[to_currency]
     
     return converted_amount

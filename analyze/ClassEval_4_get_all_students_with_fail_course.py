@@ -9,9 +9,7 @@ def get_all_students_with_fail_course(self):
     students_with_fail = []
     
     # Assuming self has a data structure to store student scores
-    # Common patterns: self.students, self.scores, self.course_scores, etc.
-    # The structure likely maps students to their courses and scores
-    
+    # Common patterns: self.students, self.scores, self.course_scores
     if hasattr(self, 'course_scores'):
         for student, courses in self.course_scores.items():
             for course, score in courses.items():
@@ -21,8 +19,8 @@ def get_all_students_with_fail_course(self):
                     break
     elif hasattr(self, 'students'):
         for student, data in self.students.items():
-            if isinstance(data, dict):
-                for course, score in data.items():
+            if isinstance(data, dict) and 'courses' in data:
+                for course, score in data['courses'].items():
                     if score < 60:
                         if student not in students_with_fail:
                             students_with_fail.append(student)

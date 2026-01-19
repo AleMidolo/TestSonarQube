@@ -7,7 +7,14 @@ def search_student_by_name(self, name):
     >>> processor.create_student_table()
     >>> result = processor.search_student_by_name("John")
     """
-    cursor = self.conn.cursor()
-    cursor.execute("SELECT * FROM students WHERE name LIKE ?", ('%' + name + '%',))
+    import sqlite3
+    
+    conn = sqlite3.connect(self.db_name)
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM students WHERE name = ?", (name,))
     results = cursor.fetchall()
+    
+    conn.close()
+    
     return results

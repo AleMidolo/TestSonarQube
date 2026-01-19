@@ -10,59 +10,65 @@ def format(self, x):
     if isinstance(x, float):
         int_part = int(x)
         decimal_part = round((x - int_part) * 100)
-        result = self._convert_integer(int_part) + " VIRGOLA " + self._convert_integer(decimal_part)
-        return result.strip()
+        result = self._convert_integer(int_part)
+        if decimal_part > 0:
+            result += " VIRGOLA " + self._convert_integer(decimal_part)
+        return result
     else:
-        return (self._convert_integer(x) + " SOLO").strip()
+        return self._convert_integer(x) + " SOLO"
     
 def _convert_integer(self, n):
     if n == 0:
         return "ZERO"
     
-    units = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
+    ones = ["", "UNO", "DUE", "TRE", "QUATTRO", "CINQUE", "SEI", "SETTE", "OTTO", "NOVE"]
     teens = ["DIECI", "UNDICI", "DODICI", "TREDICI", "QUATTORDICI", "QUINDICI", "SEDICI", "DICIASSETTE", "DICIOTTO", "DICIANNOVE"]
     tens = ["", "", "VENTI", "TRENTA", "QUARANTA", "CINQUANTA", "SESSANTA", "SETTANTA", "OTTANTA", "NOVANTA"]
     
-    if n < 10:
-        return units[n]
-    elif n < 20:
-        return teens[n - 10]
-    elif n < 100:
-        ten = n // 10
-        unit = n % 10
-        if unit == 1 or unit == 8:
-            return tens[ten][:-1] + units[unit]
+    def convert_below_thousand(num):
+        if num == 0:
+            return ""
+        elif num < 10:
+            return ones[num]
+        elif num < 20:
+            return teens[num - 10]
+        elif num < 100:
+            ten = num // 10
+            one = num % 10
+            if one in [1, 8]:
+                return tens[ten][:-1] + ones[one]
+            else:
+                return tens[ten] + ones[one]
         else:
-            return (tens[ten] + units[unit]).strip()
-    elif n < 1000:
-        hundred = n // 100
-        remainder = n % 100
-        if hundred == 1:
-            result = "CENTO"
-        else:
-            result = units[hundred] + "CENTO"
-        if remainder > 0:
-            result += " " + self._convert_integer(remainder)
-        return result.strip()
+            hundred = num // 100
+            rest = num % 100
+            if hundred == 1:
+                result = "CENTO"
+            else:
+                result = ones[hundred] + "CENTO"
+            if rest > 0:
+                result += " " + convert_below_thousand(rest)
+            return result
+    
+    if n < 1000:
+        return convert_below_thousand(n)
     elif n < 1000000:
-        thousand = n // 1000
-        remainder = n % 1000
-        if thousand == 1:
+        thousands = n // 1000
+        rest = n % 1000
+        if thousands == 1:
             result = "MILLE"
         else:
-            result = self._convert_integer(thousand) + " MILA"
-        if remainder > 0:
-            result += " " + self._convert_integer(remainder)
-        return result.strip()
-    elif n < 1000000000:
-        million = n // 1000000
-        remainder = n % 1000000
-        if million == 1:
+            result = convert_below_thousand(thousands) + " MILA"
+        if rest > 0:
+            result += " " + convert_below_thousand(rest)
+        return result
+    else:
+        millions = n // 1000000
+        rest = n % 1000000
+        if millions == 1:
             result = "UN MILIONE"
         else:
-            result = self._convert_integer(million) + " MILIONI"
-        if remainder > 0:
-            result += " " + self._convert_integer(remainder)
-        return result.strip()
-    else:
-        return str(n)
+            result = convert_below_thousand(millions) + " MILIONI"
+        if rest > 0:
+            result += " " + self._convert_integer(rest)
+        return result

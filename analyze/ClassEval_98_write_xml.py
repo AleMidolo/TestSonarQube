@@ -21,5 +21,5 @@ def write_xml(self, file_name):
             return True
         else:
             return False
-    except Exception as e:
+    except Exception:
         return False

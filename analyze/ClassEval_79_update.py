@@ -7,19 +7,14 @@ def update(self, data, condition):
     >>> sql.update({'field1': 'new_value1', 'field2': 'new_value2'}, "field3 = value1")
     "UPDATE table1 SET field1 = 'new_value1', field2 = 'new_value2' WHERE field3 = value1;"
     """
-    # Costruisce la parte SET dell'istruzione SQL
-    set_parts = []
+    set_clauses = []
     for field, value in data.items():
-        # Aggiunge le virgolette ai valori stringa
         if isinstance(value, str):
-            set_parts.append(f"{field} = '{value}'")
+            set_clauses.append(f"{field} = '{value}'")
         else:
-            set_parts.append(f"{field} = {value}")
+            set_clauses.append(f"{field} = {value}")
     
-    set_clause = ", ".join(set_parts)
+    set_statement = ", ".join(set_clauses)
+    sql_query = f"UPDATE {self.table} SET {set_statement} WHERE {condition};"
     
-    # Costruisce l'istruzione SQL completa
-    # Assumendo che self abbia un attributo 'table' che contiene il nome della tabella
-    sql_statement = f"UPDATE {self.table} SET {set_clause} WHERE {condition};"
-    
-    return sql_statement
+    return sql_query

@@ -14,7 +14,7 @@ def get_available_slots(self, date):
     day_start = datetime(date.year, date.month, date.day, 0, 0)
     day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
     # Adjust to next day midnight for consistency with the example
-    day_end = day_start + timedelta(days=1)
+    day_end = datetime(date.year, date.month, date.day) + timedelta(days=1)
     
     # Filter events for the specified date
     events_on_date = []
@@ -23,7 +23,7 @@ def get_available_slots(self, date):
         if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
             events_on_date.append(event)
     
-    # Sort events by start_time
+    # Sort events by start time
     events_on_date.sort(key=lambda x: x['start_time'])
     
     # Find available slots

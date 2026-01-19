@@ -25,7 +25,7 @@ def prepare(self, expression):
             i += 1
             continue
         
-        # If character is a digit, extract the full number
+        # If character is a digit or decimal point, extract the full number
         if char.isdigit() or char == '.':
             num = ''
             while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
@@ -56,6 +56,6 @@ def prepare(self, expression):
         
         i += 1
     
-    # Pop all remaining operators
+    # Pop all remaining operators from the stack
     while operator_stack:
         self.postfix_stack.append(operator_stack.pop())

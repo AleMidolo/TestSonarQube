@@ -1,4 +1,4 @@
-def query(self, weather_list, tmp_units='celsius'):
+def query(self, weather_list, tmp_units = 'celsius'):
     """
     Interroga il sistema meteorologico per ottenere il meteo e la temperatura della città, e converte le unità di temperatura in base al parametro di input.
     :param weather_list: un dizionario di informazioni meteorologiche per diverse città, dict.
@@ -10,14 +10,13 @@ def query(self, weather_list, tmp_units='celsius'):
     (27, 'sunny')
 
     """
-    # Get the city's weather information
     if self.city not in weather_list:
         return None
     
-    city_info = weather_list[self.city]
-    weather = city_info['weather']
-    temperature = city_info['temperature']
-    current_units = city_info['temperature units']
+    city_data = weather_list[self.city]
+    weather = city_data['weather']
+    temperature = city_data['temperature']
+    current_units = city_data['temperature units']
     
     # Convert temperature if needed
     if current_units != tmp_units:
@@ -25,13 +24,5 @@ def query(self, weather_list, tmp_units='celsius'):
             temperature = (temperature * 9/5) + 32
         elif current_units == 'fahrenheit' and tmp_units == 'celsius':
             temperature = (temperature - 32) * 5/9
-        elif current_units == 'celsius' and tmp_units == 'kelvin':
-            temperature = temperature + 273.15
-        elif current_units == 'kelvin' and tmp_units == 'celsius':
-            temperature = temperature - 273.15
-        elif current_units == 'fahrenheit' and tmp_units == 'kelvin':
-            temperature = (temperature - 32) * 5/9 + 273.15
-        elif current_units == 'kelvin' and tmp_units == 'fahrenheit':
-            temperature = (temperature - 273.15) * 9/5 + 32
     
     return (temperature, weather)

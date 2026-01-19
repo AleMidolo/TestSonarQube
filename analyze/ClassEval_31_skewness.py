@@ -20,6 +20,6 @@ def skewness(data):
         return 0.0
     
     skew = sum((x - mean) ** 3 for x in data) / n
-    skew = skew / (std_dev ** 3)
+    skewness = skew / (std_dev ** 3)
     
-    return skew
+    return skewness

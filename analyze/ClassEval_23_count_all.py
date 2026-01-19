@@ -14,12 +14,10 @@ def count_all(n: int) -> int:
     max_value = 2**63 - 1
     
     # Calcola 2^n - 1
-    if n >= 63:
-        # Se n >= 63, allora 2^n - 1 >= 2^63 - 1
-        # Dobbiamo verificare se supera il limite
-        result = 2**n - 1
-        if result > max_value:
-            return float("inf")
-        return result
-    else:
-        return 2**n - 1
+    total_combinations = 2**n - 1
+    
+    # Verifica se supera il limite
+    if total_combinations > max_value:
+        return float("inf")
+    
+    return total_combinations
