@@ -12,11 +12,9 @@ def palindromic_string(self):
     
     # Transform string to avoid even/odd length issues
     # Insert '#' between characters
-    transformed = '#'.join('^{}$'.format(self.s))
-    n = len(transformed)
-    
-    # Array to store radius of palindrome at each position
-    p = [0] * n
+    t = '#'.join('^{}$'.format(self.s))
+    n = len(t)
+    p = [0] * n  # Array to store radius of palindrome at each position
     center = 0  # Center of the rightmost palindrome
     right = 0   # Right boundary of the rightmost palindrome
     
@@ -31,9 +29,9 @@ def palindromic_string(self):
         if i < right:
             p[i] = min(right - i, p[mirror])
         
-        # Try to expand palindrome centered at i
+        # Attempt to expand palindrome centered at i
         try:
-            while transformed[i + p[i] + 1] == transformed[i - p[i] - 1]:
+            while t[i + 1 + p[i]] == t[i - 1 - p[i]]:
                 p[i] += 1
         except IndexError:
             pass

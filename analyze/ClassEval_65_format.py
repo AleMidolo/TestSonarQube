@@ -12,46 +12,46 @@ def format(self, x):
     
     # Handle negative numbers
     if x < 0:
-        return "MINUS " + self.format(-x)[:-5] + " ONLY"
+        return "MINUS " + self.format(-x)
     
     # Handle decimal numbers
     if isinstance(x, float) and x != int(x):
         integer_part = int(x)
         decimal_part = str(x).split('.')[1]
-        result = self.format(integer_part)[:-5]  # Remove " ONLY"
+        result = self.format(integer_part).replace(" ONLY", "")
         result += " POINT"
         for digit in decimal_part:
-            result += " " + self._ones[int(digit)]
+            result += " " + self._convert_ones(int(digit))
         return result + " ONLY"
     
     x = int(x)
     
     # Define word mappings
-    self._ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
-    self._teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
-                   "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
-    self._tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
+    ones = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
+    teens = ["TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", 
+             "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"]
+    tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"]
     
     def convert_below_thousand(n):
         if n == 0:
             return ""
         elif n < 10:
-            return self._ones[n]
+            return ones[n]
         elif n < 20:
-            return self._teens[n - 10]
+            return teens[n - 10]
         elif n < 100:
-            result = self._tens[n // 10]
+            result = tens[n // 10]
             if n % 10 != 0:
-                result += " " + self._ones[n % 10]
+                result += " " + ones[n % 10]
             return result
         else:
-            result = self._ones[n // 100] + " HUNDRED"
+            result = ones[n // 100] + " HUNDRED"
             remainder = n % 100
             if remainder != 0:
                 result += " AND " + convert_below_thousand(remainder)
             return result
     
-    # Handle large numbers
+    # Process number in groups of thousands
     if x < 1000:
         return convert_below_thousand(x) + " ONLY"
     elif x < 1000000:
@@ -87,3 +87,7 @@ def format(self, x):
         if remainder != 0:
             result += " " + convert_below_thousand(remainder)
         return result + " ONLY"
+
+def _convert_ones(self, n):
+    ones = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
+    return ones[n]

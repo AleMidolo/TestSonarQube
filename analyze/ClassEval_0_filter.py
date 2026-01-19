@@ -36,8 +36,8 @@ def filter(self, request):
         return True
     
     # 检查是否有有效的认证令牌（如果请求中包含）
-    if 'token' in request and request['token']:
+    if request.get('authenticated', False):
         return True
     
-    # 默认拒绝
+    # 默认拒绝其他请求
     return False

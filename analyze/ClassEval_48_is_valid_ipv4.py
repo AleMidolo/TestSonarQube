@@ -27,11 +27,11 @@ def is_valid_ipv4(ip_address):
         if len(part) > 1 and part[0] == '0':
             return False
         
-        # 检查是否只包含数字
+        # 检查是否全是数字
         if not part.isdigit():
             return False
         
-        # 检查数值范围是否在 0-255 之间
+        # 检查数字范围是否在 0-255 之间
         num = int(part)
         if num < 0 or num > 255:
             return False

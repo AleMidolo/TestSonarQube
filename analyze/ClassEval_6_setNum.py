@@ -7,10 +7,8 @@ def setNum(self):
     (2, 0)
 
     """
-    total_length = len(self.data) if hasattr(self, 'data') else len(self[0]) if isinstance(self, tuple) else 0
-    num_partitions = self.num if hasattr(self, 'num') else self[1] if isinstance(self, tuple) else 1
-    
+    total_length = len(self.data)
+    num_partitions = self.num
     block_size = total_length // num_partitions
     remainder = total_length % num_partitions
-    
     return (block_size, remainder)

@@ -5,31 +5,24 @@ def send_to(self, recv, content, size):
     :param content: 电子邮件的内容，str。
     :param size: 电子邮件的大小，float。
     :return: 如果电子邮件成功发送则返回 True，如果接收者的邮箱已满则返回 False。
-    >>> sender = EmailClient('sender@example.com', 100)
-    >>> receiver = EmailClient('receiver@example.com', 50)
-    >>> sender.send_to(receiver, 'Hello', 10)
-    True
-    >>> receiver.inbox
-    {'sender': 'sender@example.com', 'receiver': 'receiver@example.com', 'content': 'Hello', 'size': 10, 'time': '2023-07-13 11:36:40', 'state': 'unread'}
-
     """
     from datetime import datetime
     
-    # Check if receiver has enough space in their inbox
+    # Check if receiver has enough space
     if recv.get_occupied_size() + size > recv.capacity:
         return False
     
-    # Create email dictionary
+    # Create email message
     email = {
-        'sender': self.email,
-        'receiver': recv.email,
+        'sender': self.address,
+        'receiver': recv.address,
         'content': content,
         'size': size,
         'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'state': 'unread'
     }
     
-    # Add email to receiver's inbox
+    # Add to receiver's inbox
     recv.inbox = email
     
     return True

@@ -8,7 +8,7 @@ def calculate(self, expression):
     14.0
 
     """
-    # First, convert infix expression to postfix
+    # First, convert infix to postfix notation
     def infix_to_postfix(expr):
         precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
         output = []
@@ -20,7 +20,7 @@ def calculate(self, expression):
             if expr[i].isspace():
                 i += 1
                 continue
-            if expr[i].isdigit() or expr[i] == '.':
+            elif expr[i].isdigit() or expr[i] == '.':
                 j = i
                 while j < len(expr) and (expr[j].isdigit() or expr[j] == '.'):
                     j += 1
@@ -31,7 +31,7 @@ def calculate(self, expression):
                 i += 1
         
         for token in tokens:
-            if token[0].isdigit() or (len(token) > 1 and token[0] == '.'):
+            if token[0].isdigit() or (len(token) > 1 and token[0] == '.' and token[1].isdigit()):
                 output.append(token)
             elif token == '(':
                 operator_stack.append(token)

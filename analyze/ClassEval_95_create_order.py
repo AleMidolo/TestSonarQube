@@ -1,6 +1,6 @@
 def create_order(self, order_id, product_id, quantity):
     """
-    创建一个订单,其中包含产品的信息,如ID和数量。
+    创建一个订单，其中包含产品的信息，如ID和数量。
     并将新订单放入self.orders中。
     状态的默认值为'Shipped'。
     :param order_id: int
@@ -14,20 +14,20 @@ def create_order(self, order_id, product_id, quantity):
     >>> warehouse.create_order(1, 2, 2)
     False
     """
-    # 检查product_id是否在库存中
+    # Check if product_id exists in inventory
     if product_id not in self.inventory:
         return False
     
-    # 检查库存数量是否足够
+    # Check if there is sufficient quantity
     if self.inventory[product_id]['quantity'] < quantity:
         return False
     
-    # 创建订单
+    # Create the order
     self.orders[order_id] = {
         'product_id': product_id,
         'quantity': quantity,
         'status': 'Shipped'
     }
     
-    # 减少库存数量
+    # Reduce the inventory quantity
     self.inventory[product_id]['quantity'] -= quantity

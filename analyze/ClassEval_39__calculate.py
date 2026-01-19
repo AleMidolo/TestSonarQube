@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 @staticmethod
 def _calculate(first_value, second_value, current_op):
     """
@@ -10,8 +12,6 @@ def _calculate(first_value, second_value, current_op):
     >>> expression_calculator._calculate("2", "3", "+")
     5.0
     """
-    from decimal import Decimal
-    
     num1 = Decimal(first_value)
     num2 = Decimal(second_value)
     
@@ -23,5 +23,9 @@ def _calculate(first_value, second_value, current_op):
         return float(num1 * num2)
     elif current_op == '/':
         return float(num1 / num2)
-    else:
-        raise ValueError(f"Unsupported operator: {current_op}")
+    elif current_op == '//':
+        return float(num1 // num2)
+    elif current_op == '%':
+        return float(num1 % num2)
+    elif current_op == '**':
+        return float(num1 ** num2)

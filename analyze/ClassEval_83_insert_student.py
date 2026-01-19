@@ -10,13 +10,13 @@ def insert_student(self, student_data):
     """
     import sqlite3
     
-    conn = sqlite3.connect(self.database)
+    conn = sqlite3.connect(self.db_name)
     cursor = conn.cursor()
     
-    cursor.execute("""
+    cursor.execute('''
         INSERT INTO students (name, age, gender, grade)
         VALUES (?, ?, ?, ?)
-    """, (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))
+    ''', (student_data['name'], student_data['age'], student_data['gender'], student_data['grade']))
     
     conn.commit()
     conn.close()

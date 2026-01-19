@@ -9,9 +9,21 @@ def validate_phone_number(self, phone_number):
     """
     import re
     
-    # Pattern for phone numbers in format: XXX-XXX-XXXX
-    pattern = r'^\d{3}-\d{3}-\d{4}$'
+    # 定义多种常见的电话号码格式
+    patterns = [
+        r'^\d{3}-\d{3}-\d{4}$',  # 123-456-7890
+        r'^\(\d{3}\)\s?\d{3}-\d{4}$',  # (123) 456-7890 or (123)456-7890
+        r'^\d{3}\.\d{3}\.\d{4}$',  # 123.456.7890
+        r'^\d{10}$',  # 1234567890
+        r'^\+\d{1,3}\s?\d{10}$',  # +1 1234567890
+        r'^\d{3}\s\d{3}\s\d{4}$',  # 123 456 7890
+    ]
     
-    if re.match(pattern, phone_number):
-        return True
+    if not phone_number:
+        return False
+    
+    for pattern in patterns:
+        if re.match(pattern, phone_number):
+            return True
+    
     return False

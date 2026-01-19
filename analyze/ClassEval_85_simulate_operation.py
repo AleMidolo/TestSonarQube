@@ -16,20 +16,14 @@ def simulate_operation(self):
     while self.current_temp != self.target_temp:
         if self.mode == 'heat':
             # 加热模式：当前温度低于目标温度，每次增加1度
-            if self.current_temp < self.target_temp:
-                self.current_temp += 1
-                time += 1
-            else:
-                break
+            self.current_temp += 1
         elif self.mode == 'cool':
             # 制冷模式：当前温度高于目标温度，每次降低1度
-            if self.current_temp > self.target_temp:
-                self.current_temp -= 1
-                time += 1
-            else:
-                break
+            self.current_temp -= 1
         else:
-            # 其他模式（如 'idle'）不调整温度
+            # 如果模式为 'off' 或其他，则不调整温度
             break
+        
+        time += 1
     
     return time

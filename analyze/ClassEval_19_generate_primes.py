@@ -14,7 +14,7 @@ def generate_primes(self):
     is_prime = [True] * (self.limit + 1)
     is_prime[0] = is_prime[1] = False  # 0和1不是素数
     
-    # 埃拉托斯特尼筛法（钱德拉塞卡筛法是其变体）
+    # 埃拉托斯特尼筛法（标准筛法）
     p = 2
     while p * p <= self.limit:
         if is_prime[p]:

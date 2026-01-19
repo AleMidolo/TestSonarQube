@@ -11,16 +11,13 @@ def palindromic_length(self, center, diff, string):
 
     """
     # 检查边界条件
-    left = center - diff
-    right = center + diff
-    
-    # 如果超出字符串边界，返回0
-    if left < 0 or right >= len(string):
+    if center - diff < 0 or center + diff >= len(string):
         return 0
     
-    # 如果左右字符不相等，返回0
-    if string[left] != string[right]:
+    # 检查当前位置的字符是否相等
+    if string[center - diff] == string[center + diff]:
+        # 如果相等，递归检查下一层，并返回当前长度加上递归结果
+        return 1 + self.palindromic_length(center, diff + 1, string)
+    else:
+        # 如果不相等，返回0
         return 0
-    
-    # 如果字符相等，递归检查下一层，并加上当前这一对字符的贡献
-    return 2 + self.palindromic_length(center, diff + 1, string)

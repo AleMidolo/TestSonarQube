@@ -8,12 +8,12 @@ def check_balanced_brackets(self):
 
     """
     stack = []
-    brackets = {')': '(', ']': '[', '}': '{'}
+    brackets = {')': '(', '}': '{', ']': '['}
     
     for char in self.expression:
-        if char in '([{':
+        if char in '({[':
             stack.append(char)
-        elif char in ')]}':
+        elif char in ')}]':
             if not stack or stack[-1] != brackets[char]:
                 return False
             stack.pop()

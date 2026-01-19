@@ -10,4 +10,4 @@ def get_upcoming_events(self, num_events):
     [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': '新年'}, {'date': datetime.datetime(2023, 1, 2, 0, 0), 'end_time': datetime.datetime(2023, 1, 2, 1, 0), 'description': '新年 2'}]
 
     """
-    return self.events
+    return self.events[:num_events] if num_events <= len(self.events) else self.events

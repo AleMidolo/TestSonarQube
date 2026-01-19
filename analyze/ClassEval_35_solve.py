@@ -21,7 +21,7 @@ def solve(self):
         # 弹出队列首元素
         current_state, path = open_list.pop(0)
         
-        # 检查是否到达目标状态
+        # 检查是否达到目标状态
         if current_state == self.goal_state:
             return path
         

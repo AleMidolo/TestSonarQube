@@ -27,20 +27,21 @@ def book_room(self, room_type, room_number, name):
     # 获取当前可用房间数量
     available_count = self.available_rooms[room_type]
     
-    # 如果可用房间数量为零，返回 False
+    # 如果可用房间数量为零
     if available_count == 0:
         return False
     
-    # 如果请求的房间数量不超过可用数量，完成预订
+    # 如果请求的房间数量不超过可用房间数量
     if room_number <= available_count:
+        # 更新可用房间数量
         self.available_rooms[room_type] -= room_number
         
-        # 更新 booked_rooms
+        # 更新已预订房间记录
         if room_type not in self.booked_rooms:
             self.booked_rooms[room_type] = []
-        self.booked_rooms[room_type].append((name, room_number))
+        self.booked_rooms[room_type].append({name: room_number})
         
         return 'Success!'
     else:
-        # 如果请求数量超过可用数量，但可用数量不为零，返回剩余数量
+        # 请求的房间数量超过可用数量，但可用数量不为零
         return available_count

@@ -11,10 +11,10 @@ def median(self, data):
     n = len(sorted_data)
     
     if n % 2 == 1:
-        # 奇数个元素，返回中间的元素
+        # 奇数个元素，取中间的元素
         median_value = sorted_data[n // 2]
     else:
-        # 偶数个元素，返回中间两个元素的平均值
+        # 偶数个元素，取中间两个元素的平均值
         median_value = (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2
     
     return round(median_value, 2)

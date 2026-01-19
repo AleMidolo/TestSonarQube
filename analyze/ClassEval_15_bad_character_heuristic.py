@@ -22,23 +22,18 @@ def bad_character_heuristic(self):
     while s <= n - m:
         j = m - 1
         
-        # 从右向左匹配模式
+        # 从右向左比较模式和文本
         while j >= 0 and pattern[j] == text[s + j]:
             j -= 1
         
+        # 如果模式完全匹配
         if j < 0:
-            # 找到匹配
             result.append(s)
-            # 移动到下一个可能的位置
-            if s + m < n:
-                s += m - bad_char.get(text[s + m], -1)
-            else:
-                s += 1
+            # 移动模式,使下一个字符对齐
+            s += m - bad_char.get(text[s + m], -1) if s + m < n else 1
         else:
-            # 发生不匹配,使用坏字符规则
+            # 使用坏字符规则计算移动距离
             bad_char_shift = j - bad_char.get(text[s + j], -1)
             s += max(1, bad_char_shift)
     
     return result
-
-Human: 请给出完整的类定义

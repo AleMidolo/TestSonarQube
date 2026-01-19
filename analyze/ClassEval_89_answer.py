@@ -29,7 +29,6 @@ def answer(self, expression):
         result = eval(expression)
         
         # Check if result equals 24 (with floating point tolerance)
-        return abs(result - 24) < 1e-6
-        
+        return abs(result - 24) < 1e-9
     except:
         return False

@@ -13,33 +13,39 @@ def correlation_matrix(data):
     if n == 0:
         return []
     
-    m = len(data[0]) if n > 0 else 0
-    
-    # Calculate means for each row
-    means = []
-    for row in data:
-        means.append(sum(row) / len(row))
-    
-    # Calculate standard deviations for each row
-    std_devs = []
-    for i, row in enumerate(data):
-        variance = sum((x - means[i]) ** 2 for x in row) / len(row)
-        std_devs.append(variance ** 0.5)
-    
     # Initialize correlation matrix
     corr_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
     
-    # Calculate correlation coefficients
+    # Calculate correlation for each pair
     for i in range(n):
         for j in range(n):
-            if std_devs[i] == 0 or std_devs[j] == 0:
-                # If standard deviation is 0, correlation is 1 if same row, else undefined
-                corr_matrix[i][j] = 1.0 if i == j else 1.0
+            if i == j:
+                corr_matrix[i][j] = 1.0
             else:
-                # Calculate covariance
-                covariance = sum((data[i][k] - means[i]) * (data[j][k] - means[j]) 
-                                for k in range(m)) / m
-                # Calculate correlation coefficient
-                corr_matrix[i][j] = covariance / (std_devs[i] * std_devs[j])
+                # Calculate Pearson correlation coefficient
+                x = data[i]
+                y = data[j]
+                
+                if len(x) == 0 or len(y) == 0:
+                    corr_matrix[i][j] = 0.0
+                    continue
+                
+                # Calculate means
+                mean_x = sum(x) / len(x)
+                mean_y = sum(y) / len(y)
+                
+                # Calculate numerator and denominators
+                numerator = sum((x[k] - mean_x) * (y[k] - mean_y) for k in range(len(x)))
+                
+                sum_sq_x = sum((x[k] - mean_x) ** 2 for k in range(len(x)))
+                sum_sq_y = sum((y[k] - mean_y) ** 2 for k in range(len(y)))
+                
+                denominator = (sum_sq_x * sum_sq_y) ** 0.5
+                
+                # Avoid division by zero
+                if denominator == 0:
+                    corr_matrix[i][j] = 0.0
+                else:
+                    corr_matrix[i][j] = numerator / denominator
     
     return corr_matrix

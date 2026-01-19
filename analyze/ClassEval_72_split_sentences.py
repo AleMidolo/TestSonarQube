@@ -9,24 +9,25 @@ def split_sentences(self, text):
     """
     import re
     
-    # Split by sentence-ending punctuation (., ?, !)
-    sentences = re.split(r'([.?!])', text)
+    # 按句子结束标点符号分割
+    sentences = re.split(r'([.!?]+)', text)
     
-    # Reconstruct sentences by pairing text with punctuation
+    # 过滤空字符串并去除空白
     result = []
     i = 0
     while i < len(sentences):
         sentence = sentences[i].strip()
-        if sentence:  # Skip empty strings
-            # Check if there's a punctuation mark following
-            if i + 1 < len(sentences) and sentences[i + 1] in '.?!':
-                # Not the last sentence - add without punctuation
-                if i + 2 < len(sentences):
+        if sentence:
+            # 如果是最后一个非空句子，保留标点
+            if i + 1 < len(sentences) and sentences[i + 1].strip() in ['.', '!', '?', '..', '!!', '??']:
+                # 对于非最后的句子，不添加标点
+                if i + 2 < len(sentences) and any(sentences[j].strip() for j in range(i + 2, len(sentences))):
                     result.append(sentence)
+                    i += 2
                 else:
-                    # This is the last sentence - keep punctuation
-                    result.append(sentence + sentences[i + 1])
-                i += 2
+                    # 这是最后一个句子，保留标点
+                    result.append(sentence + sentences[i + 1].strip())
+                    i += 2
             else:
                 result.append(sentence)
                 i += 1

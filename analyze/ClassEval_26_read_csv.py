@@ -15,10 +15,10 @@ def read_csv(self, file_name):
     with open(file_name, 'r', encoding='utf-8') as file:
         csv_reader = csv.reader(file)
         
-        # 读取第一行作为标题
+        # Read the first row as title
         title = next(csv_reader)
         
-        # 读取剩余行作为数据
+        # Read the remaining rows as data
         for row in csv_reader:
             data.append(row)
     

@@ -23,5 +23,6 @@ def extract_file(self, file_name, output_path):
             # 提取指定文件到输出路径
             zip_ref.extract(file_name, output_path)
             return True
-    except Exception as e:
+            
+    except (zipfile.BadZipFile, FileNotFoundError, PermissionError, Exception):
         return False

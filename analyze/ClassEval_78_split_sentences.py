@@ -12,24 +12,19 @@ def split_sentences(self, sentences_string):
     # 使用正则表达式匹配句子
     # 匹配以 . 或 ? 结尾且后面跟空格的模式，但排除 Mr. 这种情况
     # 负向前瞻确保 . 前面不是 Mr
-    # 使用 (?<!Mr)\. 来排除 Mr. 的情况
-    pattern = r'(?<!Mr)[.?](?=\s|$)'
+    # 使用 split 和 findall 的组合来处理
     
-    # 先找到所有分割点
+    # 方法：使用正则表达式找到所有句子
+    # 匹配模式：非贪婪匹配直到遇到 . 或 ? 后跟空格或字符串结尾
+    # 但要排除 Mr. 的情况
+    
     sentences = []
-    last_end = 0
+    # 匹配句子：从开始到 . 或 ? (但不是 Mr.)，后面跟空格或结尾
+    pattern = r'(?:(?!Mr\.)[^.?])+[.?]'
     
-    for match in re.finditer(pattern, sentences_string):
-        end_pos = match.end()
-        sentence = sentences_string[last_end:end_pos].strip()
-        if sentence:
-            sentences.append(sentence)
-        last_end = end_pos
+    matches = re.findall(pattern, sentences_string)
     
-    # 处理最后一个句子（如果没有以空格结尾）
-    if last_end < len(sentences_string):
-        last_sentence = sentences_string[last_end:].strip()
-        if last_sentence:
-            sentences.append(last_sentence)
+    # 清理结果，去除前后空格
+    sentences = [match.strip() for match in matches]
     
     return sentences
