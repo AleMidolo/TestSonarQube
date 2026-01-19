@@ -22,25 +22,28 @@ def map(data):
         sub_list = np.array(sub_list)
         if total_num == 0:
             return (0.0, [0.0])
-        else:
-            precision_sum = 0.0
-            correct_count = 0
-            for i, value in enumerate(sub_list):
-                if value == 1:
-                    correct_count += 1
-                    precision_sum += correct_count / (i + 1)
-            ap = precision_sum / total_num if total_num > 0 else 0.0
-            return (ap, [ap])
+        positions = np.where(sub_list == 1)[0] + 1
+        if len(positions) == 0:
+            return (0.0, [0.0])
+        precisions = []
+        for i, pos in enumerate(positions):
+            precisions.append((i + 1) / pos)
+        ap = np.mean(precisions)
+        return (ap, [ap])
     if type(data) == list:
         separate_result = []
         for sub_list, total_num in data:
             sub_list = np.array(sub_list)
-            precision_sum = 0.0
-            correct_count = 0
-            for i, value in enumerate(sub_list):
-                if value == 1:
-                    correct_count += 1
-                    precision_sum += correct_count / (i + 1)
-            ap = precision_sum / total_num if total_num > 0 else 0.0
+            if total_num == 0:
+                ap = 0.0
+            else:
+                positions = np.where(sub_list == 1)[0] + 1
+                if len(positions) == 0:
+                    ap = 0.0
+                else:
+                    precisions = []
+                    for i, pos in enumerate(positions):
+                        precisions.append((i + 1) / pos)
+                    ap = np.mean(precisions)
             separate_result.append(ap)
         return (np.mean(separate_result), separate_result)

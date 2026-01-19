@@ -6,6 +6,7 @@ def read_zip_file(self):
         >>> file = zfp.read_zip_file()
         """
     try:
-        return zipfile.ZipFile(self.file_name, 'r')
+        zip_file = zipfile.ZipFile(self.file_name, 'r')
+        return zip_file
     except:
         return None

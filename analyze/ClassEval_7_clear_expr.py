@@ -5,5 +5,10 @@ def clear_expr(self):
         >>> b.clear_expr()
         >>> b.expr
         '()'
+
         """
-    self.expr = ''.join([ch for ch in self.expr if ch in self.left_brackets + self.right_brackets])
+    filtered_chars = []
+    for char in self.expr:
+        if char in self.left_brackets or char in self.right_brackets:
+            filtered_chars.append(char)
+    self.expr = ''.join(filtered_chars)

@@ -11,16 +11,13 @@ def get_most_popular_class_in_major(self, major):
         >>> registration_system.get_most_popular_class_in_major("Computer Science")
         "Data Structures"
         """
-    class_enrollment = {}
-    for student in self.students:
-        if student['major'] == major:
-            student_classes = self.students_registration_classes.get(student['name'], [])
-            for class_name in student_classes:
-                if class_name in class_enrollment:
-                    class_enrollment[class_name] += 1
-                else:
-                    class_enrollment[class_name] = 1
-    if not class_enrollment:
+    class_counts = {}
+    students_in_major = self.get_students_by_major(major)
+    for student_name in students_in_major:
+        if student_name in self.students_registration_classes:
+            for class_name in self.students_registration_classes[student_name]:
+                class_counts[class_name] = class_counts.get(class_name, 0) + 1
+    if not class_counts:
         return ''
-    most_popular_class = max(class_enrollment, key=class_enrollment.get)
-    return most_popular_class
+    most_popular_class = max(class_counts.items(), key=lambda x: x[1])
+    return most_popular_class[0]

@@ -8,14 +8,20 @@ def interpret(self, display=False):
         [{'Chord': 'C', 'Tune': '53231323'}, {'Chord': 'Em', 'Tune': '43231323'}, {'Chord': 'F', 'Tune': '43231323'}, {'Chord': 'G', 'Tune': '63231323'}]
 
         """
-    if not self.play_text.strip():
+    if not self.play_text or self.play_text.isspace():
         return []
-    chords = []
-    parts = self.play_text.split()
-    for part in parts:
-        chord = ''.join(filter(str.isalpha, part))
-        tune = ''.join(filter(str.isdigit, part))
-        chords.append({'Chord': chord, 'Tune': tune})
-        if display:
-            print(self.display(chord, tune))
-    return chords
+    result = []
+    items = self.play_text.split()
+    for item in items:
+        chord = ''
+        tune = ''
+        for i, char in enumerate(item):
+            if char.isdigit():
+                chord = item[:i]
+                tune = item[i:]
+                break
+        if chord and tune:
+            result.append({'Chord': chord, 'Tune': tune})
+            if display:
+                print(self.display(chord, tune))
+    return result

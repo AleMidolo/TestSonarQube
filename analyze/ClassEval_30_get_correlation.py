@@ -6,4 +6,8 @@ def get_correlation(self):
         >>> ds2.get_correlation()
         1.0
         """
-    return np.corrcoef(self.data, self.data)[0, 1]
+    if len(self.data) < 2:
+        return 0.0
+    indices = np.arange(len(self.data))
+    correlation_matrix = np.corrcoef(indices, self.data)
+    return round(correlation_matrix[0, 1], 2)

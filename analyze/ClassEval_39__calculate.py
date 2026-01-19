@@ -10,15 +10,19 @@ def _calculate(first_value, second_value, current_op):
         >>> expression_calculator._calculate("2", "3", "+")
         5.0
         """
-    first_value = Decimal(first_value)
-    second_value = Decimal(second_value)
+    first = Decimal(first_value)
+    second = Decimal(second_value)
     if current_op == '+':
-        return first_value + second_value
+        return first + second
     elif current_op == '-':
-        return first_value - second_value
+        return first - second
     elif current_op == '*':
-        return first_value * second_value
-    elif current_op == '\\/':
-        return first_value / second_value
+        return first * second
+    elif current_op == '/':
+        if second == 0:
+            raise ZeroDivisionError('Division by zero')
+        return first / second
     elif current_op == '%':
-        return first_value % second_value
+        return first % second
+    else:
+        raise ValueError(f'Unsupported operator: {current_op}')

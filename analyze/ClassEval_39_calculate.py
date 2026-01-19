@@ -9,14 +9,26 @@ def calculate(self, expression):
 
         """
     self.postfix_stack.clear()
-    expression = self.transform(expression)
-    self.prepare(expression)
+    transformed_expression = self.transform(expression)
+    self.prepare(transformed_expression)
+    eval_stack = deque()
     for token in self.postfix_stack:
-        if not self.is_operator(token):
-            self.postfix_stack.append(token)
+        if self.is_operator(token):
+            if token == '~':
+                if not eval_stack:
+                    raise ValueError('Invalid expression: missing operand for unary minus')
+                operand = eval_stack.pop()
+                result = Decimal(0) - Decimal(operand)
+                eval_stack.append(str(result))
+            else:
+                if len(eval_stack) < 2:
+                    raise ValueError('Invalid expression: insufficient operands for operator {}'.format(token))
+                second_value = eval_stack.pop()
+                first_value = eval_stack.pop()
+                result = self._calculate(first_value, second_value, token)
+                eval_stack.append(str(result))
         else:
-            second_value = self.postfix_stack.pop()
-            first_value = self.postfix_stack.pop()
-            result = self._calculate(first_value, second_value, token)
-            self.postfix_stack.append(result)
-    return float(self.postfix_stack.pop())
+            eval_stack.append(token)
+    if len(eval_stack) != 1:
+        raise ValueError('Invalid expression: evaluation stack has {} elements instead of 1'.format(len(eval_stack)))
+    return float(eval_stack.pop())
