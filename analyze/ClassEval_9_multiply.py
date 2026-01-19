@@ -48,7 +48,7 @@ def multiply(num1, num2):
     # 反转结果并转换为字符串
     result_str = ''.join(map(str, result[::-1]))
     
-    # 添加负号(如果需要)
+    # 添加负号
     if negative:
         result_str = '-' + result_str
     

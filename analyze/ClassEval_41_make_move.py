@@ -11,7 +11,7 @@ def make_move(self, row, col):
     >>> gomokuGame.make_move(5, 5)
     False
     """
-    # 检查行和列索引是否在有效范围内
+    # 检查行和列是否在有效范围内
     if row < 0 or row >= len(self.board) or col < 0 or col >= len(self.board[0]):
         return False
     
@@ -22,7 +22,7 @@ def make_move(self, row, col):
     # 放置当前玩家的符号
     self.board[row][col] = self.current_player
     
-    # 切换到另一个玩家
+    # 切换玩家
     if self.current_player == 'X':
         self.current_player = 'O'
     else:

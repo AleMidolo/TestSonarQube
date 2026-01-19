@@ -18,16 +18,22 @@ def split_sentences(self, text):
     while i < len(sentences):
         sentence = sentences[i].strip()
         if sentence:
-            # 如果是最后一个非空句子，保留标点
-            if i + 1 < len(sentences) and sentences[i + 1].strip() in ['.', '!', '?', '..', '!!', '??']:
-                # 对于非最后的句子，不添加标点
-                if i + 2 < len(sentences) and any(sentences[j].strip() for j in range(i + 2, len(sentences))):
+            # 检查下一个元素是否是标点符号
+            if i + 1 < len(sentences) and re.match(r'^[.!?]+$', sentences[i + 1]):
+                # 如果不是最后一组，不添加标点
+                # 需要检查是否还有后续内容
+                has_more = False
+                for j in range(i + 2, len(sentences)):
+                    if sentences[j].strip():
+                        has_more = True
+                        break
+                
+                if has_more:
                     result.append(sentence)
-                    i += 2
                 else:
                     # 这是最后一个句子，保留标点
-                    result.append(sentence + sentences[i + 1].strip())
-                    i += 2
+                    result.append(sentence + sentences[i + 1])
+                i += 2
             else:
                 result.append(sentence)
                 i += 1

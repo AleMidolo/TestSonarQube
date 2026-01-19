@@ -5,7 +5,7 @@ def save_image(self, save_path):
     >>> processor.load_image('test.jpg')
     >>> processor.save_image('test2.jpg')
     """
-    if hasattr(self, 'image') and self.image is not None:
+    if self.image is not None:
         self.image.save(save_path)
     else:
-        raise ValueError("No image loaded. Please load an image first using load_image().")
+        raise ValueError("No image loaded. Please load an image first.")

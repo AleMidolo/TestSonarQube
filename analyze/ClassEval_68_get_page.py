@@ -8,7 +8,7 @@ def get_page(self, page_number):
     [1]
 
     """
-    if page_number < 1:
+    if page_number < 1 or page_number > self.total_pages:
         return []
     
     start_index = (page_number - 1) * self.page_size
