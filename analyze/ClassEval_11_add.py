@@ -10,14 +10,13 @@ def add(states, stat):
     >>> bit_status_util.add(2, 4)
     6
     """
-    # Validate that parameters are integers
+    # Validate parameters are integers
     if not isinstance(states, int) or not isinstance(stat, int):
-        raise TypeError("Both parameters must be integers")
+        raise TypeError("Parameters must be integers")
     
-    # Validate that parameters are non-negative
+    # Validate parameters are non-negative
     if states < 0 or stat < 0:
-        raise ValueError("Parameters must be non-negative integers")
+        raise ValueError("Parameters must be non-negative")
     
     # Add the status using bitwise OR operation
-    # This ensures that bits are set without duplication
     return states | stat

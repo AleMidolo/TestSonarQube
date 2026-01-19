@@ -15,13 +15,13 @@ def select(self, fields=None, condition=None):
         field_str = ', '.join(fields)
     
     # Build the base SELECT statement
-    sql = f"SELECT {field_str} FROM {self.table_name}"
+    sql = f'SELECT {field_str} FROM {self.table_name}'
     
     # Add WHERE clause if condition is provided
     if condition is not None and condition != '':
-        sql += f" WHERE {condition}"
+        sql += f' WHERE {condition}'
     
     # Add semicolon at the end
-    sql += ";"
+    sql += ';'
     
     return sql

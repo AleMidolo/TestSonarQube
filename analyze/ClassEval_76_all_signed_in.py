@@ -8,10 +8,10 @@ def all_signed_in(self):
     >>> signInSystem.all_signed_in()
     True
     """
-    if not hasattr(self, 'users') or len(self.users) == 0:
+    if not hasattr(self, 'users') or not self.users:
         return True
     
     if not hasattr(self, 'signed_in_users'):
         return False
     
-    return all(user in self.signed_in_users for user in self.users)
+    return len(self.signed_in_users) == len(self.users)

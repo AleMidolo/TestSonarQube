@@ -68,18 +68,22 @@ def _is_clear_line(self, pos1, pos2):
     
     # Horizontal line
     if y1 == y2:
-        start, end = min(x1, x2), max(x1, x2)
-        for x in range(start + 1, end):
-            if self.board[y1][x] is not None:
-                return False
+        start_x = min(x1, x2)
+        end_x = max(x1, x2)
+        for x in range(start_x, end_x + 1):
+            if (x, y1) != pos1 and (x, y1) != pos2:
+                if self.board[y1][x] is not None:
+                    return False
         return True
     
     # Vertical line
     if x1 == x2:
-        start, end = min(y1, y2), max(y1, y2)
-        for y in range(start + 1, end):
-            if self.board[y][x1] is not None:
-                return False
+        start_y = min(y1, y2)
+        end_y = max(y1, y2)
+        for y in range(start_y, end_y + 1):
+            if (x1, y) != pos1 and (x1, y) != pos2:
+                if self.board[y][x1] is not None:
+                    return False
         return True
     
     return False
@@ -88,6 +92,7 @@ def _is_empty_or_target(self, pos, pos1, pos2):
     """Check if position is empty or one of the target positions"""
     if pos == pos1 or pos == pos2:
         return True
-    if 0 <= pos[0] < len(self.board[0]) and 0 <= pos[1] < len(self.board):
-        return self.board[pos[1]][pos[0]] is None
+    x, y = pos
+    if 0 <= x < len(self.board[0]) and 0 <= y < len(self.board):
+        return self.board[y][x] is None
     return False

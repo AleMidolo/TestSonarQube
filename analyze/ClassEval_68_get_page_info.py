@@ -22,7 +22,7 @@ def get_page_info(self, page_number):
     total_items = len(self.data)
     total_pages = math.ceil(total_items / self.per_page)
     
-    # Validate page number
+    # Validate page_number
     if page_number < 1:
         page_number = 1
     elif page_number > total_pages:

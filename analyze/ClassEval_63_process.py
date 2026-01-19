@@ -18,7 +18,7 @@ def process(self, string_list):
         # Split into words
         words = cleaned.split()
         
-        # Count word frequencies
+        # Count word frequency
         for word in words:
             if word:  # Skip empty strings
                 word_freq[word] = word_freq.get(word, 0) + 1

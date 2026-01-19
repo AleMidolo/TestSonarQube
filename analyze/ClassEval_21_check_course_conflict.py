@@ -16,20 +16,17 @@ def check_course_conflict(self, new_course):
     new_start = time_to_minutes(new_course['start_time'])
     new_end = time_to_minutes(new_course['end_time'])
     
-    # Check if courses list exists (assuming it's an instance variable)
+    # Check if courses list exists (assuming self.courses is the list of courses)
     if not hasattr(self, 'courses'):
         return True
     
-    # Check for conflicts with existing courses
     for course in self.courses:
         existing_start = time_to_minutes(course['start_time'])
         existing_end = time_to_minutes(course['end_time'])
         
-        # Check if there's any overlap (including boundary touching)
-        # Courses conflict if:
-        # - new course starts before existing ends AND new course ends after existing starts
-        # This includes the case where boundaries touch (e.g., one ends at 9:40, other starts at 9:40)
-        if new_start < existing_end and new_end > existing_start:
+        # Check for overlap (including boundary touching as per the example)
+        # Two courses conflict if they overlap or share boundary times
+        if not (new_end <= existing_start or new_start >= existing_end):
             return False
     
     return True

@@ -17,15 +17,17 @@ def buy_stock(self, stock):
         self.cash_balance -= total_cost
         
         # Check if stock already exists in portfolio
-        found = False
-        for existing_stock in self.portfolio:
-            if existing_stock["name"] == stock["name"]:
-                existing_stock["quantity"] += stock["quantity"]
-                found = True
+        existing_stock = None
+        for s in self.portfolio:
+            if s["name"] == stock["name"]:
+                existing_stock = s
                 break
         
-        # If stock doesn't exist, add it to portfolio
-        if not found:
+        if existing_stock:
+            # Update existing stock quantity and average price
+            existing_stock["quantity"] += stock["quantity"]
+        else:
+            # Add new stock to portfolio
             self.portfolio.append(stock.copy())
         
         return True

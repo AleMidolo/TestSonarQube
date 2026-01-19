@@ -10,5 +10,4 @@ def is_hex_char(char):
     """
     if not char or len(char) != 1:
         return False
-    
     return char in '0123456789abcdefABCDEF'
