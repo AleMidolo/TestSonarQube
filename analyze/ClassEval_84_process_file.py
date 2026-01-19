@@ -15,7 +15,7 @@ def process_file(self):
     # Filter out non-alphabetic characters
     processed_content = ''.join(char for char in content if char.isalpha())
     
-    # Overwrite the file with processed data
+    # Overwrite the file with processed content
     with open(self.file_path, 'w') as file:
         file.write(processed_content)
     

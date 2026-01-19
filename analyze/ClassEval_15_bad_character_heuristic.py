@@ -21,7 +21,7 @@ def bad_character_heuristic(self):
         bad_char[pattern[i]] = m - 1 - i
     
     # Search for pattern
-    result = []
+    results = []
     s = 0  # shift of the pattern with respect to text
     
     while s <= n - m:
@@ -31,13 +31,14 @@ def bad_character_heuristic(self):
         while j >= 0 and pattern[j] == text[s + j]:
             j -= 1
         
-        # If pattern is found at current shift
+        # If pattern is found
         if j < 0:
-            result.append(s)
+            results.append(s)
+            # Shift pattern to align with next character
             s += 1
         else:
             # Shift pattern based on bad character heuristic
             bad_char_shift = bad_char.get(text[s + j], m)
             s += max(1, bad_char_shift - (m - 1 - j))
     
-    return result
+    return results

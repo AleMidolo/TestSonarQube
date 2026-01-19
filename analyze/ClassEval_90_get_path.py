@@ -24,9 +24,8 @@ def get_path(self):
             # No path found, return empty string or "/"
             return ""
     else:
-        # No protocol, try to find the first "/"
+        # No protocol, try to find path directly
         slash_index = self.url.find("/")
         if slash_index != -1:
             return self.url[slash_index:]
-        else:
-            return ""
+        return ""

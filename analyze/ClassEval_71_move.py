@@ -53,14 +53,13 @@ def move(self, direction):
         box_new_y = new_y + dy
         box_new_x = new_x + dx
         
-        # Check if box can be pushed (destination is empty or goal)
-        if self.map[box_new_y][box_new_x] == ' ' or self.map[box_new_y][box_new_x] == 'G':
-            # Move the box
-            self.map[box_new_y][box_new_x] = 'X'
-            self.map[new_y][new_x] = ' '
-        else:
-            # Can't push the box
+        # Check if box can be pushed (destination is not wall or another box)
+        if self.map[box_new_y][box_new_x] == '#' or self.map[box_new_y][box_new_x] == 'X':
             return False
+        
+        # Move the box
+        self.map[box_new_y][box_new_x] = 'X'
+        self.map[new_y][new_x] = ' '
     
     # Move the player
     self.map[player_y][player_x] = ' '
@@ -68,9 +67,4 @@ def move(self, direction):
     self.player_pos = (new_y, new_x)
     
     # Check if game is won (box is on goal)
-    for row in self.map:
-        for cell in row:
-            if cell == 'G':
-                return False  # Goal still exists without box
-    
-    return True  # All goals are covered
+    return self.check_win()

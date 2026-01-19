@@ -25,8 +25,8 @@ def answer(self, expression):
         # Evaluate the expression and check if it equals 24
         result = eval(expression)
         
-        # Use approximate equality to handle floating point precision
-        return abs(result - 24) < 1e-9
+        # Check if result is 24 (with floating point tolerance)
+        return abs(result - 24) < 1e-6
         
     except:
         return False

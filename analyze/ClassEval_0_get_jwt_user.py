@@ -21,14 +21,12 @@ def get_jwt_user(self, request):
     
     # Extract JWT token and user info
     if isinstance(authorization, dict):
-        jwt_token = authorization.get('jwt')
+        jwt_token = authorization.get('jwt', '')
         user_info = authorization.get('user')
         
-        if not jwt_token or not user_info:
-            return None
-        
-        # Validate JWT token (check if it contains username and today's date)
-        if user_info.get('name') and str(datetime.date.today()) in jwt_token:
-            return {'user': user_info}
+        # Validate JWT token (check if it contains today's date)
+        today_str = str(datetime.date.today())
+        if jwt_token and today_str in jwt_token:
+            return {'user': user_info} if user_info else None
     
     return None

@@ -16,12 +16,9 @@ def _check_five_in_a_row(self, row, col, direction):
     False
     """
     # Get the symbol at the starting position
-    if not (0 <= row < len(self.board) and 0 <= col < len(self.board[0])):
-        return False
-    
     symbol = self.board[row][col]
     
-    # If the starting cell is empty, return False
+    # If the cell is empty, return False
     if symbol is None or symbol == 0 or symbol == '':
         return False
     

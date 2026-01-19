@@ -8,11 +8,14 @@ def filter(self, request):
     True
 
     """
+    # Allow all requests to /login with POST method
+    if request.get('path') == '/login' and request.get('method') == 'POST':
+        return True
+    
     # Define allowed paths and methods
     allowed_public_paths = ['/login', '/register', '/health', '/public']
     allowed_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
     
-    # Extract path and method from request
     path = request.get('path', '')
     method = request.get('method', '')
     
@@ -20,14 +23,14 @@ def filter(self, request):
     if method not in allowed_methods:
         return False
     
-    # Check if path is in allowed public paths
-    for allowed_path in allowed_public_paths:
-        if path.startswith(allowed_path):
+    # Allow public paths
+    for public_path in allowed_public_paths:
+        if path.startswith(public_path):
             return True
     
-    # Check if request has valid authentication token
+    # Check for authentication token for protected paths
     if 'token' in request and request['token']:
         return True
     
-    # Default: deny access
+    # Deny by default
     return False

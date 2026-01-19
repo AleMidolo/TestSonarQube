@@ -7,8 +7,7 @@ def count_all(n: int) -> int:
     >>> CombinationCalculator.count_all(4)
     15
     """
-    # The total number of all possible combinations is 2^n - 1
-    # (excluding the empty set)
+    # The total number of combinations is 2^n - 1 (excluding the empty set)
     # For n=4: C(4,1) + C(4,2) + C(4,3) + C(4,4) = 4 + 6 + 4 + 1 = 15
     # This equals 2^4 - 1 = 16 - 1 = 15
     
@@ -19,7 +18,7 @@ def count_all(n: int) -> int:
         # 2^63 - 1 is the max, so 2^63 would already exceed it
         return float("inf")
     
-    result = 2**n - 1
+    result = (2 ** n) - 1
     
     if result > max_value:
         return float("inf")

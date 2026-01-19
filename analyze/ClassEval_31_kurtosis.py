@@ -22,10 +22,8 @@ def kurtosis(data):
     if std_dev == 0:
         return 0.0
     
-    # Calculate fourth moment
+    # Calculate fourth moment and kurtosis (excess kurtosis)
     fourth_moment = sum((x - mean) ** 4 for x in data) / n
+    kurtosis_value = (fourth_moment / (variance ** 2)) - 3
     
-    # Calculate kurtosis (excess kurtosis)
-    kurt = (fourth_moment / (variance ** 2)) - 3
-    
-    return kurt
+    return kurtosis_value

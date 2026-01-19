@@ -29,6 +29,6 @@ def purchase_item(self, item_name):
     
     # Process the purchase
     self.balance -= item['price']
-    self.inventory[item_name]['quantity'] -= 1
+    item['quantity'] -= 1
     
     return self.balance

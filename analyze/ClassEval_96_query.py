@@ -1,4 +1,4 @@
-def query(self, weather_list, tmp_units = 'celsius'):
+def query(self, weather_list, tmp_units='celsius'):
     """
     Query the weather system for the weather and temperature of the city,and convert the temperature units based on the input parameter.
     :param weather_list: a dictionary of weather information for different cities,dict.

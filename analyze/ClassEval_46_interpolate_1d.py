@@ -27,6 +27,7 @@ def interpolate_1d(x, y, x_interp):
                 # Linear interpolation formula: y = y1 + (y2 - y1) * (x - x1) / (x2 - x1)
                 x1, x2 = x[i], x[i + 1]
                 y1, y2 = y[i], y[i + 1]
+                
                 yi = y1 + (y2 - y1) * (xi - x1) / (x2 - x1)
                 result.append(yi)
                 break

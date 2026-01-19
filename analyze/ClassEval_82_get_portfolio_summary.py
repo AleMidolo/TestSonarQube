@@ -16,7 +16,7 @@ def get_portfolio_summary(self):
         summary_list.append({'name': stock['name'], 'value': stock_value})
         total_portfolio_value += stock_value
     
-    # Add cash balance to total value
+    # Add cash to total value
     total_portfolio_value += self.cash
     
     return (total_portfolio_value, summary_list)

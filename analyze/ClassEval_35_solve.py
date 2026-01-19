@@ -36,18 +36,19 @@ def solve(self):
         possible_moves = self.get_possible_moves()
         
         # Try each possible move
-        for move_direction in possible_moves:
+        for move in possible_moves:
             # Make the move to get new state
-            new_state = self.move(move_direction)
+            new_state = self.move(move)
             
-            # Convert to tuple for hashing
+            # Check if this state has been visited
             state_tuple = tuple(map(tuple, new_state))
-            
-            # If this state hasn't been visited, add it to the queue
             if state_tuple not in visited:
                 visited.add(state_tuple)
-                new_path = path + [move_direction]
-                open_list.append((new_state, new_path))
+                # Append new state with updated path
+                open_list.append((new_state, path + [move]))
+            
+            # Restore state for next iteration
+            self.state = current_state
         
         # Restore original state
         self.state = original_state

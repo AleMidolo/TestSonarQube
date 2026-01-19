@@ -4,13 +4,6 @@ def is_valid_move(self, pos1, pos2):
     :param pos1: position tuple(x, y) of the first icon
     :param pos2: position tuple(x, y) of the second icon
     :return:True or False ,representing whether the move of two icons is valid
-    >>> mc = MahjongConnect([4, 4], ['a', 'b', 'c'])
-    mc.board = [['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a'],
-                ['a', 'b', 'c', 'a']]
-    >>> mc.is_valid_move((0, 0), (1, 0))
-    True
     """
     # Check if positions are within board range
     rows = len(self.board)
@@ -33,7 +26,5 @@ def is_valid_move(self, pos1, pos2):
         return False
     
     # Check if there is a valid path between the two positions
-    if hasattr(self, 'has_valid_path'):
-        return self.has_valid_path(pos1, pos2)
-    
-    return True
+    # Valid path in Mahjong Connect means a path with at most 2 turns (3 line segments)
+    return self.has_valid_path(pos1, pos2)

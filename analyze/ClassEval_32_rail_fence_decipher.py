@@ -9,43 +9,47 @@ def rail_fence_decipher(self, encrypted_text, rails):
     'Hello, World!'
 
     """
-    if rails == 1:
+    if rails <= 1 or len(encrypted_text) <= 1:
         return encrypted_text
     
-    length = len(encrypted_text)
+    # Create a matrix to mark positions
+    fence = [[None for _ in range(len(encrypted_text))] for _ in range(rails)]
     
-    # Create the rail fence pattern to determine positions
-    fence = [[None] * length for _ in range(rails)]
-    
-    # Mark the positions in the zigzag pattern
+    # Mark the positions in zigzag pattern
     rail = 0
     direction = 1  # 1 for down, -1 for up
     
-    for col in range(length):
-        fence[rail][col] = True
-        rail += direction
+    for col in range(len(encrypted_text)):
+        fence[rail][col] = '*'  # Mark position
         
-        if rail == 0 or rail == rails - 1:
-            direction = -direction
+        if rail == 0:
+            direction = 1
+        elif rail == rails - 1:
+            direction = -1
+        
+        rail += direction
     
-    # Fill the fence with characters from encrypted text
+    # Fill the marked positions with characters from encrypted text
     index = 0
     for row in range(rails):
-        for col in range(length):
-            if fence[row][col] is True:
+        for col in range(len(encrypted_text)):
+            if fence[row][col] == '*':
                 fence[row][col] = encrypted_text[index]
                 index += 1
     
-    # Read the fence in zigzag pattern to get plaintext
+    # Read the matrix in zigzag pattern to get plaintext
     result = []
     rail = 0
     direction = 1
     
-    for col in range(length):
+    for col in range(len(encrypted_text)):
         result.append(fence[rail][col])
-        rail += direction
         
-        if rail == 0 or rail == rails - 1:
-            direction = -direction
+        if rail == 0:
+            direction = 1
+        elif rail == rails - 1:
+            direction = -1
+        
+        rail += direction
     
     return ''.join(result)
