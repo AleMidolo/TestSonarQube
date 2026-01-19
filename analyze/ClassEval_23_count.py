@@ -8,6 +8,6 @@ def count(n: int, m: int) -> int:
         >>> CombinationCalculator.count(4, 2)
         6
         """
-    if m > n or m < 0:
+    if m < 0 or m > n:
         return 0
     return math.comb(n, m)
