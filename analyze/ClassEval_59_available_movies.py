@@ -26,7 +26,7 @@ def available_movies(self, start_time, end_time):
             movie_end = time_to_minutes(movie_info['end_time'])
             
             # La película está disponible si su horario está completamente dentro del rango
-            if start_minutes <= movie_start and movie_end <= end_minutes:
+            if movie_start >= start_minutes and movie_end <= end_minutes:
                 available.append(movie_name)
     
     return available

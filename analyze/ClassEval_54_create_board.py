@@ -14,21 +14,21 @@ def create_board(self):
     rows, cols = self.board_size[0], self.board_size[1]
     total_cells = rows * cols
     
-    # Necesitamos un número par de cada ícono
+    # Necesitamos un número par de cada ícono para poder emparejarlos
     tiles = []
     icons_count = len(self.icons)
     
-    # Calcular cuántas parejas de cada ícono necesitamos
-    pairs_needed = total_cells // 2
-    pairs_per_icon = pairs_needed // icons_count
-    remaining_pairs = pairs_needed % icons_count
+    # Calcular cuántas veces necesitamos cada ícono (asegurando pares)
+    tiles_per_icon = total_cells // icons_count
     
-    # Crear las fichas (cada ícono aparece en pares)
-    for i, icon in enumerate(self.icons):
-        count = pairs_per_icon * 2
-        if i < remaining_pairs:
-            count += 2
-        tiles.extend([icon] * count)
+    # Crear la lista de fichas con pares
+    for icon in self.icons:
+        tiles.extend([icon] * tiles_per_icon)
+    
+    # Si hay celdas restantes, agregar más íconos
+    remaining = total_cells - len(tiles)
+    for i in range(remaining):
+        tiles.append(self.icons[i % icons_count])
     
     # Mezclar las fichas
     random.shuffle(tiles)

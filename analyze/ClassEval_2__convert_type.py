@@ -8,7 +8,7 @@ def _convert_type(self, arg, value):
     >>> parser._convert_type('arg1', '21')
     21
     """
-    if arg in self.types:
+    if hasattr(self, 'types') and arg in self.types:
         try:
             return self.types[arg](value)
         except (ValueError, TypeError):

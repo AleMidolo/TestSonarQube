@@ -6,14 +6,14 @@ def get_std_deviation(self):
     >>> ds2.get_std_deviation()
     1.12
     """
-    if not self.data or len(self.data) == 0:
+    if not self or len(self) == 0:
         return 0.0
     
     # Calculate mean
-    mean = sum(self.data) / len(self.data)
+    mean = sum(self) / len(self)
     
     # Calculate variance (sum of squared differences from mean)
-    variance = sum((x - mean) ** 2 for x in self.data) / len(self.data)
+    variance = sum((x - mean) ** 2 for x in self) / len(self)
     
     # Calculate standard deviation (square root of variance)
     std_dev = variance ** 0.5

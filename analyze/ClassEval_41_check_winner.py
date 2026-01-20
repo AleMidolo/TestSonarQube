@@ -9,43 +9,35 @@ def check_winner(self):
     >>> gomokuGame.check_winner()
     'X'
     """
-    # Direcciones: horizontal, vertical, diagonal (\), diagonal (/)
-    directions = [
-        (0, 1),   # horizontal
-        (1, 0),   # vertical
-        (1, 1),   # diagonal \
-        (1, -1)   # diagonal /
-    ]
+    # Direcciones: horizontal, vertical, diagonal descendente, diagonal ascendente
+    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
     
-    # Recorrer cada posición del tablero
     for row in range(self.size):
         for col in range(self.size):
-            # Si la celda está vacía, continuar
-            if self.board[row][col] is None:
-                continue
-            
-            player = self.board[row][col]
-            
-            # Verificar en cada dirección
-            for dr, dc in directions:
-                count = 1  # Contar la pieza actual
+            # Solo verificar si hay una pieza en esta posición
+            if self.board[row][col] is not None:
+                player = self.board[row][col]
                 
-                # Contar en la dirección positiva
-                r, c = row + dr, col + dc
-                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
-                    count += 1
-                    r += dr
-                    c += dc
-                
-                # Contar en la dirección negativa
-                r, c = row - dr, col - dc
-                while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
-                    count += 1
-                    r -= dr
-                    c -= dc
-                
-                # Si hay 5 o más en fila, hay un ganador
-                if count >= 5:
-                    return player
+                # Verificar en cada dirección
+                for dr, dc in directions:
+                    count = 1  # Contar la pieza actual
+                    
+                    # Contar en la dirección positiva
+                    r, c = row + dr, col + dc
+                    while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
+                        count += 1
+                        r += dr
+                        c += dc
+                    
+                    # Contar en la dirección negativa
+                    r, c = row - dr, col - dc
+                    while 0 <= r < self.size and 0 <= c < self.size and self.board[r][c] == player:
+                        count += 1
+                        r -= dr
+                        c -= dc
+                    
+                    # Si hay 5 o más en fila, hay un ganador
+                    if count >= 5:
+                        return player
     
     return None

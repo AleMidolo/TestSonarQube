@@ -11,11 +11,11 @@ def check_won(self, map):
     """
     for i in range(len(map)):
         for j in range(len(map[i])):
-            # Si encontramos una celda sin revelar ('-') que no sea una mina
+            # Si hay una celda sin revelar ('-') en el mapa del jugador
             if map[i][j] == '-':
-                # Verificamos si en el mapa real hay una mina
+                # Verificar si esa posición NO es una mina en el mapa real
                 if self.minesweeper_map[i][j] != 'X':
-                    # Hay celdas sin revelar que no son minas, no ha ganado
+                    # Todavía hay celdas seguras sin revelar, no ha ganado
                     return False
-    # Todas las celdas no-mina están reveladas
+    # Todas las celdas no-mina han sido reveladas
     return True

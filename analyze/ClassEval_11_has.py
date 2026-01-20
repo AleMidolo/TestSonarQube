@@ -1,3 +1,4 @@
+@staticmethod
 def has(states, stat):
     """
     Verifica si el estado actual contiene el estado especificado y comprueba si los parámetros son legales.

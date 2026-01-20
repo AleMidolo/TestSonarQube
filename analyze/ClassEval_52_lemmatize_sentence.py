@@ -11,17 +11,18 @@ def lemmatize_sentence(self, sentence):
     """
     import string
     import nltk
+    from nltk.tokenize import word_tokenize
     from nltk.corpus import wordnet
     from nltk.stem import WordNetLemmatizer
     
     # Remove punctuation
     sentence = sentence.translate(str.maketrans('', '', string.punctuation))
     
-    # Tokenize the sentence
-    tokens = nltk.word_tokenize(sentence)
+    # Tokenize
+    words = word_tokenize(sentence)
     
-    # POS tag the tokens
-    pos_tags = nltk.pos_tag(tokens)
+    # POS tagging
+    pos_tags = nltk.pos_tag(words)
     
     # Initialize lemmatizer
     lemmatizer = WordNetLemmatizer()
@@ -39,7 +40,7 @@ def lemmatize_sentence(self, sentence):
         else:
             return wordnet.NOUN  # Default to noun
     
-    # Lemmatize each word based on its POS tag
+    # Lemmatize words based on their POS tags
     lemmatized_words = []
     for word, pos in pos_tags:
         wordnet_pos = get_wordnet_pos(pos)

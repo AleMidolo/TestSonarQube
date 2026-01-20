@@ -22,14 +22,14 @@ def subtract(num1, num2):
     # Convert subtraction to addition when dealing with negative numbers
     # a - b = a + (-b)
     # a - (-b) = a + b
-    # -a - b = -(a + b)
-    # -a - (-b) = -a + b = b - a
+    # (-a) - b = -(a + b)
+    # (-a) - (-b) = b - a
     
     if negative1 and negative2:
-        # -a - (-b) = b - a
+        # (-a) - (-b) = b - a
         return subtract(num2, num1)
     elif negative1:
-        # -a - b = -(a + b)
+        # (-a) - b = -(a + b)
         result = add(num1, num2)
         return '-' + result if result != '0' else '0'
     elif negative2:

@@ -11,19 +11,20 @@ def answer(self, expression):
     """
     import re
     
-    # Extraer todos los números de la expresión
-    numbers_in_expr = re.findall(r'\d+', expression)
-    numbers_in_expr = [int(num) for num in numbers_in_expr]
-    
-    # Verificar que se usen exactamente los mismos números que en self.nums
-    if sorted(numbers_in_expr) != sorted(self.nums):
-        return False
-    
     try:
+        # Extraer todos los números de la expresión
+        numbers_in_expr = re.findall(r'\d+', expression)
+        numbers_in_expr = [int(num) for num in numbers_in_expr]
+        
+        # Verificar que se usen exactamente los mismos números que en self.nums
+        if sorted(numbers_in_expr) != sorted(self.nums):
+            return False
+        
         # Evaluar la expresión
         result = eval(expression)
+        
         # Verificar si el resultado es 24 (con tolerancia para errores de punto flotante)
         return abs(result - 24) < 1e-6
+        
     except:
-        # Si hay algún error en la evaluación, retornar False
         return False

@@ -8,7 +8,9 @@ def get_all_students_with_fail_course(self):
     """
     students_with_fail = []
     
+    # Iterate through all students and their scores
     for student_name, courses in self.students.items():
+        # Check if any course has a score below 60
         for course_name, score in courses.items():
             if score < 60:
                 students_with_fail.append(student_name)

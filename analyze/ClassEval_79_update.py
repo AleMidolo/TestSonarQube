@@ -11,7 +11,7 @@ def update(self, data, condition):
     for field, value in data.items():
         set_clauses.append(f"{field} = '{value}'")
     
-    set_clause = ", ".join(set_clauses)
-    sql_statement = f"UPDATE {self.table} SET {set_clause} WHERE {condition};"
+    set_statement = ", ".join(set_clauses)
+    sql_statement = f"UPDATE {self.table} SET {set_statement} WHERE {condition};"
     
     return sql_statement

@@ -6,13 +6,17 @@ def send(self, info):
     >>> server.send({"addr":66,"content":"ABC"})
     self.send_struct = {"addr":66,"content":"ABC"}
     """
-    if not isinstance(info, dict):
-        return "Error: info debe ser un diccionario"
-    
-    if "addr" not in info:
-        return "Error: falta la clave 'addr' en info"
-    
-    if "content" not in info:
-        return "Error: falta la clave 'content' en info"
-    
-    self.send_struct = info
+    try:
+        if not isinstance(info, dict):
+            return "Error: info debe ser un diccionario"
+        
+        if "addr" not in info:
+            return "Error: falta la clave 'addr' en info"
+        
+        if "content" not in info:
+            return "Error: falta la clave 'content' en info"
+        
+        self.send_struct = info
+        
+    except Exception as e:
+        return f"Error: {str(e)}"

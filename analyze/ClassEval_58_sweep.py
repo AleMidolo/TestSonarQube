@@ -25,16 +25,16 @@ def sweep(self, x, y):
                 if dx == 0 and dy == 0:
                     continue
                 nx, ny = x + dx, y + dy
-                # Verificar que la nueva posición esté dentro de los límites
+                # Verificar límites
                 if 0 <= nx < len(self.minesweeper_map) and 0 <= ny < len(self.minesweeper_map[0]):
-                    # Solo barrer si aún no ha sido revelada
+                    # Solo revelar si aún no ha sido revelado
                     if self.player_map[nx][ny] == '-':
                         self.sweep(nx, ny)
     
-    # Verificar si el jugador ha ganado (todas las posiciones sin minas están reveladas)
-    for i in range(len(self.minesweeper_map)):
-        for j in range(len(self.minesweeper_map[0])):
-            if self.minesweeper_map[i][j] != 'X' and self.player_map[i][j] == '-':
+    # Verificar si el jugador ha ganado (todas las posiciones sin minas reveladas)
+    for i in range(len(self.player_map)):
+        for j in range(len(self.player_map[0])):
+            if self.player_map[i][j] == '-' and self.minesweeper_map[i][j] != 'X':
                 # Aún hay posiciones sin revelar que no son minas
                 return self.player_map
     

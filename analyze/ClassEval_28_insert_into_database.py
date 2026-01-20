@@ -11,21 +11,21 @@ def insert_into_database(self, table_name, data):
     if not data:
         return
     
-    # Obtener las columnas del primer diccionario
+    # Get column names from the first dictionary
     columns = list(data[0].keys())
     column_names = ', '.join(columns)
     placeholders = ', '.join(['?' for _ in columns])
     
-    # Construir la consulta SQL
-    query = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
+    # Prepare the SQL INSERT statement
+    sql = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
     
-    # Preparar los valores para cada fila
+    # Prepare the values for each row
     values_list = []
     for row in data:
         values = tuple(row[col] for col in columns)
         values_list.append(values)
     
-    # Ejecutar la inserción
+    # Execute the insert operation
     cursor = self.connection.cursor()
-    cursor.executemany(query, values_list)
+    cursor.executemany(sql, values_list)
     self.connection.commit()

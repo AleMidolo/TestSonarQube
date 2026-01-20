@@ -10,4 +10,6 @@ def mean(self, data):
     if not data:
         return 0.00
     
-    return round(sum(data) / len(data), 2)
+    total = sum(data)
+    average = total / len(data)
+    return round(average, 2)

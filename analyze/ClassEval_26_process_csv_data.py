@@ -14,10 +14,13 @@ def process_csv_data(self, N, save_file_name):
     >>> csvProcessor.read_csv('read_test_process.csv')
     (['a', 'b', 'c', 'd'], [['HELLO']])
     """
+    import csv
+    import os
+    
     try:
         # Read the CSV file
         result = self.read_csv(save_file_name)
-        if result == 0:
+        if result is None:
             return 0
         
         title, data = result
@@ -31,21 +34,17 @@ def process_csv_data(self, N, save_file_name):
         for row in data:
             if N < len(row):
                 processed_data.append([row[N].upper()])
-            else:
-                return 0
         
-        # Create new filename with '_process' suffix
-        if '.' in save_file_name:
-            name_parts = save_file_name.rsplit('.', 1)
-            new_file_name = name_parts[0] + '_process.' + name_parts[1]
-        else:
-            new_file_name = save_file_name + '_process'
+        # Generate new file name with '_process' suffix
+        base_name, ext = os.path.splitext(save_file_name)
+        new_file_name = base_name + '_process' + ext
         
         # Write to new CSV file
-        self.title = title
-        self.data = processed_data
-        write_result = self.write_csv(new_file_name)
+        with open(new_file_name, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(title)
+            writer.writerows(processed_data)
         
-        return write_result
-    except:
+        return 1
+    except Exception as e:
         return 0

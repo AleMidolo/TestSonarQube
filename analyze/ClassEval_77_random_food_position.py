@@ -12,6 +12,6 @@ def random_food_position(self):
         new_food_position = (new_food_x, new_food_y)
         
         # Verificar que la nueva posición no esté sobre la serpiente
-        if new_food_position not in self.snake_body:
-            self.food_position = new_food_position
+        if new_food_position not in self.snake:
+            self.food = new_food_position
             break

@@ -9,7 +9,14 @@ def z_score(data):
     [-1.161895003862225, -0.3872983346207417, 0.3872983346207417, 1.161895003862225]
 
     """
+    # Calculate mean
     mean = sum(data) / len(data)
+    
+    # Calculate standard deviation
     variance = sum((x - mean) ** 2 for x in data) / len(data)
     std_dev = variance ** 0.5
-    return [(x - mean) / std_dev for x in data]
+    
+    # Calculate z-score for each element
+    z_scores = [(x - mean) / std_dev for x in data]
+    
+    return z_scores

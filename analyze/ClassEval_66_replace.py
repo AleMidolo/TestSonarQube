@@ -16,21 +16,24 @@ def replace(self, string):
         if entity.startswith('&#x') or entity.startswith('&#X'):
             # Hexadecimal entity
             num_str = entity[3:-1]
-            code_point = int(num_str, 16)
+            try:
+                code_point = int(num_str, 16)
+                return chr(code_point)
+            except (ValueError, OverflowError):
+                return entity
         elif entity.startswith('&#'):
             # Decimal entity
             num_str = entity[2:-1]
-            code_point = int(num_str, 10)
-        else:
-            return entity
-        
-        try:
-            return chr(code_point)
-        except (ValueError, OverflowError):
-            return entity
+            try:
+                code_point = int(num_str, 10)
+                return chr(code_point)
+            except (ValueError, OverflowError):
+                return entity
+        return entity
     
-    # Pattern to match &#digits; or &#xhex;
+    # Pattern to match numeric character references
+    # Matches &#digits; or &#xhexdigits; or &#Xhexdigits;
     pattern = r'&#[xX]?[0-9a-fA-F]+;'
-    result = re.sub(pattern, replace_entity, string)
     
+    result = re.sub(pattern, replace_entity, string)
     return result

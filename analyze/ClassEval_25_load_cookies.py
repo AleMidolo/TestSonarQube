@@ -10,12 +10,12 @@ def load_cookies(self):
     import json
     import os
     
-    if not os.path.exists(self.cookie_file):
-        return {}
-    
     try:
-        with open(self.cookie_file, 'r', encoding='utf-8') as f:
-            cookies = json.load(f)
-            return cookies if isinstance(cookies, dict) else {}
+        if os.path.exists(self.cookie_file):
+            with open(self.cookie_file, 'r', encoding='utf-8') as f:
+                cookies = json.load(f)
+                return cookies if isinstance(cookies, dict) else {}
+        else:
+            return {}
     except (json.JSONDecodeError, IOError):
         return {}

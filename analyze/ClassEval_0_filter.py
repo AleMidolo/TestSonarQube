@@ -11,11 +11,12 @@ def filter(self, request):
     # Define allowed paths and methods
     allowed_routes = {
         '/login': ['POST', 'GET'],
+        '/logout': ['POST'],
         '/register': ['POST'],
         '/public': ['GET'],
         '/api/public': ['GET', 'POST'],
         '/health': ['GET'],
-        '/': ['GET']
+        '/status': ['GET']
     }
     
     # Extract path and method from request

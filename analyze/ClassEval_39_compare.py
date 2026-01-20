@@ -20,7 +20,7 @@ def compare(self, cur, peek):
         '**': 3
     }
     
-    # Get precedence values for both operators
+    # Get precedence values, default to 0 if operator not found
     cur_precedence = precedence.get(cur, 0)
     peek_precedence = precedence.get(peek, 0)
     

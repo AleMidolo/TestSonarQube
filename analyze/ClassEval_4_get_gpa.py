@@ -18,7 +18,7 @@ def get_gpa(self, name):
     # Get the student's course scores
     student = self.students[name]
     
-    # Check if the student has a courses attribute and it's not empty
+    # Check if the student has a courses attribute and if it has any scores
     if not hasattr(student, 'courses') or not student.courses:
         return None
     

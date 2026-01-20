@@ -12,14 +12,18 @@ def simulate_operation(self):
     
     time = 0
     
-    # Ajustar la temperatura hasta alcanzar el objetivo
+    # Ajustar la temperatura hasta alcanzar la temperatura objetivo
     while self.current_temp != self.target_temp:
-        if self.mode == 'cool':
-            # En modo enfriamiento, aumentar la temperatura actual
-            self.current_temp += 1
-        elif self.mode == 'heat':
-            # En modo calentamiento, disminuir la temperatura actual
-            self.current_temp -= 1
+        if self.mode == 'heat':
+            # En modo calefacción, aumentar la temperatura
+            self.current_temp += 0.5
+            if self.current_temp > self.target_temp:
+                self.current_temp = self.target_temp
+        elif self.mode == 'cool':
+            # En modo enfriamiento, disminuir la temperatura
+            self.current_temp -= 0.5
+            if self.current_temp < self.target_temp:
+                self.current_temp = self.target_temp
         
         time += 1
     

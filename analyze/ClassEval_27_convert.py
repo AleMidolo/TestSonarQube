@@ -9,12 +9,12 @@ def convert(self, amount, from_currency, to_currency):
     >>> cc.convert(64, 'CNY','USD')
     10.0
     """
-    # Tasas de cambio relativas a USD
+    # Tasas de cambio relativas al USD
     exchange_rates = {
         'USD': 1.0,
         'CNY': 6.4,
         'EUR': 0.85,
-        'GBP': 0.73,
+        'GBP': 0.75,
         'JPY': 110.0,
         'CAD': 1.25,
         'AUD': 1.35,

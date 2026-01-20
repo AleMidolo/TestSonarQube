@@ -39,6 +39,7 @@ def extract_code_from_html_text(self, html_text):
                     code_text = ''.join(self.current_code)
                     self.codes.append(code_text)
                 self.in_pre = False
+                self.in_code = False
                 self.current_code = []
             elif tag == 'code':
                 self.in_code = False
