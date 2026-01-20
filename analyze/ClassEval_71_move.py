@@ -71,7 +71,7 @@ def move(self, direction):
             # Limpiar la posición anterior del jugador
             self.map[player_y] = self.map[player_y][:player_x] + ' ' + self.map[player_y][player_x + 1:]
             
-            # Verificar si la caja llegó al objetivo
+            # Verificar si la caja está en el objetivo
             if box_target == 'G':
                 return True
             return False

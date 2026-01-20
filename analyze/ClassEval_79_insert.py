@@ -13,22 +13,22 @@ def insert(self, data):
     columns = ', '.join(data.keys())
     
     # Formatear los valores (agregar comillas simples a strings)
-    values = []
+    formatted_values = []
     for value in data.values():
         if isinstance(value, str):
             # Escapar comillas simples en el valor
             escaped_value = value.replace("'", "''")
-            values.append(f"'{escaped_value}'")
+            formatted_values.append(f"'{escaped_value}'")
         elif value is None:
-            values.append('NULL')
+            formatted_values.append('NULL')
         elif isinstance(value, bool):
-            values.append('TRUE' if value else 'FALSE')
+            formatted_values.append('TRUE' if value else 'FALSE')
         else:
-            values.append(str(value))
+            formatted_values.append(str(value))
     
-    values_str = ', '.join(values)
+    values = ', '.join(formatted_values)
     
     # Asumir que self.table contiene el nombre de la tabla
-    table_name = self.table if hasattr(self, 'table') else 'table1'
+    table_name = getattr(self, 'table', 'table1')
     
-    return f"INSERT INTO {table_name} ({columns}) VALUES ({values_str});"
+    return f"INSERT INTO {table_name} ({columns}) VALUES ({values});"

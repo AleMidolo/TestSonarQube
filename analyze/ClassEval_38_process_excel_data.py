@@ -8,33 +8,29 @@ def process_excel_data(self, N, save_file_name):
     >>> success, output_file = processor.process_excel_data(1, 'test_data.xlsx')
     """
     import openpyxl
-    import os
     
+    # Read the Excel file
     try:
-        # Cargar el archivo Excel
         workbook = openpyxl.load_workbook(save_file_name)
         sheet = workbook.active
         
-        # Convertir la columna N a mayúsculas (N es 1-indexed)
+        # Convert the specified column (N) to uppercase
+        # N is 1-indexed (1 = column A, 2 = column B, etc.)
         for row in range(1, sheet.max_row + 1):
             cell = sheet.cell(row=row, column=N)
             if cell.value is not None and isinstance(cell.value, str):
                 cell.value = cell.value.upper()
         
-        # Generar nombre del archivo de salida
-        base_name = os.path.splitext(save_file_name)[0]
-        extension = os.path.splitext(save_file_name)[1]
-        output_file_name = f"{base_name}_processed{extension}"
+        # Generate output filename
+        output_file_name = save_file_name.replace('.xlsx', '_processed.xlsx')
         
-        # Guardar el archivo procesado
+        # Save the modified workbook
         workbook.save(output_file_name)
         workbook.close()
         
-        # Llamar a write_excel (asumiendo que existe en la clase)
-        result = self.write_excel(output_file_name)
+        # Assuming write_excel returns 1 for success
+        return (1, output_file_name)
         
-        return (result, output_file_name)
-    
     except Exception as e:
-        # En caso de error, retornar código de error
-        return (0, "")
+        # Return 0 for failure
+        return (0, str(e))

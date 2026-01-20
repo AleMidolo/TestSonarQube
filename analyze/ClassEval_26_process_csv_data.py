@@ -35,16 +35,15 @@ def process_csv_data(self, N, save_file_name):
                 return 0
         
         # Create new filename with '_process' suffix
-        if save_file_name.endswith('.csv'):
-            new_file_name = save_file_name[:-4] + '_process.csv'
+        if '.' in save_file_name:
+            name_parts = save_file_name.rsplit('.', 1)
+            new_file_name = name_parts[0] + '_process.' + name_parts[1]
         else:
             new_file_name = save_file_name + '_process'
         
         # Write to new CSV file
-        self.title = title
-        self.data = processed_data
-        result = self.write_csv(new_file_name)
+        self.write_csv(title, processed_data, new_file_name)
         
-        return result
+        return 1
     except:
         return 0

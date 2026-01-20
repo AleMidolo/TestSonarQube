@@ -24,11 +24,7 @@ def _calculate(first_value, second_value, current_op):
         return num1 * num2
     elif current_op == '/':
         return num1 / num2
-    elif current_op == '**' or current_op == '^':
+    elif current_op == '^' or current_op == '**':
         return num1 ** num2
-    elif current_op == '%':
-        return num1 % num2
-    elif current_op == '//':
-        return num1 // num2
     else:
         raise ValueError(f"Operador no soportado: {current_op}")

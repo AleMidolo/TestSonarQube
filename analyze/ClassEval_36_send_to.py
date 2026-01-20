@@ -19,7 +19,7 @@ def send_to(self, recv, content, size):
     if recv.get_inbox_size() + size > recv.capacity:
         return False
     
-    # Create email dictionary
+    # Create email object
     email = {
         'sender': self.email,
         'receiver': recv.email,

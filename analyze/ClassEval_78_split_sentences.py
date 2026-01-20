@@ -11,7 +11,7 @@ def split_sentences(self, sentences_string):
     
     # Pattern to split on . or ? followed by a space, but not when preceded by "Sr"
     # We use a negative lookbehind to avoid splitting on "Sr."
-    pattern = r'(?<!Sr)([.?]) (?=\S)'
+    pattern = r'(?<!Sr)([.?]) +'
     
     # Split the string using the pattern
     parts = re.split(pattern, sentences_string)
@@ -25,7 +25,7 @@ def split_sentences(self, sentences_string):
             sentences.append(parts[i] + parts[i + 1])
             i += 2
         else:
-            # Last sentence or sentence without captured punctuation
+            # Last part without punctuation or standalone text
             if parts[i].strip():
                 sentences.append(parts[i])
             i += 1

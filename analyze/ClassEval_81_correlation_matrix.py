@@ -24,20 +24,21 @@ def correlation_matrix(data):
         variance = sum((x - means[i]) ** 2 for x in row) / len(row)
         std_devs.append(variance ** 0.5)
     
-    # Initialize correlation matrix
-    corr_matrix = [[0.0 for _ in range(n)] for _ in range(n)]
-    
-    # Calculate correlation coefficients
+    # Calculate correlation matrix
+    corr_matrix = []
     for i in range(n):
+        corr_row = []
         for j in range(n):
             if std_devs[i] == 0 or std_devs[j] == 0:
-                # If standard deviation is 0, correlation is 1 (perfect correlation)
-                corr_matrix[i][j] = 1.0
+                # If standard deviation is 0, correlation is 1 (perfect correlation with itself)
+                corr_row.append(1.0)
             else:
                 # Calculate covariance
-                covariance = sum((data[i][k] - means[i]) * (data[j][k] - means[j]) 
-                                for k in range(len(data[i]))) / len(data[i])
+                m = len(data[i])
+                covariance = sum((data[i][k] - means[i]) * (data[j][k] - means[j]) for k in range(m)) / m
                 # Calculate correlation coefficient
-                corr_matrix[i][j] = covariance / (std_devs[i] * std_devs[j])
+                correlation = covariance / (std_devs[i] * std_devs[j])
+                corr_row.append(correlation)
+        corr_matrix.append(corr_row)
     
     return corr_matrix

@@ -8,8 +8,8 @@ def mismatch_in_text(self, currentPos):
     2
 
     """
-    # Comparar el patrón con el texto desde la posición actual
-    # En Boyer-Moore, típicamente comparamos de derecha a izquierda
+    # Comparar el patrón con el texto desde la derecha hacia la izquierda
+    # comenzando desde la posición actual
     for i in range(len(self.pattern) - 1, -1, -1):
         # Verificar que no nos salgamos de los límites del texto
         if currentPos + i >= len(self.text):

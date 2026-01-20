@@ -9,7 +9,10 @@ def previous_song(self):
     True
 
     """
-    if not self.playlist or self.current_song is None:
+    if not self.playlist:
+        return False
+    
+    if self.current_song is None:
         return False
     
     try:

@@ -25,28 +25,26 @@ def trans_two(self, s):
     # Del 16 al 19
     unidades = ["", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"]
     if 16 <= num <= 19:
-        return "DIECISÉIS" if num == 16 else f"DIECI{unidades[num % 10]}"
+        return "DIECISÉIS" if num == 16 else "DIECI" + unidades[num % 10]
     
     # Del 20 al 29
     if 20 <= num <= 29:
         if num == 20:
             return "VEINTE"
-        veinte_map = {
-            21: "VEINTIUNO",
-            22: "VEINTIDÓS",
-            23: "VEINTITRÉS",
-            24: "VEINTICUATRO",
-            25: "VEINTICINCO",
-            26: "VEINTISÉIS",
-            27: "VEINTISIETE",
-            28: "VEINTIOCHO",
-            29: "VEINTINUEVE"
+        unidad = num % 10
+        if unidad == 0:
+            return "VEINTE"
+        veintis = {
+            1: "VEINTIUNO", 2: "VEINTIDÓS", 3: "VEINTITRÉS", 4: "VEINTICUATRO",
+            5: "VEINTICINCO", 6: "VEINTISÉIS", 7: "VEINTISIETE", 8: "VEINTIOCHO", 9: "VEINTINUEVE"
         }
-        return veinte_map[num]
+        return veintis[unidad]
     
-    # Del 30 en adelante
-    decenas = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", 
-               "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"]
+    # Del 30 al 99
+    decenas = {
+        3: "TREINTA", 4: "CUARENTA", 5: "CINCUENTA",
+        6: "SESENTA", 7: "SETENTA", 8: "OCHENTA", 9: "NOVENTA"
+    }
     
     decena = num // 10
     unidad = num % 10
@@ -54,4 +52,4 @@ def trans_two(self, s):
     if unidad == 0:
         return decenas[decena]
     else:
-        return f"{decenas[decena]} Y {unidades[unidad]}"
+        return decenas[decena] + " Y " + unidades[unidad]

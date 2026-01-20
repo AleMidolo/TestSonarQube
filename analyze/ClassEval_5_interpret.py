@@ -13,7 +13,7 @@ def interpret(self, display=False):
         return []
     
     # Split the partitura by spaces
-    tokens = self.partitura.strip().split()
+    tokens = self.partitura.split()
     
     result = []
     

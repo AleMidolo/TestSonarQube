@@ -16,7 +16,7 @@ def make_move(self, row, col):
     if row < 0 or row >= len(self.board) or col < 0 or col >= len(self.board[0]):
         return False
     
-    # Verificar si la celda está vacía
+    # Verificar si la posición está vacía
     if self.board[row][col] != ' ':
         return False
     

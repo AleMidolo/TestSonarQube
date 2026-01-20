@@ -20,7 +20,7 @@ def add_movie(self, name, price, start_time, end_time, n):
     start_dt = datetime.strptime(start_time, '%H:%M')
     end_dt = datetime.strptime(end_time, '%H:%M')
     
-    # Create seats matrix (n x n) initialized with zeros
+    # Create n x n seats array initialized with zeros
     seats = np.zeros((n, n))
     
     # Create movie dictionary

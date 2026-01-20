@@ -12,8 +12,8 @@ def median(data):
     n = len(sorted_data)
     
     if n % 2 == 0:
-        # Si la cantidad de elementos es par, promediamos los dos del medio
+        # Si la longitud es par, promedio de los dos valores centrales
         return (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2
     else:
-        # Si es impar, retornamos el elemento del medio
+        # Si la longitud es impar, valor central
         return float(sorted_data[n // 2])

@@ -17,38 +17,42 @@ def is_valid_ipv6(ip_address):
     segments = ip_address.split(':')
     
     # IPv6 should have 8 segments (or less if using :: compression)
-    # Check for :: (compression) - can only appear once
+    # Check for :: (consecutive colons for compression)
     if '::' in ip_address:
-        # Count occurrences of '::'
+        # :: can only appear once
         if ip_address.count('::') > 1:
             return False
         
-        # Split by '::' to handle compression
+        # Split by :: to handle compression
         parts = ip_address.split('::')
-        if len(parts) != 2:
+        if len(parts) > 2:
             return False
         
+        # Count total segments
         left_segments = parts[0].split(':') if parts[0] else []
-        right_segments = parts[1].split(':') if parts[1] else []
+        right_segments = parts[1].split(':') if len(parts) > 1 and parts[1] else []
         
         # Remove empty strings
         left_segments = [s for s in left_segments if s]
         right_segments = [s for s in right_segments if s]
         
-        # Total segments should be less than 8 (since :: represents at least one group of zeros)
-        if len(left_segments) + len(right_segments) >= 8:
+        total_segments = len(left_segments) + len(right_segments)
+        
+        # With :: compression, total segments should be less than 8
+        if total_segments >= 8:
             return False
         
+        # Validate each segment
         all_segments = left_segments + right_segments
     else:
-        # No compression, must have exactly 8 segments
+        # Without compression, must have exactly 8 segments
         if len(segments) != 8:
             return False
         all_segments = segments
     
     # Validate each segment
     for segment in all_segments:
-        # Each segment must be 1-4 hex characters
+        # Each segment should be 1-4 hex characters
         if not segment or len(segment) > 4:
             return False
         

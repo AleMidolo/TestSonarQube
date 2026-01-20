@@ -8,15 +8,15 @@ def count_all(n: int) -> int:
     15
     """
     # El número total de combinaciones es la suma de C(n, k) para k = 1 hasta n
-    # Esto es equivalente a 2^n - 1 (excluyendo el conjunto vacío)
+    # Esto es igual a 2^n - 1 (excluyendo el conjunto vacío)
     
     max_value = 2**63 - 1
     
     # Calcular 2^n - 1
-    total = 2**n - 1
+    result = (2 ** n) - 1
     
     # Verificar si excede el límite
-    if total > max_value:
+    if result > max_value:
         return float("inf")
     
-    return total
+    return result

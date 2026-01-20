@@ -13,22 +13,23 @@ def is_valid_input(self, textnum):
         'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
         'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
         'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million',
-        'billion', 'trillion', 'and', 'point'
+        'billion', 'trillion', 'and', 'point', 'minus', 'negative'
     }
     
     # Clean and normalize the input
     textnum = textnum.lower().strip()
     
-    # If empty, it's not valid
-    if not textnum:
-        return False
+    # Remove extra spaces
+    textnum = ' '.join(textnum.split())
     
-    # Split by spaces and hyphens
-    words = textnum.replace('-', ' ').split()
+    # Split by spaces and check each word
+    words = textnum.split()
     
-    # Check if all words are valid
     for word in words:
-        if word not in valid_words:
-            return False
+        # Remove hyphens and check each part
+        parts = word.split('-')
+        for part in parts:
+            if part and part not in valid_words:
+                return False
     
     return True

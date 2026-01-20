@@ -8,11 +8,9 @@ def match_in_pattern(self, char):
     0
 
     """
-    # Buscar la ocurrencia más a la derecha del carácter en el patrón
-    # Recorremos el patrón de derecha a izquierda (excluyendo la última posición)
-    for i in range(len(self.pattern) - 2, -1, -1):
+    # Buscar desde el final del patrón hacia el inicio
+    for i in range(len(self.pattern) - 1, -1, -1):
         if self.pattern[i] == char:
             return i
-    
     # Si no se encuentra el carácter, retornar -1
     return -1

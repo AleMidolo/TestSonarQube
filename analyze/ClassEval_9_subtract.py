@@ -57,7 +57,7 @@ def subtract(num1, num2):
             smaller = num1
             result_negative = True
     
-    # Perform subtraction: larger - smaller
+    # Perform subtraction
     larger = larger[::-1]
     smaller = smaller[::-1]
     
@@ -82,7 +82,7 @@ def subtract(num1, num2):
     while len(result) > 1 and result[-1] == '0':
         result.pop()
     
-    result_str = ''.join(reversed(result))
+    result_str = ''.join(result[::-1])
     
     if result_str == '0':
         return '0'
@@ -110,4 +110,4 @@ def add(num1, num2):
     if carry:
         result.append(str(carry))
     
-    return ''.join(reversed(result))
+    return ''.join(result[::-1])

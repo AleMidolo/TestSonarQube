@@ -8,42 +8,39 @@ def trans_three(self, s):
     "UNO CIENTO Y VEINTE TRES"
     """
     ones = ["", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"]
-    teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISÉIS", 
-             "DIECISIETE", "DIECIOCHO", "DIECINUEVE"]
-    tens = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", 
-            "SETENTA", "OCHENTA", "NOVENTA"]
-    hundreds = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", 
-                "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"]
+    tens = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"]
+    teens = ["DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISEIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"]
+    hundreds = ["", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS", "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"]
     
     s = s.zfill(3)  # Asegurar que tiene 3 dígitos
-    h = int(s[0])  # centenas
-    t = int(s[1])  # decenas
-    o = int(s[2])  # unidades
-    
     result = []
     
     # Centenas
+    h = int(s[0])
     if h > 0:
-        if h == 1 and t == 0 and o == 0:
+        if h == 1 and s[1:] == "00":
             result.append("CIEN")
         else:
             result.append(hundreds[h])
     
     # Decenas y unidades
+    t = int(s[1])
+    u = int(s[2])
+    
     if t == 0:
-        if o > 0:
-            result.append(ones[o])
+        if u > 0:
+            result.append(ones[u])
     elif t == 1:
-        result.append(teens[o])
+        result.append(teens[u])
     elif t == 2:
-        if o == 0:
+        if u == 0:
             result.append("VEINTE")
         else:
-            result.append("VEINTI" + ones[o])
+            result.append("VEINTI" + ones[u])
     else:
-        if o == 0:
+        if u == 0:
             result.append(tens[t])
         else:
-            result.append(tens[t] + " Y " + ones[o])
+            result.append(tens[t] + " Y " + ones[u])
     
-    return " ".join(result)
+    return " Y ".join(result) if len(result) > 1 else (result[0] if result else "")

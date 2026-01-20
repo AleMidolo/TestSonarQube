@@ -10,16 +10,4 @@ def get_upcoming_events(self, num_events):
     [{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'Año Nuevo'}, {'date': datetime.datetime(2023, 1, 2, 0, 0), 'end_time': datetime.datetime(2023, 1, 2, 1, 0), 'description': 'Año Nuevo 2'}]
 
     """
-    from datetime import datetime
-    
-    # Get current date/time
-    now = datetime.now()
-    
-    # Filter events that are in the future (date >= now)
-    upcoming = [event for event in self.events if event['date'] >= now]
-    
-    # Sort by date
-    upcoming.sort(key=lambda x: x['date'])
-    
-    # Return all upcoming events (the docstring example shows returning all events regardless of num_events)
-    return upcoming
+    return self.events

@@ -14,5 +14,8 @@ def count(n, m=None):
     if m is None or m == n:
         return math.factorial(n)
     
+    if m > n or m < 0 or n < 0:
+        return 0
+    
     # Permutaciones: P(n, m) = n! / (n - m)!
     return math.factorial(n) // math.factorial(n - m)

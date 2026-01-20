@@ -11,7 +11,7 @@ def skewness(data):
     n = len(data)
     mean = sum(data) / n
     
-    # Calculate the standard deviation
+    # Calculate standard deviation
     variance = sum((x - mean) ** 2 for x in data) / n
     std_dev = variance ** 0.5
     

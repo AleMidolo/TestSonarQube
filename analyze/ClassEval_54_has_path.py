@@ -11,63 +11,63 @@ def has_path(self, pos1, pos2):
     if pos1 == pos2:
         return False
     
-    # Verificar que ambas posiciones tengan el mismo ícono (no vacío)
+    # Verificar que ambas posiciones tengan el mismo ícono
     x1, y1 = pos1
     x2, y2 = pos2
     
-    if not (0 <= x1 < len(self.board) and 0 <= y1 < len(self.board[0])):
-        return False
-    if not (0 <= x2 < len(self.board) and 0 <= y2 < len(self.board[0])):
+    if self.board[y1][x1] != self.board[y2][x2]:
         return False
     
-    if self.board[x1][y1] != self.board[x2][y2] or self.board[x1][y1] is None or self.board[x1][y1] == '':
-        return False
+    # BFS para encontrar un camino con máximo 2 giros
+    # Estado: (x, y, dirección, número_de_giros)
+    # dirección: 0=ninguna, 1=horizontal, 2=vertical
     
-    # BFS para encontrar camino con máximo 2 giros
-    queue = deque([(x1, y1, -1, -1, 0)])  # (x, y, dir_x, dir_y, turns)
-    visited = {}
+    queue = deque([(x1, y1, 0, 0)])  # (x, y, dirección_previa, giros)
+    visited = set()
+    visited.add((x1, y1, 0))
+    
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]  # abajo, arriba, derecha, izquierda
+    dir_types = [2, 2, 1, 1]  # vertical, vertical, horizontal, horizontal
     
     while queue:
-        x, y, prev_dx, prev_dy, turns = queue.popleft()
+        x, y, prev_dir, turns = queue.popleft()
         
-        # Si llegamos al destino con máximo 2 giros
-        if (x, y) == pos2:
-            return True
-        
-        # Evitar revisitar con peor o igual número de giros
-        state = (x, y, prev_dx, prev_dy)
-        if state in visited and visited[state] <= turns:
-            continue
-        visited[state] = turns
-        
-        # Si ya usamos 2 giros, solo podemos seguir en la misma dirección
-        if turns >= 2 and prev_dx != -1:
-            dx, dy = prev_dx, prev_dy
+        # Explorar en todas las direcciones
+        for i, (dx, dy) in enumerate(directions):
             nx, ny = x + dx, y + dy
-            if 0 <= nx < len(self.board) and 0 <= ny < len(self.board[0]):
-                if (nx, ny) == pos2 or self.board[nx][ny] is None or self.board[nx][ny] == '':
-                    queue.append((nx, ny, dx, dy, turns))
-            continue
-        
-        # Explorar las 4 direcciones
-        for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            nx, ny = x + dx, y + dy
+            curr_dir = dir_types[i]
             
-            # Verificar límites
-            if not (0 <= nx < len(self.board) and 0 <= ny < len(self.board[0])):
-                continue
-            
-            # Solo podemos pasar por celdas vacías o el destino
-            if (nx, ny) != pos2 and self.board[nx][ny] is not None and self.board[nx][ny] != '':
-                continue
-            
-            # Calcular número de giros
+            # Calcular nuevos giros
             new_turns = turns
-            if prev_dx != -1 and (dx, dy) != (prev_dx, prev_dy):
+            if prev_dir != 0 and prev_dir != curr_dir:
                 new_turns += 1
             
-            # Solo permitir hasta 2 giros
-            if new_turns <= 2:
-                queue.append((nx, ny, dx, dy, new_turns))
+            # Máximo 2 giros permitidos
+            if new_turns > 2:
+                continue
+            
+            # Verificar si llegamos al destino
+            if (nx, ny) == (x2, y2):
+                return True
+            
+            # Verificar límites del tablero (permitir ir fuera del tablero en 1 posición)
+            if nx < -1 or nx > len(self.board[0]) or ny < -1 or ny > len(self.board):
+                continue
+            
+            # Verificar si la celda está vacía o fuera del tablero
+            is_empty = False
+            if nx < 0 or nx >= len(self.board[0]) or ny < 0 or ny >= len(self.board):
+                is_empty = True
+            elif self.board[ny][nx] == '' or self.board[ny][nx] is None:
+                is_empty = True
+            
+            if not is_empty and (nx, ny) != (x2, y2):
+                continue
+            
+            # Evitar visitar el mismo estado
+            state = (nx, ny, curr_dir)
+            if state not in visited:
+                visited.add(state)
+                queue.append((nx, ny, curr_dir, new_turns))
     
     return False

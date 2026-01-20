@@ -14,30 +14,32 @@ def calculate(self, expression):
 
 def _infix_to_postfix(self, expression):
     """Convert infix expression to postfix notation"""
-    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
     output = []
-    stack = []
+    operator_stack = []
+    
     tokens = expression.replace('(', ' ( ').replace(')', ' ) ').split()
     
     for token in tokens:
         if token.replace('.', '').replace('-', '').isdigit():
             output.append(token)
         elif token == '(':
-            stack.append(token)
+            operator_stack.append(token)
         elif token == ')':
-            while stack and stack[-1] != '(':
-                output.append(stack.pop())
-            if stack:
-                stack.pop()  # Remove '('
+            while operator_stack and operator_stack[-1] != '(':
+                output.append(operator_stack.pop())
+            if operator_stack:
+                operator_stack.pop()  # Remove '('
         elif token in precedence:
-            while (stack and stack[-1] != '(' and 
-                   stack[-1] in precedence and 
-                   precedence[stack[-1]] >= precedence[token]):
-                output.append(stack.pop())
-            stack.append(token)
+            while (operator_stack and 
+                   operator_stack[-1] != '(' and 
+                   operator_stack[-1] in precedence and
+                   precedence[operator_stack[-1]] >= precedence[token]):
+                output.append(operator_stack.pop())
+            operator_stack.append(token)
     
-    while stack:
-        output.append(stack.pop())
+    while operator_stack:
+        output.append(operator_stack.pop())
     
     return output
 
@@ -46,20 +48,17 @@ def _evaluate_postfix(self, postfix):
     stack = []
     
     for token in postfix:
-        if token in ['+', '-', '*', '/', '^']:
+        if token in ['+', '-', '*', '/']:
             b = stack.pop()
             a = stack.pop()
             if token == '+':
-                result = a + b
+                stack.append(a + b)
             elif token == '-':
-                result = a - b
+                stack.append(a - b)
             elif token == '*':
-                result = a * b
+                stack.append(a * b)
             elif token == '/':
-                result = a / b
-            elif token == '^':
-                result = a ** b
-            stack.append(result)
+                stack.append(a / b)
         else:
             stack.append(float(token))
     

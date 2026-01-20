@@ -10,7 +10,7 @@ def mode(self, data):
     if not data:
         return []
     
-    # Contar la frecuencia de cada elemento
+    # Contar la frecuencia de cada valor
     frequency = {}
     for value in data:
         frequency[value] = frequency.get(value, 0) + 1

@@ -15,7 +15,7 @@ def check_course_conflict(self, new_course):
     if not hasattr(self, 'courses'):
         return True
     
-    # Check conflict with each existing course
+    # Check for conflicts with each existing course
     for course in self.courses:
         existing_start = course['start_time']
         existing_end = course['end_time']
@@ -25,6 +25,9 @@ def check_course_conflict(self, new_course):
         # - new course starts before existing ends AND new course ends after existing starts
         # This includes the case where boundaries touch (same time)
         if new_start < existing_end and new_end > existing_start:
+            return False
+        # Also check for exact boundary matches (touching times count as conflict)
+        if new_start == existing_end or new_end == existing_start:
             return False
     
     return True

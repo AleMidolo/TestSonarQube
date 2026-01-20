@@ -25,9 +25,7 @@ def remove_book(self, title, quantity):
                     self.inventory.remove(book)
                 return True
             else:
-                # No hay suficiente cantidad
                 return False
     
     # Si no se encontró el libro
-    if not found:
-        return False
+    return False
