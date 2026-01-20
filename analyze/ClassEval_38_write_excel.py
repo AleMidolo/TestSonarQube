@@ -4,6 +4,15 @@ def write_excel(self, data, file_name):
     :param data: list, Datos a ser escritos
     :param file_name: str, Nombre del archivo de Excel en el que se escribirá
     :return: 0 o 1, 1 representa escritura exitosa, 0 representa escritura fallida
+    >>> processor = ExcelProcessor()
+    >>> new_data = [
+    >>>     ('Nombre', 'Edad', 'País'),
+    >>>     ('John', 25, 'EE.UU.'),
+    >>>     ('Alice', 30, 'Canadá'),
+    >>>     ('Bob', 35, 'Australia'),
+    >>>     ('Julia', 28, 'Alemania')
+    >>> ]
+    >>> data = processor.write_excel(new_data, 'test_data.xlsx')
     """
     try:
         import openpyxl
@@ -13,7 +22,7 @@ def write_excel(self, data, file_name):
         wb = Workbook()
         ws = wb.active
         
-        # Escribir los datos en la hoja de trabajo
+        # Escribir los datos fila por fila
         for row in data:
             ws.append(row)
         

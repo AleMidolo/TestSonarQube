@@ -30,7 +30,7 @@ def correlation_matrix(data):
         corr_row = []
         for j in range(n):
             if std_devs[i] == 0 or std_devs[j] == 0:
-                # If standard deviation is 0, correlation is 1 (perfect correlation with itself)
+                # If standard deviation is 0, correlation is 1 (perfect correlation)
                 corr_row.append(1.0)
             else:
                 # Calculate covariance

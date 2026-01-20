@@ -10,9 +10,17 @@ def level_up(self):
     # Solo subir de nivel si no hemos alcanzado el nivel máximo
     if self.level < 100:
         self.level += 1
-        self.experience = 0
-        self.health += 20
-        self.attack += 5
-        self.defense += 5
+    
+    # Resetear puntos de experiencia a cero
+    self.experience = 0
+    
+    # Aumentar puntos de salud en 20
+    self.health += 20
+    
+    # Aumentar poder de ataque en 5
+    self.attack += 5
+    
+    # Aumentar puntos de defensa en 5
+    self.defense += 5
     
     return (self.level, self.health, self.attack, self.defense)

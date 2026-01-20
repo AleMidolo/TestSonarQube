@@ -8,4 +8,4 @@ def save_image(self, save_path):
     if self.image is not None:
         self.image.save(save_path)
     else:
-        raise ValueError("No hay imagen cargada para guardar")
+        raise ValueError("No image has been loaded. Please load an image first using load_image().")

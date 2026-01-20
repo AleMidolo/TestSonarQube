@@ -10,15 +10,12 @@ def write_xml(self, file_name):
     True
     """
     try:
-        if hasattr(self, 'tree') and self.tree is not None:
-            self.tree.write(file_name, encoding='utf-8', xml_declaration=True)
-            return True
-        elif hasattr(self, 'root') and self.root is not None:
+        if hasattr(self, 'root') and self.root is not None:
             import xml.etree.ElementTree as ET
             tree = ET.ElementTree(self.root)
             tree.write(file_name, encoding='utf-8', xml_declaration=True)
             return True
         else:
             return False
-    except Exception as e:
+    except Exception:
         return False

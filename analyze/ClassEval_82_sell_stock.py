@@ -12,28 +12,25 @@ def sell_stock(self, stock):
     []
 
     """
-    stock_name = stock["name"]
-    quantity_to_sell = stock["quantity"]
-    price = stock["price"]
-    
     # Buscar la acción en el portafolio
-    for portfolio_stock in self.portfolio:
-        if portfolio_stock["name"] == stock_name:
-            # Verificar si hay suficiente cantidad
-            if portfolio_stock["quantity"] >= quantity_to_sell:
+    for i, portfolio_stock in enumerate(self.portfolio):
+        if portfolio_stock['name'] == stock['name']:
+            # Verificar si hay suficiente cantidad para vender
+            if portfolio_stock['quantity'] >= stock['quantity']:
                 # Calcular el efectivo a agregar
-                cash_to_add = price * quantity_to_sell
+                cash_to_add = stock['price'] * stock['quantity']
                 self.cash_balance += cash_to_add
                 
-                # Reducir la cantidad o eliminar la acción
-                portfolio_stock["quantity"] -= quantity_to_sell
+                # Actualizar la cantidad en el portafolio
+                portfolio_stock['quantity'] -= stock['quantity']
                 
-                # Si la cantidad llega a 0, eliminar del portafolio
-                if portfolio_stock["quantity"] == 0:
-                    self.portfolio.remove(portfolio_stock)
+                # Si la cantidad llega a 0, eliminar la acción del portafolio
+                if portfolio_stock['quantity'] == 0:
+                    self.portfolio.pop(i)
                 
                 return True
             else:
+                # No hay suficiente cantidad para vender
                 return False
     
     # Si la acción no se encuentra en el portafolio

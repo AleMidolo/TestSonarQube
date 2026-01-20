@@ -12,7 +12,7 @@ def insert(self, data):
     # Obtener las columnas y valores
     columns = ', '.join(data.keys())
     
-    # Formatear los valores (agregar comillas simples a strings)
+    # Formatear los valores - agregar comillas simples a los strings
     values = []
     for value in data.values():
         if isinstance(value, str):

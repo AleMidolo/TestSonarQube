@@ -51,7 +51,7 @@ def format_string(self, x):
     # Dividir en grupos de miles
     millones = num // 1000000
     miles = (num % 1000000) // 1000
-    unidades_grupo = num % 1000
+    unidades_num = num % 1000
     
     resultado = []
     
@@ -67,7 +67,7 @@ def format_string(self, x):
         else:
             resultado.append(convertir_centenas(miles) + " MIL")
     
-    if unidades_grupo > 0:
-        resultado.append(convertir_centenas(unidades_grupo))
+    if unidades_num > 0:
+        resultado.append(convertir_centenas(unidades_num))
     
     return " ".join(resultado) + " SOLAMENTE"

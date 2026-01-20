@@ -13,11 +13,5 @@ def parse_more(self, i):
         return "MILLION"
     elif i == 3:
         return "BILLION"
-    elif i == 4:
-        return "TRILLION"
-    elif i == 5:
-        return "QUADRILLION"
-    elif i == 6:
-        return "QUINTILLION"
     else:
         return ""

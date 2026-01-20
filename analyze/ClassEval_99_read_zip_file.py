@@ -15,5 +15,5 @@ def read_zip_file(self):
                 # Open and return the ZipFile object
                 return zipfile.ZipFile(self.zip_file_path, 'r')
         return None
-    except Exception:
+    except (zipfile.BadZipFile, IOError, OSError):
         return None

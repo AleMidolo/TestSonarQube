@@ -6,5 +6,5 @@ def read_file(self):
     >>> textFileProcessor.read_file()
     '{\n    "name": "test",\n    "age": 12\n}'
     """
-    with open(self.file_path, 'r', encoding='utf-8') as file:
+    with open(self.file_path, 'r') as file:
         return file.read()

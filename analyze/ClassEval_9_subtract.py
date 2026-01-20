@@ -54,7 +54,7 @@ def subtract(num1, num2):
     result = []
     borrow = 0
     
-    # Pad num2 with zeros
+    # Pad num2 with leading zeros
     num2 = num2.zfill(len(num1))
     
     for i in range(len(num1) - 1, -1, -1):

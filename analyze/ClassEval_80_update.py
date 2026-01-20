@@ -11,7 +11,11 @@ def update(table, data, where=None):
     # Construir la parte SET de la consulta
     set_parts = []
     for key, value in data.items():
-        set_parts.append(f"{key}='{value}'")
+        if isinstance(value, str):
+            set_parts.append(f"{key}='{value}'")
+        else:
+            set_parts.append(f"{key}='{value}'")
+    
     set_clause = ", ".join(set_parts)
     
     # Construir la consulta base
@@ -21,7 +25,11 @@ def update(table, data, where=None):
     if where:
         where_parts = []
         for key, value in where.items():
-            where_parts.append(f"{key}='{value}'")
+            if isinstance(value, str):
+                where_parts.append(f"{key}='{value}'")
+            else:
+                where_parts.append(f"{key}='{value}'")
+        
         where_clause = " AND ".join(where_parts)
         query += f" WHERE {where_clause}"
     

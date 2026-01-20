@@ -14,7 +14,7 @@ def calculate_hand_value(self, hand):
     aces_count = 0
     
     for card in hand:
-        # Extraer el rango de la carta (primer(os) carácter(es))
+        # Extraer el rango de la carta (primer(os) carácter(es) antes del palo)
         rank = card[:-1]  # Todos los caracteres excepto el último (que es el palo)
         
         if rank in ['J', 'Q', 'K']:
@@ -26,9 +26,9 @@ def calculate_hand_value(self, hand):
             # Es un dígito (2-10)
             total_value += int(rank)
     
-    # Ajustar el valor de los Ases si el total excede 21
+    # Ajustar el valor de los Ases si es necesario
     while total_value > 21 and aces_count > 0:
-        total_value -= 10  # Cambiar un As de 11 a 1 (resta 10)
+        total_value -= 10  # Cambiar un As de 11 a 1 (restar 10)
         aces_count -= 1
     
     return total_value

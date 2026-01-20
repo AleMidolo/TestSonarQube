@@ -45,7 +45,7 @@ def is_valid_ipv6(ip_address):
         # Validate each segment
         all_segments = left_segments + right_segments
     else:
-        # No compression, must have exactly 8 segments
+        # Without compression, must have exactly 8 segments
         if len(segments) != 8:
             return False
         all_segments = segments

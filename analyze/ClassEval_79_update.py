@@ -9,10 +9,7 @@ def update(self, data, condition):
     """
     set_clauses = []
     for field, value in data.items():
-        if isinstance(value, str):
-            set_clauses.append(f"{field} = '{value}'")
-        else:
-            set_clauses.append(f"{field} = {value}")
+        set_clauses.append(f"{field} = '{value}'")
     
     set_statement = ", ".join(set_clauses)
     sql_statement = f"UPDATE {self.table} SET {set_statement} WHERE {condition};"

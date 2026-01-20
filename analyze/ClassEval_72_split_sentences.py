@@ -10,16 +10,17 @@ def split_sentences(self, text):
     import re
     
     # Split by sentence-ending punctuation (., ?, !)
-    sentences = re.split(r'[.?!]\s*', text)
+    sentences = re.split(r'[.?!]', text)
     
-    # Remove empty strings from the result
+    # Filter out empty strings
     sentences = [s.strip() for s in sentences if s.strip()]
     
-    # If the original text ends with punctuation, we need to add it back to the last sentence
+    # If there are sentences and the original text ends with punctuation,
+    # add that punctuation back to the last sentence
     if sentences and text.strip():
         # Find the last punctuation mark in the original text
-        last_punct_match = re.search(r'[.?!]\s*$', text)
-        if last_punct_match:
-            sentences[-1] += last_punct_match.group().strip()
+        last_char = text.strip()[-1]
+        if last_char in '.?!':
+            sentences[-1] = sentences[-1] + last_char
     
     return sentences

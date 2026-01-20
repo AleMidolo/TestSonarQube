@@ -18,8 +18,8 @@ def create_order(self, order_id, product_id, quantity):
     if product_id not in self.inventory:
         return False
     
-    # Verificar si la cantidad es adecuada (suficiente stock disponible)
-    if self.inventory[product_id]['quantity'] < quantity:
+    # Verificar si la cantidad es adecuada (debe ser positiva y no exceder el stock disponible)
+    if quantity <= 0 or quantity > self.inventory[product_id]['quantity']:
         return False
     
     # Crear el pedido

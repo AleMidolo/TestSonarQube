@@ -82,6 +82,6 @@ def format(self, x):
     if integer_part > 0:
         result += convert_group(integer_part)
     
-    result = result.strip() + " SOLAMENTE"
+    result += " SOLAMENTE"
     
-    return result
+    return result.strip()

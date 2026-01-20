@@ -13,8 +13,10 @@ def switch_song(self):
         return False
     
     if self.current_song is None:
-        self.current_song = self.playlist[0]
-        return True
+        if len(self.playlist) > 0:
+            self.current_song = self.playlist[0]
+            return True
+        return False
     
     try:
         current_index = self.playlist.index(self.current_song)

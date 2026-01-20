@@ -10,7 +10,7 @@ def mode(self, data):
     if not data:
         return []
     
-    # Contar la frecuencia de cada valor
+    # Contar la frecuencia de cada elemento
     frequency = {}
     for value in data:
         frequency[value] = frequency.get(value, 0) + 1
@@ -21,7 +21,7 @@ def mode(self, data):
     # Obtener todos los valores con la frecuencia máxima
     modes = [key for key, freq in frequency.items() if freq == max_frequency]
     
-    # Ordenar los modos
+    # Ordenar los resultados
     modes.sort()
     
     return modes

@@ -24,7 +24,7 @@ def book_room(self, room_type, room_number, name):
     if room_type not in self.available_rooms:
         return False
     
-    # Obtener la cantidad de habitaciones disponibles de este tipo
+    # Obtener la cantidad disponible de este tipo de habitación
     available_count = self.available_rooms[room_type]
     
     # Si no hay habitaciones disponibles
@@ -35,10 +35,11 @@ def book_room(self, room_type, room_number, name):
     if room_number > available_count:
         return available_count
     
-    # Si hay suficientes habitaciones disponibles, realizar la reserva
+    # Si hay suficientes habitaciones disponibles
+    # Actualizar available_rooms
     self.available_rooms[room_type] -= room_number
     
-    # Agregar a booked_rooms
+    # Actualizar booked_rooms
     if room_type not in self.booked_rooms:
         self.booked_rooms[room_type] = {}
     

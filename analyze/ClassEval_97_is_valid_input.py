@@ -7,30 +7,30 @@ def is_valid_input(self, textnum):
     >>> w2n.is_valid_input("thirty-two")
     False
     """
-    if not textnum or not isinstance(textnum, str):
-        return False
-    
-    # Definir palabras válidas para números
+    # Define valid number words
     valid_words = {
         'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
         'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
         'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
         'sixty', 'seventy', 'eighty', 'ninety', 'hundred', 'thousand', 'million',
-        'billion', 'trillion', 'and', 'point', 'minus', 'negative'
+        'billion', 'trillion', 'and', 'point'
     }
     
-    # Limpiar y normalizar el texto
-    text = textnum.lower().strip()
+    # Clean and normalize the input
+    textnum = textnum.lower().strip()
     
-    # Reemplazar guiones con espacios para separar palabras compuestas
-    text = text.replace('-', ' ')
+    # If empty, it's not valid
+    if not textnum:
+        return False
     
-    # Dividir en palabras
-    words = text.split()
+    # Split by spaces and check each word
+    words = textnum.split()
     
-    # Verificar si todas las palabras son válidas
     for word in words:
-        if word and word not in valid_words:
-            return False
+        # Remove hyphens and check if all parts are valid
+        parts = word.split('-')
+        for part in parts:
+            if part and part not in valid_words:
+                return False
     
     return True

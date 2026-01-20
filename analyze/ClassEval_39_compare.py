@@ -9,7 +9,7 @@ def compare(self, cur, peek):
     True
 
     """
-    # Definir la precedencia de los operadores
+    # Define operator precedence levels
     precedence = {
         '+': 1,
         '-': 1,
@@ -20,9 +20,9 @@ def compare(self, cur, peek):
         '**': 3
     }
     
-    # Obtener la precedencia de ambos operadores
+    # Get precedence values, default to 0 if operator not found
     cur_precedence = precedence.get(cur, 0)
     peek_precedence = precedence.get(peek, 0)
     
-    # Retornar True si el operador actual tiene precedencia mayor o igual
+    # Return True if current operator has greater or equal precedence
     return cur_precedence >= peek_precedence
