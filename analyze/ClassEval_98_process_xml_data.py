@@ -26,8 +26,10 @@ def process_xml_data(self, file_name):
             if element.text and element.text.strip():
                 element.text = element.text.strip()
         
-        # Create an ElementTree object and write to file
+        # Create an ElementTree object from the root
         tree = ET.ElementTree(self.root)
+        
+        # Write the modified XML to the new file
         tree.write(file_name, encoding='utf-8', xml_declaration=True)
         
         return True

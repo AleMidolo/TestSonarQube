@@ -28,7 +28,7 @@ def calculate_hand_value(self, hand):
     
     # Ajustar el valor de los Ases si es necesario
     while total_value > 21 and aces_count > 0:
-        total_value -= 10  # Cambiar un As de 11 a 1 (restar 10)
+        total_value -= 10  # Cambiar un As de 11 a 1 (resta 10)
         aces_count -= 1
     
     return total_value

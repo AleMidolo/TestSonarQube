@@ -12,44 +12,27 @@ def string_to_datetime(self, string):
     # Handle various common datetime formats
     try:
         # Try parsing with datetime.strptime for common formats
-        formats = [
-            "%Y-%m-%d %H:%M:%S",
-            "%Y-%m-%d %H:%M:%S.%f",
-            "%Y/%m/%d %H:%M:%S",
-            "%d-%m-%Y %H:%M:%S",
-            "%Y-%m-%d",
-        ]
-        
-        for fmt in formats:
-            try:
-                return datetime.strptime(string, fmt)
-            except ValueError:
-                continue
-        
-        # If standard formats don't work, try a more flexible approach
-        # Split by space to separate date and time
-        parts = string.strip().split()
-        
-        if len(parts) == 2:
-            date_part, time_part = parts
-        elif len(parts) == 1:
+        dt = datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        try:
+            # Try with single digit month/day/hour/minute/second
+            parts = string.split()
             date_part = parts[0]
-            time_part = "0:0:0"
-        else:
-            raise ValueError(f"Cannot parse datetime string: {string}")
-        
-        # Parse date part (handle both - and / separators)
-        date_separator = '-' if '-' in date_part else '/'
-        date_components = date_part.split(date_separator)
-        year, month, day = map(int, date_components)
-        
-        # Parse time part
-        time_components = time_part.split(':')
-        hour = int(time_components[0]) if len(time_components) > 0 else 0
-        minute = int(time_components[1]) if len(time_components) > 1 else 0
-        second = int(time_components[2]) if len(time_components) > 2 else 0
-        
-        return datetime(year, month, day, hour, minute, second)
-        
-    except Exception as e:
-        raise ValueError(f"Cannot parse datetime string '{string}': {e}")
+            time_part = parts[1] if len(parts) > 1 else "0:0:0"
+            
+            date_components = date_part.split('-')
+            time_components = time_part.split(':')
+            
+            year = int(date_components[0])
+            month = int(date_components[1])
+            day = int(date_components[2])
+            
+            hour = int(time_components[0]) if len(time_components) > 0 else 0
+            minute = int(time_components[1]) if len(time_components) > 1 else 0
+            second = int(time_components[2]) if len(time_components) > 2 else 0
+            
+            dt = datetime(year, month, day, hour, minute, second)
+        except (ValueError, IndexError):
+            raise ValueError(f"Unable to parse datetime string: {string}")
+    
+    return dt

@@ -16,7 +16,11 @@ def skewness(data):
     std_dev = variance ** 0.5
     
     # Calculate skewness using the formula
-    # Skewness = (1/n) * Σ((x - mean) / std_dev)^3
-    skewness_value = sum(((x - mean) / std_dev) ** 3 for x in data) / n
+    # skewness = (n / ((n-1) * (n-2))) * sum((x - mean)^3) / std_dev^3
+    if std_dev == 0:
+        return 0.0
     
-    return skewness_value
+    sum_cubed_deviations = sum((x - mean) ** 3 for x in data)
+    skewness = (n / ((n - 1) * (n - 2))) * sum_cubed_deviations / (std_dev ** 3)
+    
+    return skewness

@@ -16,7 +16,7 @@ def is_free_at(self, check_time):
     try:
         check_dt = datetime.strptime(check_time, '%H:%M')
     except ValueError:
-        # Si ya está en formato correcto o hay error, intentar parsearlo
+        # Si ya está en formato correcto o necesita normalización
         check_dt = datetime.strptime(check_time, '%H:%M')
     
     # Verificar si hay conflicto con algún curso

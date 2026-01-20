@@ -18,4 +18,3 @@ def __setitem__(self, key, value):
     camel_key = snake_to_camel(key)
     # Store the value using the camelCase key in the internal dictionary
     super().__setitem__(camel_key, value)
-    print(f"camelize_map['{key}'] = '{value}'")

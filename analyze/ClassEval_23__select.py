@@ -22,9 +22,18 @@ def _select(self, dataIndex: int, resultList: List[str], resultIndex: int, resul
     if dataIndex >= len(self.data):
         return
     
-    # Incluir el elemento actual en la combinación
+    # Calcular cuántos elementos aún necesitamos seleccionar
+    remaining_needed = len(resultList) - resultIndex
+    # Calcular cuántos elementos quedan disponibles
+    remaining_available = len(self.data) - dataIndex
+    
+    # Si no hay suficientes elementos disponibles, retornar
+    if remaining_available < remaining_needed:
+        return
+    
+    # Opción 1: Incluir el elemento actual en la combinación
     resultList[resultIndex] = self.data[dataIndex]
     self._select(dataIndex + 1, resultList, resultIndex + 1, result)
     
-    # No incluir el elemento actual y continuar con el siguiente
+    # Opción 2: No incluir el elemento actual y continuar con el siguiente
     self._select(dataIndex + 1, resultList, resultIndex, result)

@@ -9,36 +9,33 @@ def interpret(self, display=False):
 
     """
     # Check if the input is empty or contains only whitespace
-    if not hasattr(self, 'score') or not self.score or self.score.strip() == '':
+    if not hasattr(self, 'partitura') or not self.partitura or self.partitura.strip() == '':
         return []
     
-    # Split the score by spaces
-    parts = self.score.strip().split()
+    # Split the partitura by spaces
+    tokens = self.partitura.strip().split()
     
     result = []
     
-    for part in parts:
-        if not part:  # Skip empty strings
+    for token in tokens:
+        if not token:  # Skip empty tokens
             continue
         
         # Find where the chord ends and the melody begins
         # The chord is the initial letters, the melody is the numbers
-        chord = ''
-        melody = ''
+        i = 0
+        while i < len(token) and not token[i].isdigit():
+            i += 1
         
-        for i, char in enumerate(part):
-            if char.isdigit():
-                chord = part[:i]
-                melody = part[i:]
-                break
+        acorde = token[:i]
+        melodia = token[i:]
         
-        # Only add if we found both chord and melody
-        if chord and melody:
-            result.append({'Acorde': chord, 'Melodía': melody})
+        # Only add if we have both chord and melody
+        if acorde and melodia:
+            result.append({'Acorde': acorde, 'Melodía': melodia})
     
     # Display if requested
     if display:
-        for item in result:
-            print(f"Acorde: {item['Acorde']}, Melodía: {item['Melodía']}")
+        print(result)
     
     return result

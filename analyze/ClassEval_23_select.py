@@ -12,6 +12,7 @@ def select(self, m: int) -> List[List[str]]:
     """
     if m == 0:
         return [[]]
+    
     if m > len(self.data):
         return []
     

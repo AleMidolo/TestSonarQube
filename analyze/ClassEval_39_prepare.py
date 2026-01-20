@@ -57,5 +57,5 @@ def prepare(self, expression):
     while operator_stack:
         output.append(operator_stack.pop())
     
-    # Store the result in postfix_stack
+    # Store result in postfix_stack attribute
     self.postfix_stack = output

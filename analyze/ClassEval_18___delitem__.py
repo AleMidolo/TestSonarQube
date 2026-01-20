@@ -9,7 +9,7 @@ def __delitem__(self, key):
     >>> flag = 'first_name' in camelize_map
     flag = False
     """
-    # Convert the key to camelCase format
+    # Convert snake_case key to camelCase
     camel_key = self._to_camel_case(key)
-    # Delete the item from the internal dictionary
+    # Delete the item using the camelCase key
     del self._data[camel_key]

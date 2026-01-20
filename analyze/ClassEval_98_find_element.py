@@ -12,6 +12,7 @@ def find_element(self, element_name):
     banana
     orange
     """
-    if hasattr(self, 'root') and self.root is not None:
-        return self.root.findall(f".//{element_name}")
-    return []
+    if self.root is None:
+        return []
+    
+    return self.root.findall(f".//{element_name}")

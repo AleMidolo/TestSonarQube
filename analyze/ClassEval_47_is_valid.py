@@ -33,7 +33,7 @@ def is_valid(self):
         if not part.isdigit():
             return False
         
-        # Check for leading zeros (except for '0' itself)
+        # Check for leading zeros (except for "0" itself)
         if len(part) > 1 and part[0] == '0':
             return False
         

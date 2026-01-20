@@ -26,9 +26,9 @@ def interpolate_2d(x, y, z, x_interp, y_interp):
         
         # Find y indices
         y_idx = 0
-        for j in range(len(y) - 1):
-            if y[j] <= yi <= y[j + 1]:
-                y_idx = j
+        for i in range(len(y) - 1):
+            if y[i] <= yi <= y[i + 1]:
+                y_idx = i
                 break
         
         # Get the four corner points

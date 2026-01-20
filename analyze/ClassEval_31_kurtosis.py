@@ -22,8 +22,10 @@ def kurtosis(data):
     if std_dev == 0:
         raise ValueError("Standard deviation is zero")
     
-    # Calculate kurtosis (excess kurtosis)
+    # Calculate fourth moment
     fourth_moment = sum((x - mean) ** 4 for x in data) / n
-    kurtosis_value = (fourth_moment / (variance ** 2)) - 3
     
-    return kurtosis_value
+    # Calculate kurtosis (excess kurtosis)
+    kurt = (fourth_moment / (variance ** 2)) - 3
+    
+    return kurt

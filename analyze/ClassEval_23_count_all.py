@@ -7,22 +7,16 @@ def count_all(n: int) -> int:
     >>> CombinationCalculator.count_all(4)
     15
     """
-    # El número total de combinaciones es la suma de C(n, k) para k = 0 hasta n
-    # Esto es igual a 2^n - 1 (excluyendo el conjunto vacío)
-    # O 2^n si incluimos el conjunto vacío, pero según el ejemplo: count_all(4) = 15 = 2^4 - 1
+    # El número total de combinaciones es la suma de C(n, k) para k = 1 hasta n
+    # Esto es equivalente a 2^n - 1 (excluyendo el conjunto vacío)
     
     max_value = 2**63 - 1
     
     # Calcular 2^n - 1
-    if n >= 63:
-        # 2^63 - 1 ya es el máximo, entonces 2^n - 1 >= 2^63 - 1 para n >= 63
-        result = 2**n - 1
-        if result > max_value:
-            return float("inf")
+    total = 2**n - 1
     
-    result = 2**n - 1
-    
-    if result > max_value:
+    # Verificar si excede el límite
+    if total > max_value:
         return float("inf")
     
-    return result
+    return total

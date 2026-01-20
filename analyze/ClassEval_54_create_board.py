@@ -14,7 +14,7 @@ def create_board(self):
     rows, cols = self.board_size[0], self.board_size[1]
     total_cells = rows * cols
     
-    # Necesitamos un número par de cada ícono para poder emparejarlos
+    # Necesitamos un número par de cada ícono
     tiles = []
     icons_count = len(self.icons)
     
@@ -23,7 +23,7 @@ def create_board(self):
     pairs_per_icon = pairs_needed // icons_count
     remaining_pairs = pairs_needed % icons_count
     
-    # Crear las fichas (cada ícono aparece un número par de veces)
+    # Crear las fichas (cada ícono aparece en pares)
     for i, icon in enumerate(self.icons):
         count = pairs_per_icon * 2
         if i < remaining_pairs:
@@ -35,12 +35,12 @@ def create_board(self):
     
     # Crear el tablero bidimensional
     board = []
-    tile_index = 0
+    index = 0
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(tiles[tile_index])
-            tile_index += 1
+            row.append(tiles[index])
+            index += 1
         board.append(row)
     
     self.board = board

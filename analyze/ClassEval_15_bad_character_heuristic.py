@@ -18,8 +18,8 @@ def bad_character_heuristic(self):
     for i in range(m):
         bad_char[pattern[i]] = i
     
-    # Búsqueda
     s = 0  # desplazamiento del patrón respecto al texto
+    
     while s <= n - m:
         j = m - 1
         
@@ -27,7 +27,7 @@ def bad_character_heuristic(self):
         while j >= 0 and pattern[j] == text[s + j]:
             j -= 1
         
-        # Si el patrón está presente en el desplazamiento actual
+        # Si el patrón está presente en la posición actual
         if j < 0:
             result.append(s)
             # Desplazar el patrón para alinear el siguiente carácter en el texto

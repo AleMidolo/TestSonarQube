@@ -10,7 +10,8 @@ def generate_primes(self):
     if self.limit < 2:
         return []
     
-    # Create a boolean array "is_prime[0..limit]" and initialize all entries as true
+    # Create a boolean array "is_prime[0..limit]" and initialize
+    # all entries as true
     is_prime = [True] * (self.limit + 1)
     is_prime[0] = is_prime[1] = False
     

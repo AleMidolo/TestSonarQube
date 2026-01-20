@@ -24,7 +24,7 @@ def vigenere_decipher(self, ciphertext):
             # Get the shift value from the key
             shift = ord(key[key_index % len(key)]) - ord('a')
             
-            # Decrypt by shifting backwards
+            # Decrypt by subtracting the shift
             decrypted_char = chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
             
             # Restore case

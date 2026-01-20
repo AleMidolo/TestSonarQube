@@ -15,7 +15,7 @@ def make_move(self, row, col):
         return False
     
     # Check if the position is empty
-    if self.board[row][col] != '' and self.board[row][col] != ' ':
+    if self.board[row][col] != ' ' and self.board[row][col] != '':
         return False
     
     # Place the current player's mark

@@ -36,13 +36,13 @@ def get_available_slots(self, date):
     current_time = day_start
     
     for event_start, event_end in events_on_date:
-        # Si hay un hueco entre el tiempo actual y el inicio del evento
+        # Si hay un hueco antes del siguiente evento
         if current_time < event_start:
             available_slots.append((current_time, event_start))
         # Actualiza el tiempo actual al final del evento
         current_time = max(current_time, event_end)
     
-    # Agrega el último intervalo si hay tiempo disponible hasta el final del día
+    # Agrega el intervalo final si hay tiempo disponible después del último evento
     if current_time < day_end:
         available_slots.append((current_time, day_end))
     

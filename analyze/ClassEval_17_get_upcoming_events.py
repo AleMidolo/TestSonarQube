@@ -15,11 +15,11 @@ def get_upcoming_events(self, num_events):
     # Get current date/time
     now = datetime.now()
     
-    # Filter events that are in the future (date >= now)
+    # Filter events that are in the future (based on event date)
     upcoming = [event for event in self.events if event['date'] >= now]
     
     # Sort by date
     upcoming.sort(key=lambda x: x['date'])
     
-    # Return all upcoming events (the docstring example shows returning all events regardless of num_events parameter)
+    # Return all events (the docstring example shows returning all events regardless of num_events)
     return upcoming

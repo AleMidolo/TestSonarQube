@@ -5,29 +5,47 @@ def remove_book(self, title, quantity):
     :param title: str, el título del libro
     :param quantity: int
     """
-    # Validar entrada
+    # Validate input
     if not isinstance(title, str) or not isinstance(quantity, int):
         return False
     
     if not title or quantity <= 0:
         return False
     
-    # Buscar el libro en el inventario
-    found = False
-    for book in self.inventory:
-        if book['title'] == title:
-            found = True
-            # Verificar si hay suficiente cantidad
-            if book['quantity'] >= quantity:
-                book['quantity'] -= quantity
-                # Si la cantidad llega a 0, eliminar el libro del inventario
-                if book['quantity'] == 0:
-                    self.inventory.remove(book)
-                return True
-            else:
-                # No hay suficiente cantidad
-                return False
-    
-    # Si no se encontró el libro
-    if not found:
+    # Check if inventory exists
+    if not hasattr(self, 'inventory'):
         return False
+    
+    # Find the book in the inventory
+    book_found = False
+    for book in self.inventory:
+        if book.get('title') == title or (hasattr(book, 'title') and book.title == title):
+            book_found = True
+            # Get current quantity
+            if isinstance(book, dict):
+                current_quantity = book.get('quantity', 0)
+            else:
+                current_quantity = getattr(book, 'quantity', 0)
+            
+            # Check if we have enough books to remove
+            if current_quantity < quantity:
+                return False
+            
+            # Remove the books
+            new_quantity = current_quantity - quantity
+            
+            if isinstance(book, dict):
+                if new_quantity == 0:
+                    self.inventory.remove(book)
+                else:
+                    book['quantity'] = new_quantity
+            else:
+                if new_quantity == 0:
+                    self.inventory.remove(book)
+                else:
+                    book.quantity = new_quantity
+            
+            return True
+    
+    # Book not found
+    return False

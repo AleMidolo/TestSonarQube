@@ -23,29 +23,27 @@ def multiply(num1, num2):
     if num1 == '0' or num2 == '0':
         return '0'
     
+    # Convert strings to lists of digits (reversed for easier calculation)
+    digits1 = [int(d) for d in num1[::-1]]
+    digits2 = [int(d) for d in num2[::-1]]
+    
     # Initialize result array
-    len1, len2 = len(num1), len(num2)
-    result = [0] * (len1 + len2)
+    result = [0] * (len(digits1) + len(digits2))
     
-    # Reverse the strings for easier processing
-    num1 = num1[::-1]
-    num2 = num2[::-1]
-    
-    # Multiply each digit
-    for i in range(len1):
-        for j in range(len2):
-            digit1 = int(num1[i])
-            digit2 = int(num2[j])
-            result[i + j] += digit1 * digit2
-            
+    # Multiply each digit of num1 with each digit of num2
+    for i in range(len(digits1)):
+        for j in range(len(digits2)):
+            result[i + j] += digits1[i] * digits2[j]
             # Handle carry
-            result[i + j + 1] += result[i + j] // 10
-            result[i + j] %= 10
+            if result[i + j] >= 10:
+                result[i + j + 1] += result[i + j] // 10
+                result[i + j] %= 10
     
-    # Convert result array to string
+    # Remove leading zeros
     while len(result) > 1 and result[-1] == 0:
         result.pop()
     
+    # Convert result to string
     result_str = ''.join(map(str, result[::-1]))
     
     return ('-' + result_str) if negative else result_str

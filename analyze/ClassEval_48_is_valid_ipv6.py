@@ -25,27 +25,23 @@ def is_valid_ipv6(ip_address):
         
         # Split by '::' to handle compression
         parts = ip_address.split('::')
-        if len(parts) > 2:
+        if len(parts) != 2:
             return False
         
-        # Count total segments
         left_segments = parts[0].split(':') if parts[0] else []
-        right_segments = parts[1].split(':') if len(parts) > 1 and parts[1] else []
+        right_segments = parts[1].split(':') if parts[1] else []
         
         # Remove empty strings
         left_segments = [s for s in left_segments if s]
         right_segments = [s for s in right_segments if s]
         
-        total_segments = len(left_segments) + len(right_segments)
-        
-        # With compression, we should have less than 8 segments
-        if total_segments >= 8:
+        # Total segments should be less than 8 (since :: represents at least one group of zeros)
+        if len(left_segments) + len(right_segments) >= 8:
             return False
         
-        # Validate each segment
         all_segments = left_segments + right_segments
     else:
-        # Without compression, must have exactly 8 segments
+        # No compression, must have exactly 8 segments
         if len(segments) != 8:
             return False
         all_segments = segments

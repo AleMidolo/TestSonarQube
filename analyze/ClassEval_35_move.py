@@ -32,9 +32,9 @@ def move(self, state, direction):
     else:
         return new_state
     
-    # Verificar que la nueva posición sea válida
+    # Verificar que la nueva posición esté dentro de los límites
     if 0 <= new_row < 3 and 0 <= new_col < 3:
-        # Intercambiar el blanco con el bloque en la nueva posición
+        # Intercambiar el blanco con la pieza en la nueva posición
         new_state[blank_row][blank_col] = new_state[new_row][new_col]
         new_state[new_row][new_col] = 0
     
