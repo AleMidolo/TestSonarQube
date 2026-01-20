@@ -16,13 +16,13 @@ def get_binary(self):
         # Split the IP address into octets
         octets = self.ip_address.split('.')
         
-        # Validate IP address format
+        # Validate that we have exactly 4 octets
         if len(octets) != 4:
             return ''
         
         binary_octets = []
         for octet in octets:
-            # Convert to integer and validate range
+            # Convert to integer and validate range (0-255)
             num = int(octet)
             if num < 0 or num > 255:
                 return ''

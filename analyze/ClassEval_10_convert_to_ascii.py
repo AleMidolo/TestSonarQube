@@ -12,5 +12,6 @@ def convert_to_ascii(self):
         # Extract 8-bit chunk
         byte = self.binary_string[i:i+8]
         # Convert binary to decimal and then to ASCII character
-        result += chr(int(byte, 2))
+        if len(byte) == 8:
+            result += chr(int(byte, 2))
     return result

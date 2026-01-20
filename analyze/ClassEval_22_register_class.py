@@ -9,13 +9,13 @@ def register_class(self, student_name, class_name):
     >>> registration_system.register_class(student_name="John", class_name="CS102")
     ["CS101", "CS102"]
     """
-    if not hasattr(self, 'students'):
-        self.students = {}
+    if not hasattr(self, 'registrations'):
+        self.registrations = {}
     
-    if student_name not in self.students:
-        self.students[student_name] = []
+    if student_name not in self.registrations:
+        self.registrations[student_name] = []
     
-    if class_name not in self.students[student_name]:
-        self.students[student_name].append(class_name)
+    if class_name not in self.registrations[student_name]:
+        self.registrations[student_name].append(class_name)
     
-    return self.students[student_name]
+    return self.registrations[student_name]

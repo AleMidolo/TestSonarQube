@@ -18,10 +18,10 @@ def lemmatize_sentence(self, sentence):
     # Remove punctuation
     sentence = sentence.translate(str.maketrans('', '', string.punctuation))
     
-    # Tokenize
+    # Tokenize the sentence
     words = word_tokenize(sentence)
     
-    # POS tagging
+    # POS tag the words
     pos_tags = nltk.pos_tag(words)
     
     # Initialize lemmatizer

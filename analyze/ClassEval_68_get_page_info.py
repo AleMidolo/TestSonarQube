@@ -16,22 +16,34 @@ def get_page_info(self, page_number):
     >>> }
 
     """
+    # Calculate total items and total pages
     total_items = len(self.data)
-    total_pages = (total_items + self.per_page - 1) // self.per_page
+    total_pages = (total_items + self.per_page - 1) // self.per_page  # Ceiling division
     
-    # Calculate start and end indices for the current page
+    # Validate page_number
+    if page_number < 1:
+        page_number = 1
+    elif page_number > total_pages:
+        page_number = total_pages
+    
+    # Calculate start and end indices for slicing
     start_index = (page_number - 1) * self.per_page
     end_index = start_index + self.per_page
     
     # Get the data for the current page
     page_data = self.data[start_index:end_index]
     
+    # Determine if there are previous and next pages
+    has_previous = page_number > 1
+    has_next = page_number < total_pages
+    
+    # Return the page information dictionary
     return {
         "current_page": page_number,
         "per_page": self.per_page,
         "total_pages": total_pages,
         "total_items": total_items,
-        "has_previous": page_number > 1,
-        "has_next": page_number < total_pages,
+        "has_previous": has_previous,
+        "has_next": has_next,
         "data": page_data
     }

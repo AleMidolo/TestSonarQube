@@ -16,38 +16,28 @@ def extract_code_from_html_text(self, html_text):
     >>>    </html>)
     ["print('¡Hola, mundo!')", 'for i in range(5):\n                print(i)']
     """
-    from html.parser import HTMLParser
+    import re
+    from html import unescape
     
-    class CodeExtractor(HTMLParser):
-        def __init__(self):
-            super().__init__()
-            self.codes = []
-            self.in_pre = False
-            self.in_code = False
-            self.current_code = []
-        
-        def handle_starttag(self, tag, attrs):
-            if tag == 'pre':
-                self.in_pre = True
-                self.current_code = []
-            elif tag == 'code' and self.in_pre:
-                self.in_code = True
-        
-        def handle_endtag(self, tag):
-            if tag == 'pre':
-                if self.current_code:
-                    code_text = ''.join(self.current_code)
-                    self.codes.append(code_text)
-                self.in_pre = False
-                self.in_code = False
-                self.current_code = []
-            elif tag == 'code':
-                self.in_code = False
-        
-        def handle_data(self, data):
-            if self.in_pre:
-                self.current_code.append(data)
+    # Find all <pre> tags and their content
+    pre_pattern = r'<pre[^>]*>(.*?)</pre>'
+    pre_matches = re.findall(pre_pattern, html_text, re.DOTALL | re.IGNORECASE)
     
-    parser = CodeExtractor()
-    parser.feed(html_text)
-    return parser.codes
+    codes = []
+    for match in pre_matches:
+        # Remove <code> tags if present
+        code_pattern = r'<code[^>]*>(.*?)</code>'
+        code_match = re.search(code_pattern, match, re.DOTALL | re.IGNORECASE)
+        
+        if code_match:
+            code_text = code_match.group(1)
+        else:
+            code_text = match
+        
+        # Unescape HTML entities and strip leading/trailing whitespace
+        code_text = unescape(code_text).strip()
+        
+        if code_text:
+            codes.append(code_text)
+    
+    return codes

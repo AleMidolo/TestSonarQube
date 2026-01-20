@@ -14,13 +14,10 @@ def process_csv_data(self, N, save_file_name):
     >>> csvProcessor.read_csv('read_test_process.csv')
     (['a', 'b', 'c', 'd'], [['HELLO']])
     """
-    import csv
-    import os
-    
     try:
         # Read the CSV file
         result = self.read_csv(save_file_name)
-        if result is None:
+        if result == 0:
             return 0
         
         title, data = result
@@ -29,22 +26,25 @@ def process_csv_data(self, N, save_file_name):
         if N < 0 or N >= len(title):
             return 0
         
-        # Process data: keep only Nth column and capitalize
+        # Process data: keep only N-th column and capitalize
         processed_data = []
         for row in data:
             if N < len(row):
                 processed_data.append([row[N].upper()])
+            else:
+                return 0
         
-        # Generate new file name with '_process' suffix
-        base_name, ext = os.path.splitext(save_file_name)
-        new_file_name = base_name + '_process' + ext
+        # Create new filename with '_process' suffix
+        if save_file_name.endswith('.csv'):
+            new_file_name = save_file_name[:-4] + '_process.csv'
+        else:
+            new_file_name = save_file_name + '_process'
         
         # Write to new CSV file
-        with open(new_file_name, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(title)
-            writer.writerows(processed_data)
+        self.title = title
+        self.data = processed_data
+        result = self.write_csv(new_file_name)
         
-        return 1
-    except Exception as e:
+        return result
+    except:
         return 0

@@ -17,8 +17,8 @@ def add_movie(self, name, price, start_time, end_time, n):
         [0., 0., 0.]])}]
     """
     # Parse time strings to datetime objects
-    start_dt = datetime.strptime(start_time, '%H:%M').replace(year=1900, month=1, day=1)
-    end_dt = datetime.strptime(end_time, '%H:%M').replace(year=1900, month=1, day=1)
+    start_dt = datetime.strptime(start_time, '%H:%M')
+    end_dt = datetime.strptime(end_time, '%H:%M')
     
     # Create seats matrix (n x n) initialized with zeros
     seats = np.zeros((n, n))

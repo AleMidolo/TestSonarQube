@@ -13,11 +13,10 @@ def count(n: int, m: int) -> int:
     if m == 0 or m == n:
         return 1
     
-    # Optimize by using the smaller value (C(n,m) = C(n, n-m))
+    # Calculate C(n, m) = n! / (m! * (n - m)!)
+    # Optimize by using C(n, m) = C(n, n-m) and choosing the smaller value
     m = min(m, n - m)
     
-    # Calculate combinations using the formula: n! / (m! * (n-m)!)
-    # We can optimize by calculating iteratively to avoid large factorials
     result = 1
     for i in range(m):
         result = result * (n - i) // (i + 1)

@@ -17,6 +17,5 @@ def remove_icons(self, pos1, pos2):
     """
     x1, y1 = pos1
     x2, y2 = pos2
-    
     self.board[y1][x1] = ' '
     self.board[y2][x2] = ' '

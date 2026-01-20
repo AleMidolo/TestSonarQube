@@ -16,23 +16,23 @@ def get_possible_moves(self, state):
                 row, col = i, j
                 break
     
-    # Verificar si se puede mover hacia arriba (el 0 puede intercambiarse con la celda de arriba)
-    # Esto significa que hay una celda arriba, es decir, row > 0
+    # Verificar si se puede mover hacia arriba (el 0 intercambia con la celda de arriba)
+    # Esto significa que el 0 debe estar en las filas 1 o 2
     if row > 0:
         moves.append('arriba')
     
-    # Verificar si se puede mover hacia abajo (el 0 puede intercambiarse con la celda de abajo)
-    # Esto significa que hay una celda abajo, es decir, row < 2
+    # Verificar si se puede mover hacia abajo (el 0 intercambia con la celda de abajo)
+    # Esto significa que el 0 debe estar en las filas 0 o 1
     if row < 2:
         moves.append('abajo')
     
-    # Verificar si se puede mover hacia izquierda (el 0 puede intercambiarse con la celda de la izquierda)
-    # Esto significa que hay una celda a la izquierda, es decir, col > 0
+    # Verificar si se puede mover hacia la izquierda (el 0 intercambia con la celda de la izquierda)
+    # Esto significa que el 0 debe estar en las columnas 1 o 2
     if col > 0:
         moves.append('izquierda')
     
-    # Verificar si se puede mover hacia derecha (el 0 puede intercambiarse con la celda de la derecha)
-    # Esto significa que hay una celda a la derecha, es decir, col < 2
+    # Verificar si se puede mover hacia la derecha (el 0 intercambia con la celda de la derecha)
+    # Esto significa que el 0 debe estar en las columnas 0 o 1
     if col < 2:
         moves.append('derecha')
     

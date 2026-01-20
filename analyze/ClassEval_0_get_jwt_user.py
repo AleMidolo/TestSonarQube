@@ -21,16 +21,15 @@ def get_jwt_user(self, request):
     
     # Si Authorization es un diccionario con información de usuario y JWT
     if isinstance(authorization, dict):
+        # Verificar si tiene JWT válido
         jwt_token = authorization.get('jwt')
-        user_info = authorization.get('user')
-        
-        if jwt_token and user_info:
-            # Validar que el JWT contiene la fecha de hoy
-            # Según el ejemplo, el JWT debe contener el nombre de usuario + fecha de hoy
-            expected_date = str(datetime.date.today())
-            
-            # Verificar que el token es válido (contiene la fecha de hoy)
-            if expected_date in jwt_token:
-                return {'user': user_info}
+        if jwt_token:
+            # Validar que el JWT contenga la fecha de hoy
+            today_str = str(datetime.date.today())
+            if today_str in jwt_token:
+                # Retornar la información del usuario
+                user_info = authorization.get('user')
+                if user_info:
+                    return {'user': user_info}
     
     return None

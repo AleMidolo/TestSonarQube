@@ -22,14 +22,14 @@ def subtract(num1, num2):
     # Convert subtraction to addition when dealing with negative numbers
     # a - b = a + (-b)
     # a - (-b) = a + b
-    # (-a) - b = -(a + b)
-    # (-a) - (-b) = b - a
+    # -a - b = -(a + b)
+    # -a - (-b) = -a + b = b - a
     
     if negative1 and negative2:
-        # (-a) - (-b) = b - a
+        # -a - (-b) = b - a
         return subtract(num2, num1)
     elif negative1:
-        # (-a) - b = -(a + b)
+        # -a - b = -(a + b)
         result = add(num1, num2)
         return '-' + result if result != '0' else '0'
     elif negative2:
@@ -57,7 +57,7 @@ def subtract(num1, num2):
             smaller = num1
             result_negative = True
     
-    # Perform subtraction
+    # Perform subtraction: larger - smaller
     larger = larger[::-1]
     smaller = smaller[::-1]
     
@@ -82,7 +82,7 @@ def subtract(num1, num2):
     while len(result) > 1 and result[-1] == '0':
         result.pop()
     
-    result_str = ''.join(result[::-1])
+    result_str = ''.join(reversed(result))
     
     if result_str == '0':
         return '0'
@@ -110,4 +110,4 @@ def add(num1, num2):
     if carry:
         result.append(str(carry))
     
-    return ''.join(result[::-1])
+    return ''.join(reversed(result))

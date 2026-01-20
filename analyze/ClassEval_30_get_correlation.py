@@ -8,25 +8,27 @@ def get_correlation(self):
     """
     import math
     
-    # Para una sola lista, calculamos la correlación con su índice (posición)
-    n = len(self.data)
+    # Assuming this is a method of a class that has data stored in self
+    # Based on the doctest, it appears to calculate correlation between indices and values
+    # For data [1, 2, 3, 4], correlation with indices [0, 1, 2, 3] would be 1.0 (perfect positive correlation)
+    
+    data = self if isinstance(self, list) else getattr(self, 'data', [])
+    n = len(data)
     
     if n == 0:
         return 0.0
     
-    # x será el índice (0, 1, 2, 3, ...)
-    # y será los valores de self.data
+    # Create indices as x values
     x = list(range(n))
-    y = self.data
+    y = data
     
-    # Calcular medias
+    # Calculate means
     mean_x = sum(x) / n
     mean_y = sum(y) / n
     
-    # Calcular numerador: suma de (x_i - mean_x) * (y_i - mean_y)
+    # Calculate correlation coefficient (Pearson's r)
     numerator = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n))
     
-    # Calcular denominador: sqrt(suma de (x_i - mean_x)^2) * sqrt(suma de (y_i - mean_y)^2)
     sum_sq_x = sum((x[i] - mean_x) ** 2 for i in range(n))
     sum_sq_y = sum((y[i] - mean_y) ** 2 for i in range(n))
     

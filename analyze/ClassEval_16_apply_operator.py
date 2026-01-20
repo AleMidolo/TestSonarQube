@@ -11,14 +11,14 @@ def apply_operator(self, operand_stack, operator_stack):
     if len(operand_stack) < 2 or len(operator_stack) < 1:
         return operand_stack, operator_stack
     
-    # Extraer el operador de la parte superior de la pila de operadores
-    operator = operator_stack.pop()
-    
-    # Extraer los dos operandos de la parte superior de la pila de operandos
+    # Extraer los dos operandos superiores
     operand2 = operand_stack.pop()
     operand1 = operand_stack.pop()
     
-    # Realizar la operación según el operador
+    # Extraer el operador superior
+    operator = operator_stack.pop()
+    
+    # Realizar la operación
     if operator == '+':
         result = operand1 + operand2
     elif operator == '-':

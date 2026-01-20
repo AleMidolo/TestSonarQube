@@ -14,4 +14,10 @@ def __getitem__(self, key):
         return components[0] + ''.join(x.title() for x in components[1:])
     
     camel_key = snake_to_camel(key)
-    return self.__dict__[camel_key]
+    
+    # Try to get the value using the camelCase key from the internal dictionary
+    # Assuming the class has an internal dictionary attribute (e.g., self._data or self.__dict__)
+    if hasattr(self, '_data'):
+        return self._data[camel_key]
+    else:
+        return self.__dict__[camel_key]

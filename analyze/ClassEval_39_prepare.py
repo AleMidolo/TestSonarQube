@@ -7,52 +7,55 @@ def prepare(self, expression):
 
     expression_calculator.postfix_stack = ['2', '3', '4', '*', '+']
     """
-    # Definir precedencia de operadores
+    # Define operator precedence
     precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
     
-    # Pila para operadores
+    # Initialize output list and operator stack
+    output = []
     operator_stack = []
-    # Lista para la expresión postfija
-    self.postfix_stack = []
     
-    # Eliminar espacios en blanco
+    # Remove whitespace from expression
     expression = expression.replace(' ', '')
     
+    # Parse the expression
     i = 0
     while i < len(expression):
         char = expression[i]
         
-        # Si es un dígito o punto decimal, extraer el número completo
+        # If character is a digit or decimal point, extract the full number
         if char.isdigit() or char == '.':
             num = ''
             while i < len(expression) and (expression[i].isdigit() or expression[i] == '.'):
                 num += expression[i]
                 i += 1
-            self.postfix_stack.append(num)
+            output.append(num)
             continue
         
-        # Si es paréntesis izquierdo
+        # If character is an opening parenthesis
         elif char == '(':
             operator_stack.append(char)
         
-        # Si es paréntesis derecho
+        # If character is a closing parenthesis
         elif char == ')':
             while operator_stack and operator_stack[-1] != '(':
-                self.postfix_stack.append(operator_stack.pop())
+                output.append(operator_stack.pop())
             if operator_stack:
-                operator_stack.pop()  # Eliminar '('
+                operator_stack.pop()  # Remove the '('
         
-        # Si es un operador
+        # If character is an operator
         elif char in precedence:
             while (operator_stack and 
                    operator_stack[-1] != '(' and 
                    operator_stack[-1] in precedence and
                    precedence[operator_stack[-1]] >= precedence[char]):
-                self.postfix_stack.append(operator_stack.pop())
+                output.append(operator_stack.pop())
             operator_stack.append(char)
         
         i += 1
     
-    # Vaciar la pila de operadores
+    # Pop remaining operators from stack
     while operator_stack:
-        self.postfix_stack.append(operator_stack.pop())
+        output.append(operator_stack.pop())
+    
+    # Store result in postfix_stack attribute
+    self.postfix_stack = output

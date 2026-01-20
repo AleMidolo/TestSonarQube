@@ -18,17 +18,18 @@ def create_board(self):
     tiles = []
     icons_count = len(self.icons)
     
-    # Calcular cuántas veces necesitamos cada ícono (asegurando pares)
+    # Calcular cuántas veces necesitamos cada ícono (siempre en pares)
     tiles_per_icon = total_cells // icons_count
     
-    # Crear la lista de fichas con pares
+    # Crear la lista de fichas asegurando que haya pares
     for icon in self.icons:
         tiles.extend([icon] * tiles_per_icon)
     
-    # Si hay celdas restantes, agregar más íconos
+    # Si hay celdas restantes, agregar más íconos en pares
     remaining = total_cells - len(tiles)
-    for i in range(remaining):
-        tiles.append(self.icons[i % icons_count])
+    if remaining > 0:
+        for i in range(remaining):
+            tiles.append(self.icons[i % icons_count])
     
     # Mezclar las fichas
     random.shuffle(tiles)

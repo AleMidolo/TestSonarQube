@@ -10,14 +10,13 @@ def process_excel_data(self, N, save_file_name):
     import openpyxl
     import os
     
-    # Leer el archivo Excel
     try:
+        # Cargar el archivo Excel
         workbook = openpyxl.load_workbook(save_file_name)
         sheet = workbook.active
         
-        # Convertir la columna N a mayúsculas
-        max_row = sheet.max_row
-        for row in range(1, max_row + 1):
+        # Convertir la columna N a mayúsculas (N es 1-indexed)
+        for row in range(1, sheet.max_row + 1):
             cell = sheet.cell(row=row, column=N)
             if cell.value is not None and isinstance(cell.value, str):
                 cell.value = cell.value.upper()
@@ -27,13 +26,15 @@ def process_excel_data(self, N, save_file_name):
         extension = os.path.splitext(save_file_name)[1]
         output_file_name = f"{base_name}_processed{extension}"
         
-        # Guardar el archivo
+        # Guardar el archivo procesado
         workbook.save(output_file_name)
         workbook.close()
         
-        # Retornar éxito (1) y el nombre del archivo
-        return (1, output_file_name)
+        # Llamar a write_excel (asumiendo que existe en la clase)
+        result = self.write_excel(output_file_name)
         
+        return (result, output_file_name)
+    
     except Exception as e:
-        # En caso de error, retornar 0 y mensaje de error
-        return (0, str(e))
+        # En caso de error, retornar código de error
+        return (0, "")

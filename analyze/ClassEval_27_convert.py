@@ -14,7 +14,7 @@ def convert(self, amount, from_currency, to_currency):
         'USD': 1.0,
         'CNY': 6.4,
         'EUR': 0.85,
-        'GBP': 0.75,
+        'GBP': 0.73,
         'JPY': 110.0,
         'CAD': 1.25,
         'AUD': 1.35,

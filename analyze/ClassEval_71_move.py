@@ -76,7 +76,7 @@ def move(self, direction):
                 return True
             return False
         else:
-            # No se puede empujar la caja (hay una pared u otro obstáculo)
+            # No se puede empujar la caja (hay una pared u obstáculo)
             return False
     
     return False

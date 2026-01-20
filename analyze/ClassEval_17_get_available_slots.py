@@ -18,31 +18,30 @@ def get_available_slots(self, date):
     # Filtra eventos que ocurren en la fecha dada
     events_on_date = []
     for event in self.events:
-        event_start = event['start_time']
-        event_end = event['end_time']
-        
-        # Verifica si el evento se solapa con el día dado
-        if event_start < day_end and event_end > day_start:
-            # Ajusta los tiempos del evento a los límites del día
-            adjusted_start = max(event_start, day_start)
-            adjusted_end = min(event_end, day_end)
-            events_on_date.append((adjusted_start, adjusted_end))
+        event_date = event['date']
+        if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
+            events_on_date.append(event)
     
-    # Ordena los eventos por tiempo de inicio
-    events_on_date.sort(key=lambda x: x[0])
+    # Ordena eventos por hora de inicio
+    events_on_date.sort(key=lambda x: x['start_time'])
     
     # Encuentra los intervalos disponibles
     available_slots = []
     current_time = day_start
     
-    for event_start, event_end in events_on_date:
-        # Si hay un hueco entre el tiempo actual y el inicio del evento
+    for event in events_on_date:
+        event_start = event['start_time']
+        event_end = event['end_time']
+        
+        # Si hay un hueco antes del evento
         if current_time < event_start:
             available_slots.append((current_time, event_start))
+        
         # Actualiza el tiempo actual al final del evento
-        current_time = max(current_time, event_end)
+        if event_end > current_time:
+            current_time = event_end
     
-    # Agrega el intervalo final si hay tiempo disponible hasta el final del día
+    # Si hay tiempo disponible después del último evento
     if current_time < day_end:
         available_slots.append((current_time, day_end))
     

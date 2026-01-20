@@ -13,7 +13,7 @@ def write_excel(self, data, file_name):
         wb = Workbook()
         ws = wb.active
         
-        # Escribir los datos en la hoja de cálculo
+        # Escribir los datos en la hoja de trabajo
         for row in data:
             ws.append(row)
         

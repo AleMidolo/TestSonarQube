@@ -11,15 +11,15 @@ def bad_character_heuristic(self):
     pattern = self.pattern
     m = len(pattern)
     n = len(text)
-    result = []
     
     # Crear tabla de caracteres malos
     bad_char = {}
     for i in range(m):
         bad_char[pattern[i]] = i
     
-    # Búsqueda
+    result = []
     s = 0  # desplazamiento del patrón respecto al texto
+    
     while s <= n - m:
         j = m - 1
         

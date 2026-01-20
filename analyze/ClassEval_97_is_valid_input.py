@@ -19,7 +19,7 @@ def is_valid_input(self, textnum):
     # Clean and normalize the input
     textnum = textnum.lower().strip()
     
-    # If empty, it's invalid
+    # If empty, it's not valid
     if not textnum:
         return False
     

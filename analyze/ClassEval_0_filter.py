@@ -33,5 +33,5 @@ def filter(self, request):
     if path.startswith('/public'):
         return True
     
-    # Default: deny access
+    # Default deny
     return False

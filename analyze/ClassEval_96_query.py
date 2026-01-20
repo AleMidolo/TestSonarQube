@@ -14,8 +14,8 @@ def query(self, weather_list, tmp_units = 'celsius'):
         return None
     
     city_weather = weather_list[self.city]
-    temperature = city_weather['temperature']
     weather = city_weather['weather']
+    temperature = city_weather['temperature']
     current_units = city_weather['temperature units']
     
     # Convert temperature if needed

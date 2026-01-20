@@ -11,12 +11,12 @@ def create_zip_file(self, files, output_file_name):
     >>> zfp.create_zip_file(["bbb.txt", "ccc.txt", "ddd.txt"], "output/bcd")
     """
     try:
-        # Crear el directorio de salida si no existe
+        # Asegurar que el directorio de salida existe
         output_dir = os.path.dirname(output_file_name)
         if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir)
         
-        # Asegurar que el nombre del archivo tenga extensión .zip
+        # Agregar extensión .zip si no está presente
         if not output_file_name.endswith('.zip'):
             output_file_name += '.zip'
         
@@ -32,7 +32,6 @@ def create_zip_file(self, files, output_file_name):
                     return False
         
         return True
-    
     except Exception as e:
         # En caso de cualquier error, retornar False
         return False

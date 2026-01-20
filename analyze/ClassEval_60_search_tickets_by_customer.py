@@ -11,5 +11,5 @@ def search_tickets_by_customer(self, customer_name):
     """
     cursor = self.connection.cursor()
     cursor.execute("SELECT * FROM tickets WHERE customer_name = ?", (customer_name,))
-    result = cursor.fetchall()
-    return result
+    results = cursor.fetchall()
+    return results

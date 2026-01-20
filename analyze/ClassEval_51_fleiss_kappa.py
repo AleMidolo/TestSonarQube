@@ -28,7 +28,7 @@ def fleiss_kappa(testData, N, k, n):
         P_i = (sum_sq - n) / (n * (n - 1))
         P_i_sum += P_i
     
-    # Calculate P_bar (mean of all P_i)
+    # Calculate P_bar (mean of P_i values)
     P_bar = P_i_sum / N
     
     # Calculate P_j (proportion of ratings in each category)

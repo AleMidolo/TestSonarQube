@@ -31,7 +31,7 @@ def _infix_to_postfix(self, expression):
                 stack.pop()  # Remove '('
         elif token in precedence:
             while (stack and stack[-1] != '(' and 
-                   stack[-1] in precedence and
+                   stack[-1] in precedence and 
                    precedence[stack[-1]] >= precedence[token]):
                 output.append(stack.pop())
             stack.append(token)
