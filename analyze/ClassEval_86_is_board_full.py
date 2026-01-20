@@ -7,6 +7,6 @@ def is_board_full(self):
     """
     for row in self.board:
         for cell in row:
-            if cell == ' ' or cell == '' or cell is None:
+            if cell == ' ' or cell == '':
                 return False
     return True

@@ -15,7 +15,7 @@ def count_words(self, sentence):
     for word in words:
         # Remove punctuation from the word
         cleaned_word = ''.join(char for char in word if char.isalpha())
-        # Count only if the cleaned word is not empty (contains letters)
+        # Count only if the cleaned word is not empty (i.e., it contains letters)
         if cleaned_word:
             count += 1
     

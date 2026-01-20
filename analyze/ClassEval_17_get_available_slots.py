@@ -22,7 +22,7 @@ def get_available_slots(self, date):
         if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
             events_on_date.append(event)
     
-    # Ordena eventos por hora de inicio
+    # Ordena los eventos por hora de inicio
     events_on_date.sort(key=lambda x: x['start_time'])
     
     # Encuentra los intervalos disponibles
@@ -33,7 +33,7 @@ def get_available_slots(self, date):
         event_start = event['start_time']
         event_end = event['end_time']
         
-        # Si hay un hueco antes del evento
+        # Si hay un hueco entre el tiempo actual y el inicio del evento
         if current_time < event_start:
             available_slots.append((current_time, event_start))
         
@@ -41,7 +41,7 @@ def get_available_slots(self, date):
         if event_end > current_time:
             current_time = event_end
     
-    # Si hay tiempo disponible después del último evento
+    # Agrega el intervalo final si hay tiempo disponible hasta el final del día
     if current_time < day_end:
         available_slots.append((current_time, day_end))
     

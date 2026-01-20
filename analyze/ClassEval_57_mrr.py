@@ -13,27 +13,25 @@ def mrr(data):
     0.75, [1.0, 0.5]
     """
     def calculate_single_mrr(result_list, ground_truth):
-        # Find the position of the first correct answer (first 1)
-        for i, val in enumerate(result_list):
-            if val == 1:
-                # MRR is 1 / (rank), where rank starts at 1
+        # MRR es el recíproco del rango de la primera respuesta correcta
+        for i, value in enumerate(result_list):
+            if value == 1:
                 return 1.0 / (i + 1)
-        # If no correct answer found, return 0
         return 0.0
     
-    # Check if data is a single tuple or a list of tuples
+    # Verificar si data es una sola tupla o una lista de tuplas
     if isinstance(data, tuple):
-        # Single tuple case
+        # Caso de una sola tupla
         result_list, ground_truth = data
         mrr_value = calculate_single_mrr(result_list, ground_truth)
         return mrr_value, [mrr_value]
     else:
-        # List of tuples case
+        # Caso de lista de tuplas
         mrr_values = []
         for result_list, ground_truth in data:
             mrr_value = calculate_single_mrr(result_list, ground_truth)
             mrr_values.append(mrr_value)
         
-        # Calculate average MRR
+        # Calcular el promedio de MRR
         avg_mrr = sum(mrr_values) / len(mrr_values) if mrr_values else 0.0
         return avg_mrr, mrr_values

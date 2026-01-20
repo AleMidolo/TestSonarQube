@@ -15,22 +15,22 @@ def search(self, keyword):
     # Convert keyword to string for comparison
     keyword_str = str(keyword)
     
-    # Search for elements that contain the keyword
-    results = []
+    # Search for matching elements in self.data
+    matching_results = []
     for item in self.data:
         if keyword_str in str(item):
-            results.append(item)
+            matching_results.append(item)
     
     # Calculate total results and total pages
-    total_results = len(results)
+    total_results = len(matching_results)
     total_pages = (total_results + self.page_size - 1) // self.page_size if total_results > 0 else 0
     
-    # Return search information
+    # Build and return search info dictionary
     search_info = {
         "keyword": keyword_str,
         "total_results": total_results,
         "total_pages": total_pages,
-        "results": results
+        "results": matching_results
     }
     
     return search_info

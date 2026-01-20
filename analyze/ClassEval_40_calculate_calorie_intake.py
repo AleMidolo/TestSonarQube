@@ -14,14 +14,13 @@ def calculate_calorie_intake(self):
         bmr = 10 * self.weight + 6.25 * self.height - 5 * self.age - 161
     
     # Get user condition (assuming there's a method or attribute for this)
-    # We need to determine if user is overweight, underweight, or normal
-    # This likely uses BMI or another method
+    # We need to determine the condition first
     condition = self.get_condition() if hasattr(self, 'get_condition') else self.condition
     
     # Calculate calorie intake based on condition
-    if condition == "overweight" or condition == "sobrepeso":
+    if condition == "overweight":
         calorie_intake = bmr * 1.2
-    elif condition == "underweight" or condition == "demasiado delgado":
+    elif condition == "underweight":
         calorie_intake = bmr * 1.6
     else:  # normal
         calorie_intake = bmr * 1.4

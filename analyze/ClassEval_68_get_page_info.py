@@ -20,13 +20,7 @@ def get_page_info(self, page_number):
     total_items = len(self.data)
     total_pages = (total_items + self.per_page - 1) // self.per_page  # Ceiling division
     
-    # Validate page_number
-    if page_number < 1:
-        page_number = 1
-    elif page_number > total_pages:
-        page_number = total_pages
-    
-    # Calculate start and end indices for slicing
+    # Calculate start and end indices for the current page
     start_index = (page_number - 1) * self.per_page
     end_index = start_index + self.per_page
     
@@ -37,7 +31,6 @@ def get_page_info(self, page_number):
     has_previous = page_number > 1
     has_next = page_number < total_pages
     
-    # Return the page information dictionary
     return {
         "current_page": page_number,
         "per_page": self.per_page,

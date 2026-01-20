@@ -12,7 +12,7 @@ def evaluate_expression(self, expression):
     try:
         # Evaluar la expresión de forma segura
         result = eval(expression)
-        # Verificar si el resultado es 24 (con tolerancia para flotantes)
+        # Verificar si el resultado es 24 (con tolerancia para números flotantes)
         return abs(result - 24) < 1e-6
     except:
         # Si hay algún error en la evaluación, retornar False

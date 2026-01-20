@@ -9,14 +9,15 @@ def answer(self, expression):
     >>> ret = game.answer(ans)
     True
     """
+    import re
+    
     try:
-        # Extraer los números de la expresión
-        import re
-        nums_in_expr = re.findall(r'\d+', expression)
-        nums_in_expr = [int(num) for num in nums_in_expr]
+        # Extraer todos los números de la expresión
+        numbers_in_expr = re.findall(r'\d+', expression)
+        numbers_in_expr = [int(num) for num in numbers_in_expr]
         
         # Verificar que se usen exactamente los mismos números que en self.nums
-        if sorted(nums_in_expr) != sorted(self.nums):
+        if sorted(numbers_in_expr) != sorted(self.nums):
             return False
         
         # Evaluar la expresión
@@ -24,5 +25,6 @@ def answer(self, expression):
         
         # Verificar si el resultado es 24 (con tolerancia para errores de punto flotante)
         return abs(result - 24) < 1e-6
+        
     except:
         return False

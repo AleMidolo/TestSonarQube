@@ -43,16 +43,15 @@ def format_string(self, x):
             else:
                 return centenas[c] + " " + convertir_centenas(resto)
     
-    # Convertir string a entero
-    numero = int(x)
+    num = int(x)
     
-    if numero == 0:
+    if num == 0:
         return "CERO SOLAMENTE"
     
     # Dividir en grupos de miles
-    millones = numero // 1000000
-    miles = (numero % 1000000) // 1000
-    unidades_num = numero % 1000
+    millones = num // 1000000
+    miles = (num % 1000000) // 1000
+    unidades_grupo = num % 1000
     
     resultado = []
     
@@ -68,7 +67,7 @@ def format_string(self, x):
         else:
             resultado.append(convertir_centenas(miles) + " MIL")
     
-    if unidades_num > 0:
-        resultado.append(convertir_centenas(unidades_num))
+    if unidades_grupo > 0:
+        resultado.append(convertir_centenas(unidades_grupo))
     
     return " ".join(resultado) + " SOLAMENTE"

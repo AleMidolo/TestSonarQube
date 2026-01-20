@@ -15,23 +15,25 @@ def add(num1, num2):
     if not num2:
         return num1
     
-    # Make sure both numbers have the same length by padding with zeros
-    max_len = max(len(num1), len(num2))
-    num1 = num1.zfill(max_len)
-    num2 = num2.zfill(max_len)
+    # Make num1 the longer number
+    if len(num2) > len(num1):
+        num1, num2 = num2, num1
+    
+    # Pad num2 with leading zeros
+    num2 = num2.zfill(len(num1))
     
     result = []
     carry = 0
     
     # Add from right to left
-    for i in range(max_len - 1, -1, -1):
+    for i in range(len(num1) - 1, -1, -1):
         digit_sum = int(num1[i]) + int(num2[i]) + carry
         result.append(str(digit_sum % 10))
         carry = digit_sum // 10
     
-    # If there's a remaining carry, add it
+    # Add remaining carry
     if carry:
         result.append(str(carry))
     
-    # Reverse the result and join
+    # Reverse to get correct order
     return ''.join(reversed(result))

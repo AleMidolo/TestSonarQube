@@ -7,19 +7,22 @@ def bad_character_heuristic(self):
     [0, 3]
 
     """
+    result = []
     text = self.text
     pattern = self.pattern
     m = len(pattern)
     n = len(text)
-    result = []
+    
+    if m == 0 or n == 0 or m > n:
+        return result
     
     # Crear tabla de caracteres malos
     bad_char = {}
-    for i in range(m):
-        bad_char[pattern[i]] = i
+    for i in range(m - 1):
+        bad_char[pattern[i]] = m - 1 - i
     
+    # Búsqueda
     s = 0  # desplazamiento del patrón respecto al texto
-    
     while s <= n - m:
         j = m - 1
         
@@ -27,13 +30,14 @@ def bad_character_heuristic(self):
         while j >= 0 and pattern[j] == text[s + j]:
             j -= 1
         
-        # Si el patrón está presente en la posición actual
+        # Si el patrón está presente en el desplazamiento actual
         if j < 0:
             result.append(s)
-            # Desplazar el patrón para alinear el siguiente carácter en el texto
-            s += (m - bad_char.get(text[s + m], -1) - 1) if s + m < n else 1
+            # Mover el patrón para alinearlo con el siguiente carácter
+            s += 1
         else:
-            # Desplazar el patrón para alinear el carácter malo con su última ocurrencia en el patrón
-            s += max(1, j - bad_char.get(text[s + j], -1))
+            # Desplazar el patrón usando la heurística del carácter malo
+            bad_char_shift = bad_char.get(text[s + j], m)
+            s += max(1, bad_char_shift - (m - 1 - j))
     
     return result

@@ -13,21 +13,21 @@ def remove_book(self, title, quantity):
         return False
     
     # Buscar el libro en el inventario
-    found = False
-    for book in self.inventory:
-        if book['title'] == title:
-            found = True
-            # Verificar si hay suficiente cantidad
-            if book['quantity'] >= quantity:
-                book['quantity'] -= quantity
-                # Si la cantidad llega a 0, eliminar el libro del inventario
-                if book['quantity'] == 0:
-                    self.inventory.remove(book)
-                return True
-            else:
-                # No hay suficiente cantidad
-                return False
+    if not hasattr(self, 'inventory'):
+        self.inventory = []
     
-    # Si no se encontró el libro
-    if not found:
-        return False
+    for book in self.inventory:
+        if book.get('title') == title:
+            current_quantity = book.get('quantity', 0)
+            
+            # Si la cantidad a eliminar es mayor o igual a la existente, eliminar el libro
+            if quantity >= current_quantity:
+                self.inventory.remove(book)
+            else:
+                # Reducir la cantidad
+                book['quantity'] = current_quantity - quantity
+            
+            return True
+    
+    # Si no se encuentra el libro
+    return False

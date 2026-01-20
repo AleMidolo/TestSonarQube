@@ -9,7 +9,7 @@ def match_in_pattern(self, char):
 
     """
     # Buscar la ocurrencia más a la derecha del carácter en el patrón
-    # Recorremos el patrón de derecha a izquierda (excluyendo la última posición)
+    # Recorremos el patrón de derecha a izquierda (excluyendo el último carácter)
     for i in range(len(self.pattern) - 2, -1, -1):
         if self.pattern[i] == char:
             return i

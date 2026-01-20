@@ -17,7 +17,7 @@ def count(n: int, m: int) -> int:
     m = min(m, n - m)
     
     # Calculate combinations using the formula: n! / (m! * (n-m)!)
-    # We calculate it iteratively to avoid overflow with large factorials
+    # We can optimize by calculating iteratively to avoid large factorials
     result = 1
     for i in range(m):
         result = result * (n - i) // (i + 1)

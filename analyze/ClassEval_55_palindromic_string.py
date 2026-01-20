@@ -33,7 +33,7 @@ def palindromic_string(self):
         
         # Attempt to expand palindrome centered at i
         try:
-            while transformed[i + 1 + P[i]] == transformed[i - 1 - P[i]]:
+            while transformed[i + P[i] + 1] == transformed[i - P[i] - 1]:
                 P[i] += 1
         except IndexError:
             pass

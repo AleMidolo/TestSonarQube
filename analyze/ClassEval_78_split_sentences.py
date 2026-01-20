@@ -9,24 +9,26 @@ def split_sentences(self, sentences_string):
     """
     import re
     
-    # Patrón que busca . o ? seguidos de un espacio (pero no Sr.)
-    # Usamos lookahead negativo para evitar dividir en "Sr."
+    # Pattern that matches . or ? followed by a space, but not "Sr."
+    # We use negative lookbehind to avoid matching "Sr."
     pattern = r'(?<!Sr)([.?])\s+'
     
-    # Dividir por el patrón pero mantener el delimitador
+    # Split by the pattern but keep the delimiters
     parts = re.split(pattern, sentences_string)
     
-    # Reconstruir las oraciones combinando el texto con su puntuación
+    # Reconstruct sentences by combining text with their ending punctuation
     sentences = []
     i = 0
     while i < len(parts):
-        if i + 1 < len(parts) and parts[i + 1] in '.?':
-            # Combinar texto con su puntuación
-            sentences.append(parts[i] + parts[i + 1])
-            i += 2
-        elif parts[i].strip():  # Si hay texto restante
-            sentences.append(parts[i])
-            i += 1
+        if parts[i]:  # Skip empty strings
+            if i + 1 < len(parts) and parts[i + 1] in '.?':
+                # Combine text with its punctuation
+                sentences.append(parts[i] + parts[i + 1])
+                i += 2
+            else:
+                # Last sentence or text without following punctuation
+                sentences.append(parts[i])
+                i += 1
         else:
             i += 1
     

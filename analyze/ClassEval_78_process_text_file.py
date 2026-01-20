@@ -8,18 +8,16 @@ def process_text_file(self, sentences_string):
     """
     import re
     
-    # Split by sentence delimiters (. ? !)
+    # Split the text into sentences using '.', '?', '!' as delimiters
     sentences = re.split(r'[.?!]+', sentences_string)
     
-    max_words = 0
+    max_word_count = 0
     
     for sentence in sentences:
         # Strip whitespace and split by spaces to get words
         words = sentence.strip().split()
-        # Count words in this sentence
-        word_count = len(words)
-        # Update max if this sentence has more words
-        if word_count > max_words:
-            max_words = word_count
+        # Count non-empty words
+        word_count = len([word for word in words if word])
+        max_word_count = max(max_word_count, word_count)
     
-    return max_words
+    return max_word_count

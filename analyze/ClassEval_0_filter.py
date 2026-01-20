@@ -11,11 +11,10 @@ def filter(self, request):
     # Define allowed paths and methods
     allowed_routes = {
         '/login': ['POST', 'GET'],
+        '/logout': ['POST'],
         '/register': ['POST'],
-        '/public': ['GET'],
+        '/home': ['GET'],
         '/api/public': ['GET', 'POST'],
-        '/health': ['GET'],
-        '/': ['GET']
     }
     
     # Extract path and method from request
@@ -27,10 +26,6 @@ def filter(self, request):
         # Check if method is allowed for this path
         if method in allowed_routes[path]:
             return True
-    
-    # Check for public paths (paths starting with /public)
-    if path.startswith('/public'):
-        return True
     
     # Default: deny access
     return False

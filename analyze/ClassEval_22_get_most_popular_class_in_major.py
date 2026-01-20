@@ -21,7 +21,7 @@ def get_most_popular_class_in_major(self, major):
             for class_name in self.students_registration_classes[student_name]:
                 class_count[class_name] = class_count.get(class_name, 0) + 1
     
-    # Find the class with the maximum enrollment
+    # Find the class with the maximum count
     if not class_count:
         return None
     

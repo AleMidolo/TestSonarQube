@@ -6,6 +6,7 @@ def get_octets(self):
     >>> ipaddress.get_octets()
     ["10", "10", "10", "10"]
     """
+    # Assuming self has an ip_address attribute
     if hasattr(self, 'ip_address') and self.ip_address:
         parts = self.ip_address.split('.')
         
@@ -15,15 +16,17 @@ def get_octets(self):
         
         # Validate each octet
         for part in parts:
-            try:
-                num = int(part)
-                # Check if the number is in valid range (0-255)
-                if num < 0 or num > 255:
-                    return []
-                # Check for leading zeros (except for "0" itself)
-                if len(part) > 1 and part[0] == '0':
-                    return []
-            except ValueError:
+            # Check if it's a valid number
+            if not part.isdigit():
+                return []
+            
+            # Check if it's in valid range (0-255)
+            num = int(part)
+            if num < 0 or num > 255:
+                return []
+            
+            # Check for leading zeros (except for "0" itself)
+            if len(part) > 1 and part[0] == '0':
                 return []
         
         return parts

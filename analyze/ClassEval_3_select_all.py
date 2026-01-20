@@ -12,7 +12,7 @@ def select_all(self):
     result = []
     n = len(self.data)
     
-    # Generate all permutations for each length from 1 to n
+    # Generate permutations for each length from 1 to n
     for r in range(1, n + 1):
         for perm in permutations(self.data, r):
             result.append(list(perm))

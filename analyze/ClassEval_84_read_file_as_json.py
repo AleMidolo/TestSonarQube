@@ -1,5 +1,3 @@
-import json
-
 def read_file_as_json(self):
     """
     Lee el archivo self.file_path en formato json.
@@ -11,6 +9,9 @@ def read_file_as_json(self):
     >>> type(textFileProcessor.read_file_as_json())
     <class 'dict'>
     """
+    import json
+    
     with open(self.file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
+    
     return data

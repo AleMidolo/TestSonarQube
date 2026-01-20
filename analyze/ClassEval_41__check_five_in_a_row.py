@@ -19,7 +19,7 @@ def _check_five_in_a_row(self, row, col, direction):
     player = self.board[row][col]
     
     # If the cell is empty, there can't be five in a row
-    if player is None or player == ' ' or player == '':
+    if player is None or player == 0 or player == '':
         return False
     
     dx, dy = direction
@@ -28,7 +28,6 @@ def _check_five_in_a_row(self, row, col, direction):
     # Check in the positive direction
     current_row = row + dx
     current_col = col + dy
-    
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
            self.board[current_row][current_col] == player):
@@ -39,7 +38,6 @@ def _check_five_in_a_row(self, row, col, direction):
     # Check in the negative direction
     current_row = row - dx
     current_col = col - dy
-    
     while (0 <= current_row < len(self.board) and 
            0 <= current_col < len(self.board[0]) and 
            self.board[current_row][current_col] == player):

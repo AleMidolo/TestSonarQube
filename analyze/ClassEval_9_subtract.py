@@ -85,7 +85,7 @@ def subtract(num1, num2):
 
 
 def add(num1, num2):
-    """Helper function to add two positive number strings."""
+    """Helper function to add two positive number strings"""
     if len(num1) < len(num2):
         num1, num2 = num2, num1
     

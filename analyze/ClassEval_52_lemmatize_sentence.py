@@ -40,7 +40,7 @@ def lemmatize_sentence(self, sentence):
         else:
             return wordnet.NOUN  # Default to noun
     
-    # Lemmatize words based on their POS tags
+    # Lemmatize each word based on its POS tag
     lemmatized_words = []
     for word, pos in pos_tags:
         wordnet_pos = get_wordnet_pos(pos)

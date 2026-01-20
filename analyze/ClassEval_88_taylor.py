@@ -12,10 +12,9 @@ def taylor(self, x, n):
     # Convert x from degrees to radians
     x_rad = x / 180 * math.pi
     
-    # Taylor series for cos(x) around 0:
-    # cos(x) = sum from k=0 to n of: (-1)^k * x^(2k) / (2k)!
-    
+    # Taylor series for cos(x) = sum from k=0 to n of (-1)^k * x^(2k) / (2k)!
     result = 0.0
+    
     for k in range(n + 1):
         term = ((-1) ** k) * (x_rad ** (2 * k)) / math.factorial(2 * k)
         result += term
